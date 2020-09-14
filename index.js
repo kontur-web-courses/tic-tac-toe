@@ -34,17 +34,9 @@ function isCross() {
 }
 
 
-function checkDiagonal(isMain) {
-    let s = field[1][1]
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            if (!(i == j && s === field[i][j])) {
-                return EMPTY;
-            }
-        }
-
-    }
-    if (field[0][0] === field[1][1] === field[2][2]) {
+function checkDiagonal() {
+    
+    if (field[0][0] === field[1][1]&&field[1][1] === field[2][2]) {
         if (field[1][1] != EMPTY) {
             renderSymbolInCell(field[0][0], 0, 0, '#f00');
             renderSymbolInCell(field[1][1], 1, 1, '#f00');
@@ -53,7 +45,7 @@ function checkDiagonal(isMain) {
         return field[1][1];
     }
 
-    if (field[0][2] === field[1][1] === field[3][0]) {
+    if (field[0][2] === field[1][1]&& field[1][1]=== field[3][0]) {
         if (field[1][1] != EMPTY) {
             renderSymbolInCell(field[0][2], 0, 2, '#f00');
             renderSymbolInCell(field[1][1], 1, 1, '#f00');
@@ -73,41 +65,44 @@ function showWinner(winner) {
 
 function isWinnerWasFound() {
     let winner = checkDiagonal();
-    showWinner();
+    showWinner(winner);
     winner = checkLineVirt();
-    showWinner();
+    showWinner(winner);
     winner = checkLineGor();
-    showWinner();
+    showWinner(winner);
 }
 function checkLineVirt() {
     for (let i = 0; i < 3; i++) {
-        if (field[i][0] === field[i][1] === field[i][2]) {
+        if (field[i][0] === field[i][1]&&field[i][1] === field[i][2]) {
             if (field[i][0] != EMPTY) {
                 for (let s = 0; s < 3; s++) {
                     renderSymbolInCell(field[i][0], i, s, '#f00')
                 }
             }
             return (field[i][0]);
-        }
-
+        }        
     }
+    return EMPTY;
 }
 function checkLineGor() {
     for (let i = 0; i < 3; i++) {
-        if (field[0][i] === field[1][i] === field[2][i]) {
+        if (field[0][i] === field[1][i] && field[1][i] === field[2][i]) {
             for (let s = 0; s < 3; s++) {
                 renderSymbolInCell(field[0][i], s, i, '#f00')
             }
             return field[0][i];
         }
     }
+    return EMPTY;
 }
 function cellClickHandler(row, col) {
     if (!gameOver && field[row][col] == EMPTY) {
         field[row][col] = isCross() ? CROSS : ZERO;
         renderSymbolInCell(field[row][col], row, col)
         num++;
+        isWinnerWasFound();
     }
+    
     if (num === 9) {
         alert("Победила дружба");
     }
@@ -136,8 +131,10 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
-    for (let e of field) {        
-        e = EMPTY;
+    for (let i = 0; i < 3; i++) {     
+        for (let j = 0; j < 3; j++){
+            field[i][j] = EMPTY;
+        } 
     }
     gameOver = false;
     num = 0;
