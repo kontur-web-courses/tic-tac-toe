@@ -15,7 +15,6 @@ let numOfMoves = 0;
 let IsXMove = false; // false - 0, true - x
 let res = Continue;
 
-
 for (let i = 0; i < COUNT_CELLS; i++) 
    gameField[i] = EMPTY;
 
