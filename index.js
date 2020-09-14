@@ -1,7 +1,15 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-
+const SIZE = 3;
+let field = [];
+let currentMark = ZERO;
+for (let i = 0; i < SIZE; i++){
+    field[i] = [];
+    for (let j = 0; j < SIZE; j++){
+        field[i][j] = EMPTY;
+    }
+}
 const container = document.getElementById('fieldWrapper');
 
 startGame();
@@ -13,7 +21,7 @@ function startGame () {
 
 function renderGrid (dimension) {
     container.innerHTML = '';
-
+    
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
         for (let j = 0; j < dimension; j++) {
@@ -27,13 +35,100 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    if (field[row][col] === EMPTY){
+        currentMark = (currentMark === ZERO) ? CROSS : ZERO;
+        field[row][col] = currentMark;
+        renderSymbolInCell(currentMark, row, col);
+        checkStatus();
+    }
     console.log(`Clicked on cell: ${row}, ${col}`);
+}
 
+function checkStatus(){
+    if (!checkEmpty()) alert("Friendship won!");
+    if (checkHorizontals(currentMark) || checkVerticals(currentMark) || checkDiagonals(currentMark)){
+       alert(`${currentMark} won!`);
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    }
+}
+
+function checkEmpty(){
+    for (let i = 0; i < SIZE; i++){
+        for (let j = 0; j < SIZE; j++){
+            if (field[i][j] == EMPTY){
+               return true; 
+            }
+        }
+    }
+    return false;
+}
+
+function checkHorizontals(mark){
+    for (let i = 0; i < SIZE; i++){
+        let count = 0;
+        for (let j = 0; j < SIZE; j++){
+            if(field[i][j] === mark){
+                count++;
+            }
+        }
+        if (count === SIZE){
+            for (let j = 0; j < SIZE; j++){
+                renderSymbolInCell(mark, i, j, '#ff0000');
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+function checkVerticals(mark){
+    for (let i = 0; i < SIZE; i++){
+        let count = 0;
+        for (let j = 0; j < SIZE; j++){
+            if (field[j][i] === mark){
+                count++;
+            }
+        }
+        if (count === SIZE){
+            for (let j = 0; j < SIZE; j++){
+                renderSymbolInCell(mark, j, i, '#ff0000');
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+function checkDiagonals(mark){
+    let count = 0;
+    for (let i = 0; i < SIZE; i++){
+        if (field[i][i] === mark){
+            count++;
+        }
+    }
+    if (count === SIZE){
+        for (let i = 0; i < SIZE; i++){
+            renderSymbolInCell(mark, i, i, '#ff0000');
+        }
+        return true;
+    }
+    let j = SIZE - 1;
+    count = 0;
+    for (let i = 0; i < SIZE; i++){
+        if (field[i][j] === mark){
+            count++;
+        }
+        j--;
+    }
+    if (count === SIZE){
+        j = SIZE - 1;
+        for (let i = 0; i < SIZE; i++){
+            renderSymbolInCell(mark, i, j, '#ff0000');
+            j--;
+        }
+        return true;
+    }
+    return false;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -55,6 +150,12 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    for (let i = 0; i < SIZE; i++){
+        for (let j = 0; j < SIZE; j++){
+            field[i][j] = EMPTY;
+            renderSymbolInCell(EMPTY, i, j);
+        }
+    }
 }
 
 
