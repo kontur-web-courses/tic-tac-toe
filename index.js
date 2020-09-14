@@ -3,11 +3,16 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
+const map = [[,,],[,,],[,,]];
+let isOver = false;
 
 startGame();
 addResetListener();
-
+ 
 function startGame () {
+    for(let i = 0; i < 3; i++)
+        for(let j = 0; j < 3; j++)
+            map[i][j] = EMPTY;
     renderGrid(3);
 }
 
@@ -27,13 +32,80 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    if(map[row][col] !== EMPTY || isOver) {
+        console.log(map[row][col]);
+        return;
+    }
+    let countOfCross = 0;
+    let countOfZero = 0;
+    for(let column of map)
+        for(let cell of column)
+            if(cell === CROSS)
+                countOfCross++;
+            else if(cell === ZERO)
+                countOfZero++;
+    
+    map[row][col] = (countOfCross === countOfZero) ? CROSS : ZERO;
+    renderSymbolInCell(map[row][col], row, col);
+    let winner = getWinner();
+    if(winner !== null) {
+        paintWinner(winner);
+        alert(winner);
+        isOver = true;
+    }
+    else if(countOfZero + countOfCross === 8)
+        alert("Победила дружба");
     console.log(`Clicked on cell: ${row}, ${col}`);
+}
 
+function getWinner () {
+    let element = map[1][1];
+    let countOfElement = 0;
+    if(element !== EMPTY){
+        for(let i = 0; i < 3; i++)
+            if(map[i][2 - i] === element)
+                countOfElement++;
+        if(countOfElement === 3)
+            return element;
+        countOfElement = 0;
+    
+        for(let i = 0; i < 3; i++)
+            if(map[i][i] === element)
+                countOfElement++;
+        if(countOfElement === 3)
+            return element;
+    }
+    for(let i = 0; i < 3; i++) {
+        element = map[i][0];
+        if(element!==EMPTY){
+            countOfElement = 0;
+            for(let j = 0; j < 3; j++)
+                if(map[i][j] === element)
+                    countOfElement++;
+            if(countOfElement === 3)
+                return element;
+        }
+    }
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    for(let i = 0; i < 3; i++) {
+        element = map[0][i];
+        if(element!==EMPTY){
+            countOfElement = 0;
+            for(let j = 0; j < 3; j++)
+                if(map[j][i] === element)
+                    countOfElement++;
+            if(countOfElement === 3)
+                return element;
+        }
+    }
+    return null;
+}
+
+function paintWinner(winner){
+    for(let i = 0; i < 3; i++)
+        for(let j = 0; j < 3; j++)
+            if(map[i][j] === winner)
+                renderSymbolInCell(winner, i, j, "#ff0000");
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -55,6 +127,12 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    isOver = false;
+    for(let i = 0; i < 3; i++)
+        for(let j = 0; j < 3; j++){
+            map[i][j] = EMPTY;
+            renderSymbolInCell(map[i][j], i, j);
+        }
 }
 
 
