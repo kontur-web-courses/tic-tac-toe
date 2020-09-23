@@ -3,14 +3,45 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-const dimensionGame = 2;
+const dimensionGame = 3;
 let gameField = [[]];
 let clickCounter = 0;
-const possibleClickedCount = dimensionGame * dimensionGame;
+let possibleClickedCount = dimensionGame * dimensionGame;
 let checkWin = 0;
 startGame();
 addResetListener();
 
+function addField() {
+    let newDimensionGame = gameField.length + 2;
+    possibleClickedCount = newDimensionGame * newDimensionGame;
+    let newGameField = [];
+    for (let i = 0; i < newDimensionGame; i++)
+        newGameField[i] = new Array(newDimensionGame);
+    for (let i = 0; i < gameField.length; i++) {
+        for (let j = 0; j < gameField.length; j++) {
+            newGameField[i + 1][j + 1] = gameField[i][j];
+        }
+    }
+    for (let i = 0; i < newDimensionGame; i++) {
+        for (let j = 0; j < newDimensionGame; j++) {
+            if (newGameField[i][j] == null)
+                newGameField[i][j] = " ";
+        }
+    }
+    gameField = newGameField.concat();
+    container.innerHTML = '';
+    for (let i = 0; i < gameField.length; i++) {
+        const row = document.createElement('tr');
+        for (let j = 0; j < gameField.length; j++) {
+            const cell = document.createElement('td');
+            cell.textContent = gameField[i][j];
+            cell.addEventListener('click', () => cellClickHandler(i, j));
+            row.appendChild(cell);
+        }
+        container.appendChild(row);
+    }
+
+}
 
 function initGameField(dimension, gameField) {
     for (let i = 0; i < dimension; i++) {
@@ -41,7 +72,6 @@ function renderGrid(dimension) {
     }
 }
 
-let arrayZero = [];
 
 function smartPlayer() {
 
@@ -62,7 +92,7 @@ function smartPlayer() {
             let resultField = [];
             for (let i = 0; i < gameField.length; i++) {
                 if (gameField[index][i] === EMPTY) {
-                    resultField.push(index,i);
+                    resultField.push(index, i);
                     continue
                 }
                 word += gameField[index][i];
@@ -73,12 +103,13 @@ function smartPlayer() {
             } else return false;
 
         }
+
         function checkVerticalWinnerBot(index) {
             let resultField = [];
             let word = "";
             for (let i = 0; i < gameField.length; i++) {
                 if (gameField[i][index] === EMPTY) {
-                    resultField.push(i,index);
+                    resultField.push(i, index);
                     continue;
                 }
                 word += gameField[i][index];
@@ -150,6 +181,8 @@ function cellClickHandler(row, col) {
         checkWinner(gameField)
         if (clickCounter % 2 != 0 && clickCounter != possibleClickedCount)
             smartPlayer()
+        if (clickCounter > (gameField.length * gameField.length) / 2 && checkWin == 0)
+            addField()
         if (clickCounter === possibleClickedCount && checkWin === 0)
             alert("Победила дружба");
         console.log(`Clicked on cell: ${row}, ${col}`);
@@ -299,9 +332,12 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
+    possibleClickedCount = dimensionGame * dimensionGame;
+    gameField = [];
     startGame()
     clickCounter = 0;
-    checkWin = 0
+    checkWin = 0;
+
     console.log('reset!');
 }
 
