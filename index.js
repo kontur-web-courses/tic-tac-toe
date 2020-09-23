@@ -3,7 +3,7 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-const dimensionGame = 3;
+const dimensionGame = 2;
 let gameField = [[]];
 let clickCounter = 0;
 const possibleClickedCount = dimensionGame * dimensionGame;
@@ -41,20 +41,97 @@ function renderGrid(dimension) {
     }
 }
 
+let arrayZero = [];
+
 function smartPlayer() {
-    let arrayZero=[];
+
     let randomRow = Math.round(Math.random() * (gameField.length - 1));
     let randomCol = Math.round(Math.random() * (gameField.length - 1));
+    let flagTrue = checkWinBot();
     if (gameField[randomRow][randomCol] == EMPTY) {
-        cellClickHandler(randomRow, randomCol);
-        arrayZero.push([randomRow,randomCol]);
+        if (flagTrue != true)
+            cellClickHandler(randomRow, randomCol);
+
     } else {
         smartPlayer();
     }
 
     function checkWinBot() {
+        function checkHorizontalWinnerBot(index) {
+            let word = "";
+            let resultField = [];
+            for (let i = 0; i < gameField.length; i++) {
+                if (gameField[index][i] === EMPTY) {
+                    resultField.push(index,i);
+                    continue
+                }
+                word += gameField[index][i];
+            }
+            if (word === ZERO.repeat(gameField.length - 1)) {
+                cellClickHandler(resultField[0], resultField[1])
+                return true;
+            } else return false;
 
+        }
+        function checkVerticalWinnerBot(index) {
+            let resultField = [];
+            let word = "";
+            for (let i = 0; i < gameField.length; i++) {
+                if (gameField[i][index] === EMPTY) {
+                    resultField.push(i,index);
+                    continue;
+                }
+                word += gameField[i][index];
+            }
+            if (word === ZERO.repeat(gameField.length - 1)) {
+                cellClickHandler(resultField[0], resultField[1])
+                return true;
+            } else return false;
+        }
 
+        function checkFirstDiagonalWinnerBot() {
+            let word = "";
+            let resultField = [];
+            for (let i = 0; i < gameField.length; i++) {
+                if (gameField[i][i] === EMPTY) {
+                    resultField.push(i, i);
+                    continue
+                }
+                word += gameField[i][i];
+            }
+            if (word === ZERO.repeat(gameField.length - 1)) {
+                cellClickHandler(resultField[0], resultField[1])
+                return true;
+            } else return false;
+        }
+
+        function checkSecondDiagonalWinnerBot() {
+            let word = "";
+            let resultField = [];
+            let flag = gameField.length - 1;
+            for (let i = 0; i < gameField.length; i++) {
+                if (gameField[i][flag] === EMPTY) {
+                    resultField.push(i, flag);
+                    flag--;
+                    continue;
+                }
+                word += gameField[i][flag];
+                flag--;
+            }
+            if (word === ZERO.repeat(gameField.length - 1)) {
+                cellClickHandler(resultField[0], resultField[1])
+                return true;
+            } else return false;
+        }
+
+        for (let i = 0; i < gameField.length; i++) {
+            checkHorizontalWinnerBot(i)
+        }
+        for (let i = 0; i < gameField.length; i++) {
+            checkVerticalWinnerBot(i)
+        }
+        checkFirstDiagonalWinnerBot();
+        checkSecondDiagonalWinnerBot();
     }
 }
 
@@ -153,7 +230,7 @@ function checkWinner(gameField) {
         let diagonalArray = [];
         for (let i = 0; i < gameField.length; i++) {
             if (gameField[i][flag] === EMPTY) {
-                delete diagonalArray;
+                diagonalArray = [];
                 continue
             }
             secondDiagonal += gameField[i][flag];
