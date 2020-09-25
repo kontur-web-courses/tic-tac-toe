@@ -13,7 +13,39 @@
             </tbody>
         </table>
     </div>
+    <div class = 'inputDiv'>
+        <label>
+            Введите размер поля<br>
+            <input id="fieldSizeInput" type="number" placeholder="3">
+        </label>
+    </div>
+    <div class="inputDiv">
+        <p>
+            Включить ИИ?<br>
+            <label>
+                <input class = "radioInput" id="enableDumbAi" type="radio" name="dumbAi" value="dumb"> Да
+            </label><br>
+            <label>
+                <input class = "radioInput" id="enableSmartAi" type="radio" name="dumbAi" value="smart">Умный ИИ
+            </label><br>
+            <label>
+                <input class = "radioInput" type="radio" name="dumbAi" value="no" checked>Нет
+            </label>
+        </p>
+    </div>
+    <div class="inputDiv">
+        <p>Включить авторасширение поля?<br>
+            <label>
+                <input class = "radioInput" id="enableFieldExpanding" type="radio" name="expandField" value="Yes"> Да
+            </label><br>
+            <label>
+                <input class = "radioInput" type="radio" name="expandField" value="No" checked>Нет
+            </label>
+        </p>
+    </div>
+
     <div>
+        <button class="resetButton" id="start">Начать игру</button>
         <button class="resetButton" id="reset">Сначала</button>
     </div>
     <script src="index.js"></script>

@@ -51,3 +51,12 @@ body {
     border: 3px solid orange;
     border-radius: 5px;
 }
+
+.inputDiv {
+    font-size: 16px;
+    margin: auto;
+}
+
+.radioInput{
+    margin-left: 10px;
+}
