@@ -53,6 +53,7 @@ function cellClickHandler (row, col) {
     if (!endState && field[row][col] == EMPTY) {
 
         renderSymbolInCell(xTurn ? CROSS : ZERO, row, col);
+        field[row][col] = xTurn ? CROSS : ZERO;
         turnCount += 1;
 
         let modifier = xTurn ? 1 : -1;
@@ -66,7 +67,9 @@ function cellClickHandler (row, col) {
         if (dim - 1 - row == col)
             antiDiag += modifier;
         
+        // 5 - extract
         if (Math.abs(rows[row]) == dim || Math.abs(cols[col]) == dim || Math.abs(mainDiag) == dim || Math.abs(antiDiag) == dim) {
+            paintCells(xTurn);
             alert(`${xTurn ? "X" : "O"} won!`);
             endState = true;
             return;
@@ -76,17 +79,36 @@ function cellClickHandler (row, col) {
             return;
         }
 
-        xTurn = !xTurn;
-        field[row][col] = xTurn ? CROSS : ZERO;
-
         console.log(`Clicked on cell: ${row}, ${col}, Values: ${rows}, ${cols}, Diags: ${mainDiag}, ${antiDiag}`);
 
+        xTurn = !xTurn;
     }
 
 
     /* Пользоваться методом для размещения символа в клетке так:
         
      */
+}
+
+function paintCells(xWon=true, color='red') {
+    for (let i = 0; i < dim; i++) {
+        for (let j = 0; j < dim; j++) {
+            let cell = field[i][j];
+            
+            if (xWon) {
+                if (cell == CROSS)
+                    renderSymbolInCell(cell, i, j, color = color)
+                else
+                    renderSymbolInCell(cell, i, j)
+            } else {
+                if (cell == ZERO)
+                    renderSymbolInCell(cell, i, j, color = color)
+                else
+                    renderSymbolInCell(cell, i, j);
+            }
+            
+        }
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
