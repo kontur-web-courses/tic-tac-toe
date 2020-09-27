@@ -12,18 +12,18 @@ startGame();
 addResetListener();
 
 function addField() {
-    let newDimensionGame = gameField.length + 2;
-    possibleClickedCount = newDimensionGame * newDimensionGame;
+    let newDimensionField = gameField.length + 2;
+    possibleClickedCount = newDimensionField * newDimensionField;
     let newGameField = [];
-    for (let i = 0; i < newDimensionGame; i++)
-        newGameField[i] = new Array(newDimensionGame);
+    for (let i = 0; i < newDimensionField; i++)
+        newGameField[i] = new Array(newDimensionField);
     for (let i = 0; i < gameField.length; i++) {
         for (let j = 0; j < gameField.length; j++) {
             newGameField[i + 1][j + 1] = gameField[i][j];
         }
     }
-    for (let i = 0; i < newDimensionGame; i++) {
-        for (let j = 0; j < newDimensionGame; j++) {
+    for (let i = 0; i < newDimensionField; i++) {
+        for (let j = 0; j < newDimensionField; j++) {
             if (newGameField[i][j] == null)
                 newGameField[i][j] = " ";
         }
@@ -184,7 +184,7 @@ function cellClickHandler(row, col) {
         if (clickCounter > (gameField.length * gameField.length) / 2 && checkWin == 0)
             addField()
         if (clickCounter === possibleClickedCount && checkWin === 0)
-            alert("Победила дружба");
+            setTimeout(() => alert("Победила дружба"),1);
         console.log(`Clicked on cell: ${row}, ${col}`);
         console.log(gameField);
     }
@@ -197,12 +197,12 @@ function checkWinner(gameField) {
             let rowString = gameField[i].join("");
             if (rowString === CROSS.repeat(gameField.length)) {
                 paintWinningFields(rowString, i)
-                alert(`${CROSS} победил`)
+                setTimeout(() => alert(`${CROSS} победил`), 1)
                 checkWin = 1;
                 break;
             } else if (rowString === ZERO.repeat(gameField.length)) {
                 paintWinningFields(rowString, i)
-                alert(`${ZERO} победил`)
+                setTimeout(() => alert(`${ZERO} победил`), 1)
                 checkWin = 1;
                 break;
             }
@@ -220,12 +220,12 @@ function checkWinner(gameField) {
         }
         if (word === CROSS.repeat(gameField.length)) {
             paintWinningFields(gameField, index, true)
-            alert(`${CROSS} победил`)
+            setTimeout(() => alert(`${CROSS} победил`), 1)
             checkWin = 1;
             return true;
         } else if (word === ZERO.repeat(gameField.length)) {
             paintWinningFields(gameField, index, true)
-            alert(`${ZERO} победил`)
+            setTimeout(() => alert(`${ZERO} победил`),)
             checkWin = 1;
             return true;
         }
@@ -245,12 +245,12 @@ function checkWinner(gameField) {
 
         if (word === CROSS.repeat(gameField.length)) {
             paintDiagonalFields(diagonalArray)
-            alert(`${CROSS} победил`)
+            setTimeout(() => alert(`${CROSS} победил`), 1)
             checkWin = 1;
             return true;
         } else if (word === ZERO.repeat(gameField.length)) {
             paintDiagonalFields(diagonalArray)
-            alert(`${ZERO} победил`)
+            setTimeout(() => alert(`${ZERO} победил`), 1)
             checkWin = 1;
             return true;
         }
@@ -273,11 +273,11 @@ function checkWinner(gameField) {
 
         if (secondDiagonal === CROSS.repeat(gameField.length)) {
             paintDiagonalFields(diagonalArray)
-            alert(`${CROSS} победил`)
+            setTimeout(() => alert(`${CROSS} победил`), 1)
             checkWin = 1;
             return true;
         } else if (secondDiagonal === ZERO.repeat(gameField.length)) {
-            paintDiagonalFields(diagonalArray)
+            setTimeout(() => paintDiagonalFields(diagonalArray), 1)
             alert(`${ZERO} победил`)
             checkWin = 1;
             return true;
