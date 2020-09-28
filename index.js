@@ -4,14 +4,65 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+class Rule {
+    constructor(d) {
+        this.d = d;
+        this.full = new Array(2 * d + 2).fill(0);
+        this.rowIdx = 0;
+        this.colIdx = d;
+        this.mainDiagIdx = 2 * d;
+        this.antiDiagIdx = 2 * d + 1;
+    }
+
+    setValue(row, col, value) {
+        this.full[this.rowIdx + row] = value;
+        this.full[this.colIdx + col] = value;
+        if (row == col)
+            this.full[this.mainDiagIdx] = value;
+        if (this.d - 1 - row == col)
+            this.full[this.antiDiagIdx] = value;
+    }
+
+    turnChanges(row, col, modifier = 1) {
+        this.full[this.rowIdx + row] += modifier;
+        this.full[this.colIdx + col] += modifier;
+        if (row == col)
+            this.full[this.mainDiagIdx] += modifier;
+        if (this.d - 1 - row == col)
+            this.full[this.antiDiagIdx] += modifier;
+    }
+
+    isWinState(row, col) {
+        if (Math.abs(this.full[this.rowIdx + row]) == this.d || 
+        Math.abs(this.full[this.colIdx + col]) == this.d || 
+        Math.abs(this.full[this.mainDiagIdx]) == this.d || 
+        Math.abs(this.full[this.antiDiagIdx]) == this.d) {
+            return true;
+        }
+        return false;
+    }
+
+
+    findTurn(ignoreValue = Number.NEGATIVE_INFINITY) {
+        rowIdxs = [];
+        colIdxs = [];
+        usingMain = this.full[this.mainDiagIdx] != ignoreValue;
+        usingAnti = this.full[this.antiDiagIdx] != ignoreValue;
+        for (let i = 0; i < 2 * this.d; i++) {
+            if (i < this.colIdx && this.full[i] != ignoreValue)
+                rowIdxs.push(i);
+            else if (this.full[i + this.colIdx] != ignoreValue)
+                colIdxs.push(i - this.colIdx);
+        }
+    }
+}
+
+
 let field;
-let rows;
-let cols;
-let mainDiag;
-let antiDiag;
 let xTurn;
 let endState;
-
+let turnCount;
+let multiPlayerRules;
 let dim;
 
 startGame();
@@ -22,13 +73,11 @@ function startGame () {
     field = [];
     for (let i = 0; i < dim; i++)
         field.push(new Array(dim).fill(EMPTY));
-    rows = new Array(dim).fill(0);
-    cols = new Array(dim).fill(0);
+
     xTurn = true;
     endState = false;
     turnCount = 0;
-    mainDiag = 0;
-    antiDiag = 0;
+    multiPlayerRules = new Rule(dim);
     renderGrid(dim);
 }
 
@@ -49,65 +98,29 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
-
     if (!endState && field[row][col] == EMPTY) {
 
         renderSymbolInCell(xTurn ? CROSS : ZERO, row, col);
+
         field[row][col] = xTurn ? CROSS : ZERO;
+
         turnCount += 1;
 
-        let modifier = xTurn ? 1 : -1;
+        multiPlayerRules.turnChanges(row, col, xTurn ? 1 : -1);
 
-        rows[row] += modifier;
-        cols[col] += modifier;
+        endState = (multiPlayerRules.isWinState(row, col) || (turnCount == dim ** 2));
 
-        if (row == col)
-            mainDiag += modifier;
-        
-        if (dim - 1 - row == col)
-            antiDiag += modifier;
-        
-        // 5 - extract
-        if (Math.abs(rows[row]) == dim || Math.abs(cols[col]) == dim || Math.abs(mainDiag) == dim || Math.abs(antiDiag) == dim) {
-            paintCells(xTurn);
-            alert(`${xTurn ? "X" : "O"} won!`);
-            endState = true;
-            return;
-        } else if (turnCount == dim ** 2) {
-            alert("Friendship won!");
-            endState = true;
+        if (endState) {
+            if (multiPlayerRules.isWinState(row, col))
+                alert(`${xTurn ? "X" : "O"} won!`);
+                //paint here
+            else
+                alert("DRAW!");
             return;
         }
-
-        console.log(`Clicked on cell: ${row}, ${col}, Values: ${rows}, ${cols}, Diags: ${mainDiag}, ${antiDiag}`);
 
         xTurn = !xTurn;
-    }
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        
-     */
-}
-
-function paintCells(xWon=true, color='red') {
-    for (let i = 0; i < dim; i++) {
-        for (let j = 0; j < dim; j++) {
-            let cell = field[i][j];
-            
-            if (xWon) {
-                if (cell == CROSS)
-                    renderSymbolInCell(cell, i, j, color = color)
-                else
-                    renderSymbolInCell(cell, i, j)
-            } else {
-                if (cell == ZERO)
-                    renderSymbolInCell(cell, i, j, color = color)
-                else
-                    renderSymbolInCell(cell, i, j);
-            }
-            
-        }
+        // console.log(endState, multiPlayerRules.full, row, col)
     }
 }
 
