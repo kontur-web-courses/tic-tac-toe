@@ -1,7 +1,11 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-
+let i = 0
+let moves = ''
+let steps = 0
+let crosssteps = ''
+let zerosteps = ''
 const container = document.getElementById('fieldWrapper');
 
 startGame();
@@ -9,6 +13,10 @@ addResetListener();
 
 function startGame () {
     renderGrid(3);
+    moves = ''
+    crosssteps = ''
+    zerosteps = ''
+    i = 0
 }
 
 function renderGrid (dimension) {
@@ -27,18 +35,43 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    console.log(`Clicked on cell: ${row}, ${col}`)
+    let flag = false
+    let arr = String(row) + String (col)
+    for (let j = 0; j < moves.length+2;j+=2)
+        if (moves.slice(j, j + 2) === arr)
+            flag = true
+    if (!flag)
+    {
+        moves+=arr
+        if (i % 2 === 0)
+        {
+            renderSymbolInCell(ZERO, row, col)
+            zerosteps = String(row) + String (col)
+            if (zerosteps.length>=6)
+                if(checkForWin(zerosteps))
+                    alert('КРУГЛЫЙ ПОБЕДИЛ')
+        }
+        else
+        {
+            renderSymbolInCell(CROSS, row,col)
+            crosssteps = String(row) + String(col)
+            if (crosssteps.length>=6)
+                if (checkForWin(crosssteps))
+                    alert('КРЕСТОВЫЙ ПОБЕДИЛ')
+        }
+        i++
+        steps++
+    }
+    if (steps===9)
+        alert('Победила дружба')
 }
+function checkForWin(checkingSteps)
+{
 
+}
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
-
     targetCell.textContent = symbol;
     targetCell.style.color = color;
 }
@@ -55,6 +88,8 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    mainArray = []
+    startGame()
 }
 
 
