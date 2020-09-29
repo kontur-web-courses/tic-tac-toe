@@ -2,13 +2,25 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
+let player = 0;
+let dim;
+let field;
+let win = false;
 const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    dim = Number(prompt("Введите длину поля: ", 3));
+    field = [];
+    for (let i = 0; i < dim; i++) {
+        field[i] = [];
+        for (let j = 0; j < dim; j++) {
+            field[i][j] = '-';
+        }
+   }
+    renderGrid(dim);
 }
 
 function renderGrid (dimension) {
@@ -28,12 +40,149 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
+    let winner = checkWinner();
+    if(winner != "-")
+    {
+        player = 0;
+        alert("Победитель: " + winner);
+    }
+    if(field[row][col] == '-' && winner == "-")
+    {
+        if(player%2==0)
+        {
+            renderSymbolInCell(CROSS, row, col);
+            field[row][col] = 1;
+        }
+        else
+        {
+            renderSymbolInCell(ZERO, row, col);
+            field[row][col] = 4;
+        }
+        player++;
+        if(isOver(field))
+            alert("Победила дружба");
+    }
+    if(player %2 != 0)
+        getRandom();
     console.log(`Clicked on cell: ${row}, ${col}`);
+}
 
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+
+function checkWinner()
+{
+    let sum =  0;
+    for (let i = 0; i < field.length; i++) 
+    { 
+        for(let j = 0; j < field.length; j++) 
+        {
+            sum+= field[j][i];
+        }
+
+        if(sum == field.length)
+        {
+            for(let j = 0; j < field.length; j++) 
+            {
+                makeRed(j, i, CROSS);
+            }
+          
+            return CROSS;
+        }
+        else
+            if (sum == field.length*4) 
+                { 
+                    for(let j = 0; j < field.length; j++) 
+                    {
+                        makeRed(j, i, ZERO);
+                    }
+                    return ZERO;
+                }
+        sum =  0
+    }
+        
+     for (let i = 0; i < field.length; i++) 
+    {  
+        sum = 0;
+        for(let j = 0; j < field.length; j++) 
+        {
+            sum+= field[i][j];
+        }
+
+        if(sum == field.length)
+        {
+            for(let j = 0; j < field.length; j++) 
+            {
+                makeRed(i, j, CROSS);
+            }
+            return CROSS;
+        }
+        else
+            if (sum == field.length*4) 
+                { 
+                    for(let j = 0; j < field.length; j++) 
+                    {
+                        makeRed(i, j, ZERO);
+                    }
+                    return ZERO;
+                }
+    }
+    
+    sum = 0;
+    for(let j = 0; j < field.length; j++) 
+    {
+        sum+= field[j][j];
+    }
+
+       if (sum == field.length) 
+        {
+            for(let j = 0; j < field.length; j++) 
+            {
+                makeRed(j, j, CROSS);
+            }
+            return CROSS;
+        }
+        else
+            if (sum == field.length*4) 
+            {
+                for(let j = 0; j < field.length; j++) 
+                {
+                    makeRed(j, j, ZERO);
+                }
+                return ZERO;
+            }   
+              
+    sum = 0;
+    for(let i = 0; i < field.length; i++) 
+        sum+=field[i][field.length-i-1];
+    
+    if(sum == field.length)
+    {
+        for(let i = 0; i < field.length; i++) 
+            makeRed(i, field.length-i-1, CROSS); 
+        return CROSS;
+    }
+
+        else
+        if(sum == field.length*4) 
+            {
+                for(let i = 0; i < field.length; i++) 
+                    makeRed(i, field.length-i-1, ZERO); 
+                return ZERO;
+            } 
+        return "-";
+}
+
+function makeRed(x, y, value)
+{
+    renderSymbolInCell(value, x, y, "#FF0000");
+
+}
+
+function isOver(arr)
+{
+    const sum = arr => arr.reduce((res, el) => res + (Array.isArray(el) ? sum(el) : el), 0);
+    if(sum(arr)>8)
+        return true;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -54,7 +203,21 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    for(let i=0; i<field.length; i++)
+        for(let j=0; j<field.length; j++)
+            {
+                renderSymbolInCell(EMPTY, i, j);
+                field[i][j] = "-";
+            }
     console.log('reset!');
+}
+ 
+//вывод случайного числа
+function getRandom()
+{    
+    let x = Math.floor(Math.random() * field.length);
+    let y = Math.floor(Math.random() * field.length);
+    cellClickHandler (x, y);
 }
 
 
