@@ -147,13 +147,17 @@ function cellClickHandler (row, col) {
 }
 
 function AI (field) {
-    let obj = {x:getRandomInt(3), y:getRandomInt(3)}
+    let obj = {x:getRandomInt(dimension), y:getRandomInt(dimension)}
     if (field[obj.x][obj.y] != EMPTY){
         return AI(field);
     }
     else {
         return obj;
     } 
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
 }
 
 function brush (cells){
@@ -184,9 +188,7 @@ function resetClickHandler () {
     console.log('reset!');
 }
 
-function getRandomInt(max) {
-    return Math.floor(Math.random() * Math.floor(max));
-  }
+
 
 /* Test Function */
 /* Победа первого игрока */
