@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <input id="input" type="text" placeholder="Доска NxN. Введите N">
     <div class="container">
         <table class="table">
             <tbody id="fieldWrapper">
@@ -15,6 +16,11 @@
     </div>
     <div>
         <button class="resetButton" id="reset">Сначала</button>
+    </div>
+    <div class="settings">
+        <input type="checkbox" id="doUpgradeGrid" checked="checked">увеличивать доску<br>
+        <input type="checkbox" id="isAIOn" checked="checked">подключить ИИ<br>
+        <input type="checkbox" id="isAIClever" checked="checked">сделать ИИ умнее<br>
     </div>
     <script src="index.js"></script>
 </body>
