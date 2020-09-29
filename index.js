@@ -1,13 +1,17 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-let i = 0
+let whoIsStepping = 0
 let moves = ''
 let steps = 0
 let crosssteps = ''
 let zerosteps = ''
+let endOfGameFlag = false
+let xWinline = ''
+let oWinLine = ''
+let oFlag = false
 const container = document.getElementById('fieldWrapper');
-
+const winCombinationsArray = ['001020', '011121', '021222', '000102', '101112', '202122', '001122', '201102']
 startGame();
 addResetListener();
 
@@ -16,7 +20,12 @@ function startGame () {
     moves = ''
     crosssteps = ''
     zerosteps = ''
-    i = 0
+    steps = 0
+    whoIsStepping = 0
+    endOfGameFlag = false
+    xWinline = ''
+    oWinLine = ''
+    oFlag = false
 }
 
 function renderGrid (dimension) {
@@ -35,40 +44,72 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
+    if (endOfGameFlag)
+        return
     console.log(`Clicked on cell: ${row}, ${col}`)
-    let flag = false
+    let makeStep = false
     let arr = String(row) + String (col)
     for (let j = 0; j < moves.length+2;j+=2)
         if (moves.slice(j, j + 2) === arr)
-            flag = true
-    if (!flag)
+            makeStep = true
+    if (!makeStep)
     {
         moves+=arr
-        if (i % 2 === 0)
+        if (whoIsStepping % 2 === 0)
         {
             renderSymbolInCell(ZERO, row, col)
-            zerosteps = String(row) + String (col)
+            zerosteps += String(row) + String (col)
+            oFlag = true
             if (zerosteps.length>=6)
-                if(checkForWin(zerosteps))
+                if(checkForWin(zerosteps, oWinLine)){
+                    for (let i = 0; i < oWinLine.length; i+=2)
+                        renderSymbolInCell(ZERO,oWinLine[i], oWinLine[i+1], '#FF0000')
                     alert('КРУГЛЫЙ ПОБЕДИЛ')
+                    endOfGameFlag = true}
         }
         else
         {
             renderSymbolInCell(CROSS, row,col)
-            crosssteps = String(row) + String(col)
+            crosssteps += String(row) + String(col)
+            oFlag = false
             if (crosssteps.length>=6)
-                if (checkForWin(crosssteps))
+                if (checkForWin(crosssteps, xWinline)){
+                    for (let i = 0; i < xWinline.length; i+=2)
+                        renderSymbolInCell(CROSS, xWinline[i], xWinline[i+1], '#FF0000')
                     alert('КРЕСТОВЫЙ ПОБЕДИЛ')
+                    endOfGameFlag = true}
         }
-        i++
+        whoIsStepping++
         steps++
     }
     if (steps===9)
         alert('Победила дружба')
 }
-function checkForWin(checkingSteps)
+function checkForWin(checkingSteps, winArr)
 {
+    let winCount = 0
+    winArr = ''
+    for (let i = 0; i < winCombinationsArray.length; i++)
+        for (let z = 0; z < checkingSteps.length; z+=2)
+            for (let j = 0; j < checkingSteps.length; j += 2)
+            {
+                if (winCombinationsArray[i].slice(j, j + 2).includes(checkingSteps.slice(z, z + 2)))
+                {
+                    winArr += checkingSteps.slice(z, z + 2)
+                    winCount++
+                    if (winCount === 3) {
+                        oFlag ? oWinLine = winArr : xWinline = winArr
+                        return true
+                    }
+                }
+                if (z === checkingSteps.length - 2 && winCount !== 3)
+                {
+                    winArr = ''
+                    winCount = 0
+                }
 
+    }
+    return false
 }
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
