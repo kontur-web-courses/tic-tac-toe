@@ -19,12 +19,17 @@ body {
     min-width: 20px;
     height: 28px;
     padding: 20px;
+    margin: 2px;
     font-size: 24px;
+    color:#333;
     font-family: "Consolas", monospace;
     text-align: center;
     border: 1px solid #333;
     cursor: pointer;
+    background: lightgoldenrodyellow;
 }
+
+.table td:hover { background: palegoldenrod;}
 
 .table tr:first-child td {
     border-top-color: transparent;
