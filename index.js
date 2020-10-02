@@ -24,6 +24,7 @@ addResetListener();
 
 function startGame() {
     gridSize = parseInt(prompt("Введите размер поля", "3")) || 3;
+    gridSize = gridSize >= 3 ? gridSize : 3;
     gameStatus = NOT_FINISHED;
     cellsCount = gridSize ** 2;
     filledCellsCount = 0;
