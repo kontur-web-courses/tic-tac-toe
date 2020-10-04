@@ -42,6 +42,16 @@ body {
     border-right-color: transparent;
 }
 
+.inputDimensions {
+    position: static;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    width: 15em;
+    text-align: center;
+    border: solid orange 1px;
+}
+
 .resetButton {
     display: block;
     margin: 20px auto;
