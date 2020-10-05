@@ -8,7 +8,7 @@ const DRAW = CROSS + ZERO;
 const NOT_FINISHED = " ";
 
 const container = document.getElementById("fieldWrapper");
-let currentSymbol = undefined;
+let currSymbol = undefined;
 let field = undefined;
 let gridSize = 3;
 let cellsCount = gridSize ** 2;
@@ -34,7 +34,7 @@ function startGame() {
     gameStatus = NOT_FINISHED;
     cellsCount = gridSize ** 2;
     filledCellsCount = 0;
-    currentSymbol = CROSS;
+    currSymbol = CROSS;
     field = Array(gridSize).fill().map(() => Array(gridSize).fill(EMPTY));
     console.log(field);
     renderGrid(gridSize);
@@ -54,14 +54,19 @@ function renderGrid(dimension) {
     }
 }
 
+function getSymbol(row, col) {
+    if (row >= 0 && row < gridSize && col >= 0 && col < gridSize)
+        return field[row][col];
+    return EMPTY;
+}
+
 function canMakeMove(row, col) {
     return gameStatus === NOT_FINISHED && field[row][col] === EMPTY;
 }
 
 function makeMove(row, col) {
-    field[row][col] = currentSymbol;
-    renderSymbolInCell(currentSymbol, row, col);
-    currentSymbol = currentSymbol === CROSS ? ZERO : CROSS;
+    field[row][col] = currSymbol;
+    renderSymbolInCell(currSymbol, row, col);
     filledCellsCount++;
 }
 
@@ -76,55 +81,38 @@ function checkDraw(currentGameStatus) {
 }
 
 function checkWin(gameStatus) {
-    gameStatus = checkLines(gameStatus, true);
-    gameStatus = checkLines(gameStatus, false);
-    gameStatus = checkDiagonal(gameStatus, true);
-    gameStatus = checkDiagonal(gameStatus, false);
-    return gameStatus;
-}
+    for (let row = 0; row < gridSize; row++) {
+        for (let col = 0; col < gridSize; col++) {
+            if (field[row][col] !== currSymbol)
+                continue;
 
-function colorizeWinLine(index, isHorizontal) {
-    for (let j = 0; j < gridSize; j++) {
-        if (isHorizontal)
-            colorizeCell("#CD5C5C", index, j);
-        else
-            colorizeCell("#CD5C5C", j, index);
-    }
-}
+            if (getSymbol(row - 1, col - 1) === currSymbol && getSymbol(row + 1, col + 1) === currSymbol) {
+                colorizeWinLine(row - 1, col - 1, 1, 1);
+                return currSymbol;
+            }
 
-function colorizeWinDiagonal(isMainDiagonal) {
-    for (let i = 0; i < gridSize; i++)
-        colorizeCell("#CD5C5C", i, isMainDiagonal ? i : gridSize - 1 - i);
-}
+            if (getSymbol(row - 1, col + 1) === currSymbol && getSymbol(row + 1, col - 1) === currSymbol) {
+                colorizeWinLine(row - 1, col + 1, 1, -1);
+                return currSymbol;
+            }
 
-function checkLines(gameStatus, isHorizontal) {
-    for (let i = 0; i < gridSize; i++) {
-        let symbol = isHorizontal ? field[i][0] : field[0][i];
-        if (symbol === EMPTY) continue;
-        let isWin = true;
-        for (let j = 1; j < gridSize && isWin; j++) {
-            let nextSymbol = isHorizontal ? field[i][j] : field[j][i];
-            if (nextSymbol !== symbol) isWin = false;
-        }
-        if (isWin) {
-            colorizeWinLine(i, isHorizontal);
-            return symbol;
+            if (getSymbol(row - 1, col) === currSymbol && getSymbol(+row + 1, col) === currSymbol) {
+                colorizeWinLine(row - 1, col, 1, 0);
+                return currSymbol;
+            }
+
+            if (getSymbol(row, col - 1) === currSymbol && getSymbol(row, col + 1) === currSymbol) {
+                colorizeWinLine(row, col - 1, 0, 1);
+                return currSymbol;
+            }
         }
     }
     return gameStatus;
 }
 
-function checkDiagonal(gameStatus, isMainDiagonal) {
-    let symbol = isMainDiagonal ? field[0][0] : field[0][gridSize - 1];
-    if (symbol === EMPTY) return gameStatus;
-    let isWin = true;
-    for (let i = 1; i < gridSize && isWin; i++) {
-        let nextSymbol = isMainDiagonal ? field[i][i] : field[i][gridSize - 1 - i];
-        if (nextSymbol !== symbol) isWin = false;
-    }
-    if (isWin)
-        colorizeWinDiagonal(isMainDiagonal);
-    return isWin ? symbol : gameStatus;
+function colorizeWinLine(startRow, startCol, rowShift, colShift) {
+    for (let i = 0; i < 3; i++)
+        colorizeCell("#CD5C5C", startRow + rowShift * i, startCol + colShift * i);
 }
 
 function cellClickHandler(row, col) {
@@ -134,6 +122,7 @@ function cellClickHandler(row, col) {
         gameStatus = updateGameStatus(gameStatus);
         if (gameStatus !== NOT_FINISHED)
             alert(gameStatus); //todo replace alert with changing elements in layout
+        currSymbol = currSymbol === CROSS ? ZERO : CROSS;
     }
 }
 
