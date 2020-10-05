@@ -18,7 +18,6 @@ let gameStatus = NOT_FINISHED;
 
 startGame();
 addResetListener();
-
 function addResetListener() {
     const resetButton = document.getElementById("reset");
     resetButton.addEventListener("click", resetClickHandler);
@@ -46,7 +45,7 @@ function renderGrid(dimension) {
         const row = document.createElement("tr");
         for (let j = 0; j < dimension; j++) {
             const cell = document.createElement("td");
-            cell.textContent = EMPTY;
+            cell.textContent = getSymbol(i, j);
             cell.addEventListener("click", () => cellClickHandler(i, j));
             row.appendChild(cell);
         }
@@ -117,13 +116,27 @@ function colorizeWinLine(startRow, startCol, rowShift, colShift) {
 
 function cellClickHandler(row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
+
     if (canMakeMove(row, col)) {
         makeMove(row, col);
         gameStatus = updateGameStatus(gameStatus);
         if (gameStatus !== NOT_FINISHED)
             alert(gameStatus); //todo replace alert with changing elements in layout
-        currSymbol = currSymbol === CROSS ? ZERO : CROSS;
+        else {
+            expandFieldIfNeeded();
+            currSymbol = currSymbol === CROSS ? ZERO : CROSS;
+        }
     }
+}
+
+function expandFieldIfNeeded() {
+    if ((filledCellsCount / cellsCount).toFixed(1) < 0.5)
+        return;
+    gridSize++;
+    cellsCount = gridSize ** 2;
+    field.forEach(row => row.push(EMPTY));
+    field.push(Array(gridSize).fill(EMPTY));
+    renderGrid(gridSize);
 }
 
 function renderSymbolInCell(symbol, row, col) {
