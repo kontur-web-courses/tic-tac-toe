@@ -1,11 +1,31 @@
 // symbol
-const CROSS = "X";
-const ZERO = "O";
+const CROSS = "X";  // player symbol
+const ZERO = "O";  // ai symbol
 const EMPTY = " ";
 
 // extra game status
 const DRAW = CROSS + ZERO;
 const NOT_FINISHED = " ";
+
+const AI_CLOSE_CELLS = [
+    {f_row_shift: 0, f_col_shift: 1, s_row_shift: 0, s_col_shift: 2},//'^00' row
+    {f_row_shift: 0, f_col_shift: -1, s_row_shift: 0, s_col_shift: 1},//'0^0' row
+    {f_row_shift: 0, f_col_shift: -2, s_row_shift: 0, s_col_shift: -1},//'00^' row
+
+    {f_row_shift: 1, f_col_shift: 0, s_row_shift: 2, s_col_shift: 0},//'^00' col
+    {f_row_shift: -1, f_col_shift: 0, s_row_shift: 1, s_col_shift: 0},//'0^0' col
+    {f_row_shift: -2, f_col_shift: 0, s_row_shift: -1, s_col_shift: 0},//'00^' col
+
+    {f_row_shift: 1, f_col_shift: 1, s_row_shift: 2, s_col_shift: 2},//'^00' main diag
+    {f_row_shift: -1, f_col_shift: -1, s_row_shift: 1, s_col_shift: 1},//'0^0' main diag
+    {f_row_shift: -2, f_col_shift: -2, s_row_shift: -1, s_col_shift: -1},//'00^' main diag
+
+    {f_row_shift: -1, f_col_shift: 1, s_row_shift: -2, s_col_shift: 2},//'^00' side diag
+    {f_row_shift: 1, f_col_shift: -1, s_row_shift: -1, s_col_shift: 1},//'0^0' side diag
+    {f_row_shift: 2, f_col_shift: -2, s_row_shift: 1, s_col_shift: -1},//'00^' side diag
+];
+
+const ALERT_TEXT=new Map([[DRAW,"Победила дружба"], [CROSS,"Победили крестики"], [ZERO,"Победили нолики"]]);
 
 const container = document.getElementById("fieldWrapper");
 let currSymbol = undefined;
@@ -18,6 +38,7 @@ let gameStatus = NOT_FINISHED;
 
 startGame();
 addResetListener();
+
 function addResetListener() {
     const resetButton = document.getElementById("reset");
     resetButton.addEventListener("click", resetClickHandler);
@@ -60,7 +81,7 @@ function getSymbol(row, col) {
 }
 
 function canMakeMove(row, col) {
-    return gameStatus === NOT_FINISHED && field[row][col] === EMPTY;
+    return gameStatus === NOT_FINISHED && field[row][col] === EMPTY && currSymbol === CROSS;
 }
 
 function makeMove(row, col) {
@@ -72,6 +93,8 @@ function makeMove(row, col) {
 function updateGameStatus(gameStatus) {
     gameStatus = checkDraw(gameStatus);
     gameStatus = checkWin(gameStatus);
+    if (gameStatus !== NOT_FINISHED)
+        alert(ALERT_TEXT.get(gameStatus));
     return gameStatus;
 }
 
@@ -95,7 +118,7 @@ function checkWin(gameStatus) {
                 return currSymbol;
             }
 
-            if (getSymbol(row - 1, col) === currSymbol && getSymbol(+row + 1, col) === currSymbol) {
+            if (getSymbol(row - 1, col) === currSymbol && getSymbol(row + 1, col) === currSymbol) {
                 colorizeWinLine(row - 1, col, 1, 0);
                 return currSymbol;
             }
@@ -114,18 +137,60 @@ function colorizeWinLine(startRow, startCol, rowShift, colShift) {
         colorizeCell("#CD5C5C", startRow + rowShift * i, startCol + colShift * i);
 }
 
+function makeRandomMoveAI() {
+    console.log("RANDOM");
+    let row, col;
+    do {
+        row = Math.floor(Math.random() * gridSize);
+        col = Math.floor(Math.random() * gridSize);
+    } while (field[row][col] !== EMPTY);
+    console.log(`random: ${row},${col}`);
+    makeMove(row, col);
+}
+
+function makeMoveAI() {
+    let isSmartMoveMade = makeSmartMoveAI();
+    if (!isSmartMoveMade)
+        makeRandomMoveAI();
+}
+
+// returns true if smart move possible, returns false if not
+function makeSmartMoveAI() {
+    let isSmartMoveMade = false;
+    for (let row = 0; row < gridSize && !isSmartMoveMade; row++) {
+        for (let col = 0; col < gridSize && !isSmartMoveMade; col++) {
+            if (field[row][col] !== EMPTY)
+                continue;
+
+            isSmartMoveMade = AI_CLOSE_CELLS.some(shifts => {
+                    if (getSymbol(row - shifts.f_row_shift, col - shifts.f_col_shift) === currSymbol
+                        && getSymbol(row - shifts.s_row_shift, col - shifts.s_col_shift) === currSymbol) {
+                        makeMove(row, col);
+                        return true;
+                    }
+                }
+            );
+        }
+    }
+    return isSmartMoveMade;
+}
+
 function cellClickHandler(row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
 
     if (canMakeMove(row, col)) {
         makeMove(row, col);
         gameStatus = updateGameStatus(gameStatus);
+        currSymbol = currSymbol === CROSS ? ZERO : CROSS;
         if (gameStatus !== NOT_FINISHED)
-            alert(gameStatus); //todo replace alert with changing elements in layout
-        else {
-            expandFieldIfNeeded();
-            currSymbol = currSymbol === CROSS ? ZERO : CROSS;
-        }
+            return;
+        expandFieldIfNeeded();
+        makeMoveAI();
+        gameStatus = updateGameStatus(gameStatus);
+        currSymbol = currSymbol === CROSS ? ZERO : CROSS;
+        if (gameStatus !== NOT_FINISHED)
+            return;
+        expandFieldIfNeeded();
     }
 }
 
