@@ -3,9 +3,7 @@ const CROSS = "X";
 const ZERO = "O";
 const EMPTY = " ";
 
-// game status
-const CROSS_WIN = CROSS;
-const ZERO_WIN = ZERO;
+// extra game status
 const DRAW = CROSS + ZERO;
 const NOT_FINISHED = " ";
 
@@ -17,10 +15,18 @@ let cellsCount = gridSize ** 2;
 let filledCellsCount = 0;
 let gameStatus = NOT_FINISHED;
 
+
 startGame();
 addResetListener();
 
-//testWin();
+function addResetListener() {
+    const resetButton = document.getElementById("reset");
+    resetButton.addEventListener("click", resetClickHandler);
+}
+
+function resetClickHandler() {
+    startGame();
+}
 
 function startGame() {
     gridSize = parseInt(prompt("Введите размер поля", "3")) || 3;
@@ -145,15 +151,6 @@ function colorizeCell(color, row, col) {
 function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
-}
-
-function addResetListener() {
-    const resetButton = document.getElementById("reset");
-    resetButton.addEventListener("click", resetClickHandler);
-}
-
-function resetClickHandler() {
-    startGame();
 }
 
 
