@@ -1,14 +1,29 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let field =[];
+let player = CROSS;
+let freeCells;
+let dimension;
+let win = false;
 
 const container = document.getElementById('fieldWrapper');
 
 startGame();
+dimension = +prompt('Введите размерность поля','3');
+startGame(dimension);
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(dimension);
+    freeCells = dimension ** 2;
+    //field = [[EMPTY, EMPTY, EMPTY],[EMPTY, EMPTY, EMPTY],[EMPTY, EMPTY, EMPTY]];
+
+    for (let i = 0; i < dimension; i++) {
+        let rows = [];
+        rows.length = dimension;
+        rows.fill(EMPTY,0,dimension);
+        field.push(rows);
 }
 
 function renderGrid (dimension) {
@@ -27,15 +42,100 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
+    // Пиши код 
+    if(field[row][col] !== EMPTY)
+        return;
+    //console.log(`Clicked on cell: ${row}, ${col}`);
+    renderSymbolInCell(player, row, col);
+    field[row][col] = player;
+    
+    if (--freeCells <= 0){
+        alert('Победила дружба!');
+    };
+    
+    let count = 0;
+    let cells = [];
+    for (let i = 0; i < dimension;i++){
+        for (let j = 0; j < dimension;j++){
+            if (field[i][j] === player){
+                count++;
+                if (count === dimension){
+                    alert('Победил ' + player);
+                    return;
+                }
+            }
+            else {
+                count = 0;
+            }
+        }
+    }
 
+    for (let i = 0; i< dimension;i++){
+        for (let j = 0; j < dimension;j++){
+            if (field[j][i] === player){
+                count++;
+                if (count === dimension){
+                    alert('Победил ' + player);
+                    return;
+                }
+            }
+            else {
+                count = 0;
+            }
+        }
+    }
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    for (let i = 0; i< dimension;i++){
+        for (let j = 0; j < dimension;j++){
+            if (i === j){
+                if (field[i][j] === player){
+                    count++;
+                    if (count === dimension){
+                        alert('Победил ' + player);
+                        return;
+                    }
+                }
+                else {
+                    count = 0;
+                }
+            }
+            
+        }
+    }
+
+    for (let i = 0; i< dimension;i++){
+        for (let j = 0; j < dimension;j++){
+            if (Math.abs(i-dimension - 1) === j){
+                if (field[i][j] === player){
+                    let obj = {x:i, y:j};
+                    cells.push(obj);
+                    if (cells.length === dimension){
+                        alert('Победил ' + player);
+                        brush(cells);                        
+                        return;
+                    }
+                }
+                else {
+                    cells.length = 0;
+                }
+            }
+        }
+    }
+
+    
+
+    if (player === CROSS){
+        player = ZERO;        
+    }
+    else{
+        player = CROSS;
+    }
 }
-
+function brush (cells){
+    for(var i of cells){
+        renderSymbolInCell(player, i.x, i.y, 'red');
+    }
+}
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
@@ -54,6 +154,7 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    startGame();
     console.log('reset!');
 }
 
