@@ -7,25 +7,32 @@ const EMPTY = " ";
 const DRAW = CROSS + ZERO;
 const NOT_FINISHED = " ";
 
-const AI_CLOSE_CELLS = [
-    {f_row_shift: 0, f_col_shift: 1, s_row_shift: 0, s_col_shift: 2},//'^00' row
-    {f_row_shift: 0, f_col_shift: -1, s_row_shift: 0, s_col_shift: 1},//'0^0' row
-    {f_row_shift: 0, f_col_shift: -2, s_row_shift: 0, s_col_shift: -1},//'00^' row
-
-    {f_row_shift: 1, f_col_shift: 0, s_row_shift: 2, s_col_shift: 0},//'^00' col
-    {f_row_shift: -1, f_col_shift: 0, s_row_shift: 1, s_col_shift: 0},//'0^0' col
-    {f_row_shift: -2, f_col_shift: 0, s_row_shift: -1, s_col_shift: 0},//'00^' col
-
-    {f_row_shift: 1, f_col_shift: 1, s_row_shift: 2, s_col_shift: 2},//'^00' main diag
-    {f_row_shift: -1, f_col_shift: -1, s_row_shift: 1, s_col_shift: 1},//'0^0' main diag
-    {f_row_shift: -2, f_col_shift: -2, s_row_shift: -1, s_col_shift: -1},//'00^' main diag
-
-    {f_row_shift: -1, f_col_shift: 1, s_row_shift: -2, s_col_shift: 2},//'^00' side diag
-    {f_row_shift: 1, f_col_shift: -1, s_row_shift: -1, s_col_shift: 1},//'0^0' side diag
-    {f_row_shift: 2, f_col_shift: -2, s_row_shift: 1, s_col_shift: -1},//'00^' side diag
+const WIN_CHECK_MATRIX = [
+    {first_row: 0, first_col: -1, second_row: 0, second_col: 1, row_shift: 0, col_shift: 1},//'0^0' row
+    {first_row: -1, first_col: 0, second_row: 1, second_col: 0, row_shift: 1, col_shift: 0},//'0^0' col
+    {first_row: -1, first_col: -1, second_row: 1, second_col: 1, row_shift: 1, col_shift: 1},//'0^0' main diag
+    {first_row: 1, first_col: -1, second_row: -1, second_col: 1, row_shift: -1, col_shift: 1},//'0^0' side diag
 ];
 
-const ALERT_TEXT=new Map([[DRAW,"Победила дружба"], [CROSS,"Победили крестики"], [ZERO,"Победили нолики"]]);
+const AI_SMART_MOVE_MATRIX = [
+    {first_row: 0, first_col: 1, second_row: 0, second_col: 2},//'^00' row
+    {first_row: 0, first_col: -1, second_row: 0, second_col: 1},//'0^0' row
+    {first_row: 0, first_col: -2, second_row: 0, second_col: -1},//'00^' row
+
+    {first_row: 1, first_col: 0, second_row: 2, second_col: 0},//'^00' col
+    {first_row: -1, first_col: 0, second_row: 1, second_col: 0},//'0^0' col
+    {first_row: -2, first_col: 0, second_row: -1, second_col: 0},//'00^' col
+
+    {first_row: 1, first_col: 1, second_row: 2, second_col: 2},//'^00' main diag
+    {first_row: -1, first_col: -1, second_row: 1, second_col: 1},//'0^0' main diag
+    {first_row: -2, first_col: -2, second_row: -1, second_col: -1},//'00^' main diag
+
+    {first_row: -1, first_col: 1, second_row: -2, second_col: 2},//'^00' side diag
+    {first_row: 1, first_col: -1, second_row: -1, second_col: 1},//'0^0' side diag
+    {first_row: 2, first_col: -2, second_row: 1, second_col: -1},//'00^' side diag
+];
+
+const ALERT_TEXT = new Map([[DRAW, "Победила дружба"], [CROSS, "Победили крестики"], [ZERO, "Победили нолики"]]);
 
 const container = document.getElementById("fieldWrapper");
 let currSymbol = undefined;
@@ -108,25 +115,16 @@ function checkWin(gameStatus) {
             if (field[row][col] !== currSymbol)
                 continue;
 
-            if (getSymbol(row - 1, col - 1) === currSymbol && getSymbol(row + 1, col + 1) === currSymbol) {
-                colorizeWinLine(row - 1, col - 1, 1, 1);
+            let isWin = WIN_CHECK_MATRIX.some(s => {
+                    if (getSymbol(row + s.first_row, col + s.first_col) === currSymbol
+                        && getSymbol(row + s.second_row, col + s.second_col) === currSymbol) {
+                        colorizeWinLine(row + s.first_row, col + s.first_col, s.row_shift, s.col_shift);
+                        return true;
+                    }
+                }
+            );
+            if (isWin)
                 return currSymbol;
-            }
-
-            if (getSymbol(row - 1, col + 1) === currSymbol && getSymbol(row + 1, col - 1) === currSymbol) {
-                colorizeWinLine(row - 1, col + 1, 1, -1);
-                return currSymbol;
-            }
-
-            if (getSymbol(row - 1, col) === currSymbol && getSymbol(row + 1, col) === currSymbol) {
-                colorizeWinLine(row - 1, col, 1, 0);
-                return currSymbol;
-            }
-
-            if (getSymbol(row, col - 1) === currSymbol && getSymbol(row, col + 1) === currSymbol) {
-                colorizeWinLine(row, col - 1, 0, 1);
-                return currSymbol;
-            }
         }
     }
     return gameStatus;
@@ -138,13 +136,11 @@ function colorizeWinLine(startRow, startCol, rowShift, colShift) {
 }
 
 function makeRandomMoveAI() {
-    console.log("RANDOM");
     let row, col;
     do {
         row = Math.floor(Math.random() * gridSize);
         col = Math.floor(Math.random() * gridSize);
     } while (field[row][col] !== EMPTY);
-    console.log(`random: ${row},${col}`);
     makeMove(row, col);
 }
 
@@ -161,10 +157,9 @@ function makeSmartMoveAI() {
         for (let col = 0; col < gridSize && !isSmartMoveMade; col++) {
             if (field[row][col] !== EMPTY)
                 continue;
-
-            isSmartMoveMade = AI_CLOSE_CELLS.some(shifts => {
-                    if (getSymbol(row - shifts.f_row_shift, col - shifts.f_col_shift) === currSymbol
-                        && getSymbol(row - shifts.s_row_shift, col - shifts.s_col_shift) === currSymbol) {
+            isSmartMoveMade = AI_SMART_MOVE_MATRIX.some(shifts => {
+                    if (getSymbol(row + shifts.first_row, col + shifts.first_col) === currSymbol
+                        && getSymbol(row + shifts.second_row, col + shifts.second_col) === currSymbol) {
                         makeMove(row, col);
                         return true;
                     }
@@ -175,23 +170,25 @@ function makeSmartMoveAI() {
     return isSmartMoveMade;
 }
 
-function cellClickHandler(row, col) {
-    console.log(`Clicked on cell: ${row}, ${col}`);
+function changeCurrentSymbol() {
+    currSymbol = currSymbol === CROSS ? ZERO : CROSS;
+}
 
-    if (canMakeMove(row, col)) {
-        makeMove(row, col);
-        gameStatus = updateGameStatus(gameStatus);
-        currSymbol = currSymbol === CROSS ? ZERO : CROSS;
-        if (gameStatus !== NOT_FINISHED)
-            return;
-        expandFieldIfNeeded();
-        makeMoveAI();
-        gameStatus = updateGameStatus(gameStatus);
-        currSymbol = currSymbol === CROSS ? ZERO : CROSS;
-        if (gameStatus !== NOT_FINISHED)
-            return;
-        expandFieldIfNeeded();
-    }
+function cellClickHandler(row, col) {
+    if (!canMakeMove(row, col))
+        return;
+    makeMove(row, col);
+    gameStatus = updateGameStatus(gameStatus);
+    if (gameStatus !== NOT_FINISHED)
+        return;
+    changeCurrentSymbol();
+    expandFieldIfNeeded();
+    makeMoveAI();
+    gameStatus = updateGameStatus(gameStatus);
+    if (gameStatus !== NOT_FINISHED)
+        return;
+    changeCurrentSymbol();
+    expandFieldIfNeeded();
 }
 
 function expandFieldIfNeeded() {
@@ -218,36 +215,4 @@ function colorizeCell(color, row, col) {
 function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
-}
-
-
-/* Test Function */
-
-/* Победа первого игрока */
-function testWin() {
-    clickOnCell(0, 2);
-    clickOnCell(0, 0);
-    clickOnCell(2, 0);
-    clickOnCell(1, 1);
-    clickOnCell(2, 2);
-    clickOnCell(1, 2);
-    clickOnCell(2, 1);
-}
-
-/* Ничья */
-function testDraw() {
-    clickOnCell(2, 0);
-    clickOnCell(1, 0);
-    clickOnCell(1, 1);
-    clickOnCell(0, 0);
-    clickOnCell(1, 2);
-    clickOnCell(1, 2);
-    clickOnCell(0, 2);
-    clickOnCell(0, 1);
-    clickOnCell(2, 1);
-    clickOnCell(2, 2);
-}
-
-function clickOnCell(row, col) {
-    findCell(row, col).click();
 }
