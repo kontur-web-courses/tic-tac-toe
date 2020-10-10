@@ -4,11 +4,28 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+let personalCount = prompt('Укажите размерность поля?', ) // Для 9 задания
+const gameField = [];
+let clickCounter = 0;
+const possibleClicksCount = personalCount * personalCount;
+let isWin = false; // Для 7 задания
+
 startGame();
 addResetListener();
 
+function initGameField(dimension, gameField){
+    for (let i = 0; i < dimension; i++) {
+        gameField[i] = new Array(dimension)
+        for (let j = 0; j < dimension; j++) {
+            gameField[i][j] = EMPTY;
+        }
+    }
+    console.log(gameField, 'Field initialized')
+}
+
 function startGame () {
-    renderGrid(3);
+    initGameField(personalCount, gameField);
+    renderGrid(personalCount);
 }
 
 function renderGrid (dimension) {
@@ -26,14 +43,149 @@ function renderGrid (dimension) {
     }
 }
 
+function checkWinner(gameField){
+    const checkHorizontalWinner = () => {
+        for (let i=0;i<gameField.length;i++){
+            let rowString = gameField[i].join("")
+            if (rowString === CROSS.repeat(gameField.length)){
+                alert(`${CROSS} победил`);
+                paintWinningFields(rowString, i);
+                isWin = true;
+                break
+            }
+            else if(rowString === ZERO.repeat(gameField.length)) {
+                alert(`${ZERO} победил`);
+                isWin = true;
+                paintWinningFields(rowString, i)
+                break
+            }
+        }
+    }
+    const checkVerticalWinner = (index) => {
+        let flatArray = gameField.flat(2)
+        console.log(flatArray)
+        let word = ''
+        for (let i = index; i < flatArray.length; i+=gameField.length) {
+            if(flatArray[i]===EMPTY)
+                continue
+            word += flatArray[i]
+        }
+        if (word===CROSS.repeat(gameField.length)){
+            alert(`${CROSS} победил`);
+            isWin = true;
+            paintWinningFields(gameField, index, true)
+            return true
+        }
+        else if (word===ZERO.repeat(gameField.length)){
+            alert(`${ZERO} победил`);
+            isWin = true;
+            paintWinningFields(gameField, index, true)
+            return true
+        }
+    }
+    const checkDiagonalWinner = (index) => {
+        let flatArray = gameField.flat(2)
+        console.log(flatArray)
+        let word = ''
+        if (index === 0) {
+            for (let i = index; i < flatArray.length; i += gameField.length + 1) {
+                if (flatArray[i] === EMPTY)
+                    continue
+                word += flatArray[i]
+            }
+        }
+        else {
+            for (let i = index; i < flatArray.length; i += gameField.length - 1) {
+                if (flatArray[i] === EMPTY)
+                    continue
+                word += flatArray[i]
+            }
+        }
+        if (word === CROSS.repeat(gameField.length)) {
+            alert(`${CROSS} победил`)
+            isWin = true;
+            paintWinningFields(gameField, index, true)
+            return true
+        } else if (word === ZERO.repeat(gameField.length)) {
+            alert(`${ZERO} победил`)
+            isWin = true;
+            paintWinningFields(gameField, index, true)
+            return true
+        }
+
+    }
+    const paintWinningFields = (line, startIndex, col = false) => {
+        if (col){
+            for (let i = 0; i < line.length; i++) {
+                findCell(i, startIndex).style.color = 'red';
+            }
+            return
+        }
+        for (let i = 0; i < line.length; i++) {
+            findCell(startIndex, i).style.color = 'red';
+        }
+        for (let i=0; i<line.length; i++) {
+            if (startIndex===0) {
+                for (let j=0; j < line.length; i++) {
+                    findCell(i, j).style.color = 'red';
+                }
+            }
+            else {
+                for (let j=line.length; i>0; i--) {
+                    findCell(i, j).style.color = 'red';
+                }
+            }
+        }
+    }
+    checkHorizontalWinner()
+    for(let i=0;i<gameField.length;i++){
+        if(checkVerticalWinner(i)){
+            break
+        }
+    }
+    for(let i=0;i<gameField.length;i++){
+        if(checkDiagonalWinner(i)){
+            break
+        }
+    }
+}
+
 function cellClickHandler (row, col) {
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
+    if (isWin) return; // проверка для 7 задания
+    if (gameField[row][col]===EMPTY) {
+        let fieldState = clickCounter % 2 === 0 ? CROSS : ZERO;
+        if (fieldState===CROSS) {
+            gameField[row][col] = fieldState;
+            console.log(`Clicked on cell: ${row}, ${col}`);
+            clickCounter++;
+            renderSymbolInCell(fieldState, row, col);
+            console.log(gameField);
+        }
+        else if (fieldState===ZERO) {
+            clickRandomZero(gameField);
+        }
+    }
+    checkWinner(gameField)
+    if (clickCounter === possibleClicksCount)
+        alert('Победила дружба');
+}
 
+// Для 10 задания
+function clickRandomZero(gameField) {
+    let randomRow = Math.floor(Math.random() * gameField.length);
+    let randomCol = Math.floor(Math.random() * gameField.length);
+    if (gameField[randomRow][randomCol]===EMPTY){
+        let fieldState = ZERO;
+        gameField[randomRow][randomCol] = fieldState;
+        console.log(`Clicked on cell: ${randomRow}, ${randomCol}`);
+        clickCounter++;
+        renderSymbolInCell(fieldState, randomRow, randomCol);
+        console.log(gameField);
+    }
+    else {
+        clickRandomZero(gameField);
+    }
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -54,8 +206,16 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    gameField.length = 0;
+    startGame();
+    isWin = false;
+    clickCounter = 0;
     console.log('reset!');
 }
+
+
+
+
 
 
 /* Test Function */
