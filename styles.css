@@ -25,7 +25,9 @@ body {
     border: 1px solid #333;
     cursor: pointer;
 }
-
+#fieldSizeValue {
+    width: 10%;
+}
 .table tr:first-child td {
     border-top-color: transparent;
 }
