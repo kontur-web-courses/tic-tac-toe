@@ -1,14 +1,23 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let arrayField;
+let player = CROSS;
+let dimension = 3;
+let freeCell;
 
 const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
+rechangeCells();
 
-function startGame () {
-    renderGrid(3);
+function startGame() {
+    freeCell = dimension ** 2;
+    emptyList = [];
+    arrayField = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
+    console.log(arrayField);
+    renderGrid(dimension)
 }
 
 function renderGrid (dimension) {
@@ -27,13 +36,103 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
+
+    if (arrayField[row][col] !== EMPTY)
+        return;
+    
+    renderSymbolInCell(player, row, col);
+    arrayField[row][col] = player;
+
+    if (--freeCell <= 0)
+        alert('Победила дружба!');
 
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    let count = 0;
+    cells = [];
+
+    for (let i = 0; i <= 2; i++) {
+        for (let j = 0; j <= 2; j++) {
+            if (arrayField[i][j] === player) {
+                let obj = { x: i, y: j };
+                cells.push(obj);
+                if (cells.length === 3) {
+                    alert('Победил wide?' + player);
+                    brush(cells);
+                    return;
+                }
+            }
+            else {
+                cells.length = 0;
+            }            
+        }
+    }
+
+    for (let i = 0; i <= 2; i++) {
+        for (let j = 0; j <= 2; j++) {
+            if (arrayField[j][i] === player) {
+                let obj = { x: i, y: j };
+                cells.push(obj);
+                if (cells.length === 3) {
+                    alert('Победил up? ' + player);
+                    brush(cells);
+                    return;
+                }
+            }
+            else {
+                cells.length = 0;
+            }
+        }
+    }
+
+    for (let i = 0; i <= 2; i++) {//главная диагональ работает
+        for (let j = 0; j <= 2; j++) {
+            if (i === j) {
+                if (arrayField[i][j] === player) {
+                    let obj = { x: i, y: j };
+                    cells.push(obj);                   
+                    if (cells.length === 3) {
+                        alert('Победил ' + player);
+                        brush(cells);
+                        return;
+                    }
+                }
+                else {
+                    cells.length = 0;
+                }
+            }
+        }
+    }
+
+    for (let i = 0; i <= 2; i++) {//побочная диагональ работает
+        for (let j = 0; j <= 2; j++) {
+            if (Math.abs(i - 2) === j) {
+                if (arrayField[i][j] === player) {
+                    let obj = { x: i, y: j };
+                    cells.push(obj);
+                    if (cells.length === 3) {
+                        alert('Победил ' + player);
+                        brush(cells);
+                        return;
+                    }
+                }
+                else {
+                    cells.length = 0;
+                }
+            }
+        }
+    }
+
+    //for (let i = 0; i < p.length; i++) {
+    //    //i>p.
+    //}
+
+    if (player === CROSS)
+        player = ZERO;
+    else
+        player = CROSS;
+
+    
+     
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -48,14 +147,33 @@ function findCell (row, col) {
     return targetRow.querySelectorAll('td')[col];
 }
 
-function addResetListener () {
-    const resetButton = document.getElementById('reset');
-    resetButton.addEventListener('click', resetClickHandler);
+function addResetListener () {//работает после старта
+    const resetButton = document.getElementById('reset');//регистрирует кнопку
+    resetButton.addEventListener('click', resetClickHandler);//по клику переходит ниже
 }
-
-function resetClickHandler () {
+function resetClickHandler() {//сюда
+    startGame();
     console.log('reset!');
 }
+
+function brush(cells) {
+    for (var i of cells) {
+        renderSymbolInCell(player, i.x, i.y, 'red');
+    }
+}
+
+function rechangeCells() {
+    const rechangeButton = document.getElementById('rechange');//кнопка   
+    rechangeButton.addEventListener('click', getgrid);//по клику переходит выше
+}
+
+function getgrid() {
+    dimension = document.getElementById("quantity").value;
+    startGame();
+    console.log('grid!');
+}
+
+
 
 
 /* Test Function */
