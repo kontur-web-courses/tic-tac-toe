@@ -1,89 +1,223 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-
+const gameField = [];
+let moveCounter = 0;
+let isWinner = false;
+let moveBot = false;
 const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
 
-function startGame () {
-    renderGrid(3);
+function startGame() {
+const fieldSize = +prompt('Введите размер игрового поля', '');
+renderGrid(fieldSize);
 }
 
-function renderGrid (dimension) {
-    container.innerHTML = '';
+function renderGrid(dimension) {
+container.innerHTML = '';
 
-    for (let i = 0; i < dimension; i++) {
-        const row = document.createElement('tr');
-        for (let j = 0; j < dimension; j++) {
-            const cell = document.createElement('td');
-            cell.textContent = EMPTY;
-            cell.addEventListener('click', () => cellClickHandler(i, j));
-            row.appendChild(cell);
-        }
-        container.appendChild(row);
-    }
+for (let i = 0; i < dimension; i++) {
+gameField.push([]);
+const row = document.createElement('tr');
+
+for (let j = 0; j < dimension; j++) {
+gameField[i].push(EMPTY);
+
+const cell = document.createElement('td');
+cell.textContent = EMPTY;
+cell.addEventListener('click', () => cellClickHandler(i, j));
+row.appendChild(cell);
+}
+container.appendChild(row);
+}
 }
 
-function cellClickHandler (row, col) {
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
 
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+function cellClickHandler(row, col) {
+if (gameField[row][col] === EMPTY && !isWinner && !moveBot) {
+addSymbol(CROSS, row, col);
+moveBot = true;
+setTimeout(moveRandomBot, 400);
+console.log(`Clicked on cell: ${row}, ${col}`);
+console.log(gameField);
+console.log(moveCounter);
 }
 
-function renderSymbolInCell (symbol, row, col, color = '#333') {
-    const targetCell = findCell(row, col);
+if (moveCounter === gameField.length ** 2) {
+alert('Ничья!');
+}
+}
 
-    targetCell.textContent = symbol;
-    targetCell.style.color = color;
+function checkWinner(symbol) {
+const transposeGameField = transpose(gameField);
+const mainDiag = checkMainDiag();
+const secondaryDiag = checkSecondaryDiag();
+
+for (let i = 0; i < gameField.length; i++) {
+displayWinner(gameField[i], 'horizontal', symbol, i);
+displayWinner(transposeGameField[i], 'vertical', symbol, i);
+}
+
+displayWinner(mainDiag, 'mainDiag', symbol);
+displayWinner(secondaryDiag, 'secondaryDiag', symbol);
+}
+function displayWinner(line, position, symbol, index = 0) {
+if (checkLineWinner(line, symbol)) {
+moveCounter = -1;
+isWinner = true;
+paintWinner(index, position);
+alert(`${symbol} выиграл!`);
+}
+}
+
+function checkLineWinner(lineArr, symbol) {
+return lineArr.every((value) => value === symbol);
+}
+
+function transpose(matrix) {
+return matrix[0].map((_, i) => matrix.map((row) => row[i]));
+}
+
+function checkMainDiag() {
+const mainDiag = [];
+
+for (let i = 0; i < gameField.length; i++) {
+for (let j = 0; j < gameField.length; j++) {
+if (i === j) {
+mainDiag.push(gameField[i][j]);
+}
+}
+}
+return mainDiag;
+}
+
+function checkSecondaryDiag() {
+const secondaryDiag = [];
+
+for (let i = 0; i < gameField.length; i++) {
+for (let j = 0; j < gameField.length; j++) {
+if (i === gameField.length - j - 1) {
+secondaryDiag.push(gameField[i][j]);
+}
+}
+}
+return secondaryDiag;
+}
+
+function paintWinner(start, line) {
+switch (line) {
+case 'horizontal':
+for (let i = 0; i < gameField.length; i++) {
+findCell(start, i).style.color = 'red';
+}
+break;
+
+case 'vertical':
+for (let i = 0; i < gameField.length; i++) {
+findCell(i, start).style.color = 'red';
+}
+break;
+
+case 'mainDiag':
+for (let i = 0; i < gameField.length; i++) {
+for (let j = 0; j < gameField.length; j++) {
+if (i === j) {
+findCell(i, j).style.color = 'red';
+}
+}
+}
+break;
+
+case 'secondaryDiag':
+for (let i = 0; i < gameField.length; i++) {
+for (let j = 0; j < gameField.length; j++) {
+if (i === gameField.length - j - 1) {
+findCell(i, j).style.color = 'red';
+}
+}
+}
+break;
+}
+}
+
+function renderSymbolInCell(symbol, row, col, color = '#333') {
+const targetCell = findCell(row, col);
+
+targetCell.textContent = symbol;
+targetCell.style.color = color;
 }
 
 function findCell (row, col) {
-    const targetRow = container.querySelectorAll('tr')[row];
-    return targetRow.querySelectorAll('td')[col];
+function addSymbol(symbol, row, col) {
+gameField[row][col] = symbol;
+renderSymbolInCell(symbol, row, col);
+checkWinner(symbol);
+moveCounter++;
 }
 
-function addResetListener () {
-    const resetButton = document.getElementById('reset');
-    resetButton.addEventListener('click', resetClickHandler);
+function findCell(row, col) {
+const targetRow = container.querySelectorAll('tr')[row];
+return targetRow.querySelectorAll('td')[col];
 }
 
-function resetClickHandler () {
-    console.log('reset!');
+
+function addResetListener() {
+const resetButton = document.getElementById('reset');
+resetButton.addEventListener('click', resetClickHandler);
 }
 
+function resetClickHandler() {
+gameField.length = 0;
+moveCounter = 0;
+isWinner = false;
+startGame();
+console.log('reset!');
+}
+
+function
+ 
+moveRandomBot() {
+if (!isWinner && moveCounter !== gameField.length ** 2) {
+const moveX = getRandomInt(gameField.length);
+const moveY = getRandomInt(gameField.length);
+if (gameField[moveX][moveY] === EMPTY) {
+addSymbol(ZERO, moveX, moveY);
+} else {
+moveRandomBot();
+}
+}
+moveBot = false;
+}
 
 /* Test Function */
 /* Победа первого игрока */
 function testWin () {
-    clickOnCell(0, 2);
-    clickOnCell(0, 0);
-    clickOnCell(2, 0);
-    clickOnCell(1, 1);
-    clickOnCell(2, 2);
-    clickOnCell(1, 2);
-    clickOnCell(2, 1);
+clickOnCell(0, 2);
+clickOnCell(0, 0);
+clickOnCell(2, 0);
+clickOnCell(1, 1);
+clickOnCell(2, 2);
+clickOnCell(1, 2);
+clickOnCell(2, 1);
 }
 
 /* Ничья */
 function testDraw () {
-    clickOnCell(2, 0);
-    clickOnCell(1, 0);
-    clickOnCell(1, 1);
-    clickOnCell(0, 0);
-    clickOnCell(1, 2);
-    clickOnCell(1, 2);
-    clickOnCell(0, 2);
-    clickOnCell(0, 1);
-    clickOnCell(2, 1);
-    clickOnCell(2, 2);
+clickOnCell(2, 0);
+clickOnCell(1, 0);
+clickOnCell(1, 1);
+clickOnCell(0, 0);
+clickOnCell(1, 2);
+clickOnCell(1, 2);
+clickOnCell(0, 2);
+clickOnCell(0, 1);
+clickOnCell(2, 1);
+clickOnCell(2, 2);
 }
 
-function clickOnCell (row, col) {
-    findCell(row, col).click();
+function getRandomInt(max) {
+return Math.floor(Math.random() * Math.floor(max));
+}
 }
