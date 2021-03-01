@@ -1,6 +1,14 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let FIELD = [
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY]
+];
+let QUEUE = 1;
+const FIELD_SIZE = 3;
+let IS_END = false;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -27,13 +35,24 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    if (FIELD[row][col] === EMPTY && !IS_END) {
+        if (QUEUE % 2 === 1){
+            FIELD[row][col] = CROSS;
+            renderSymbolInCell(CROSS, row, col);
+        } else {
+            FIELD[row][col] = ZERO;
+            renderSymbolInCell(ZERO, row, col);
+        }
+        QUEUE++;
+        checkWinner(row, col);
+    }
+
+    if (QUEUE === FIELD_SIZE * FIELD_SIZE + 1) {
+        IS_END = true;
+        alert('Победила дружба');
+    }
+
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -54,8 +73,82 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    FIELD = [
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY]];
+    QUEUE = 1;
+    IS_END = false;
+
+    for (let i = 0; i < FIELD_SIZE; i++) {
+        for (let j = 0; j < FIELD_SIZE; j++) {
+            renderSymbolInCell(EMPTY, i, j);
+        }
+    }
     console.log('reset!');
 }
+
+function checkWinner (row, col) {
+    let line = [];
+    for (let i = 0; i < FIELD_SIZE; i++) {
+        line.push([FIELD[row][i], row, i]);
+    }
+    checkLine(line);
+    checkColumn(col);
+    if (row === col || row === FIELD_SIZE - col - 1) {
+        checkDiagonal();
+    }
+}
+
+
+function checkLine(line) {
+    let allInLine = true;
+    const first = line[0][0];
+    for (let el of line) {
+        if (el[0] !== first) {
+            allInLine = false;
+        }
+    }
+
+    if (allInLine) {
+
+        for (let el of line) {
+            renderSymbolInCell(el[0], el[1], el[2], color = "red");
+        }
+
+        if (first === CROSS) {
+            IS_END = true;
+            alert('CROSS');
+        }
+
+        if (first === ZERO) {
+            IS_END = true;
+            alert('ZERO');
+        }
+    }
+}
+
+function checkColumn(col) {
+    let column = [];
+    for (let i = 0; i < FIELD_SIZE; i++) {
+        column.push([FIELD[i][col], i, col]);
+    }
+
+    checkLine(column);
+}
+
+function checkDiagonal() {
+    let mainDia = [];
+    let secondaryDia = [];
+    for (let i = 0; i < FIELD_SIZE; i++) {
+        mainDia.push([FIELD[i][i], i, i]);
+        secondaryDia.push([FIELD[i][FIELD_SIZE - i - 1], i, FIELD_SIZE - i - 1]);
+    }
+
+    checkLine(mainDia);
+    checkLine(secondaryDia);
+}
+
 
 
 /* Test Function */
