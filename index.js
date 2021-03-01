@@ -55,20 +55,15 @@ function cellClickHandler (row, col) {
     }
 }
 
-function isWin(row, col){
-    if ((row === 0 && col === 0)
-        || (row === dim - 1  && col === dim - 1)
-        || (row === dim - 1  && col === 0)
-        || (row === 0  && col === dim - 1)){
-    }
-}
 
-function countNeighbours(row, col, ){
-    for(let i = 0; i < 3; i++){
-        for(let j = 0; j < 3; j++){
-
+function findLineNeighbours(minIndex, maxIndex, counter, points, e){
+    for (let i = minIndex; i <= maxIndex; i++){
+        if (map[i] === e){
+            counter += 1;
+            points.push((i));
         }
     }
+    return counter;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
