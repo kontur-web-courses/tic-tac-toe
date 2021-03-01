@@ -50,6 +50,11 @@ function cellClickHandler (row, col) {
      */
 }
 
+function findWinner(field)
+{
+
+}
+
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
