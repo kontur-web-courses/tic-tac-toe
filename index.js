@@ -81,25 +81,20 @@ function isWin(row, col){
         return true;
 
     // По вертикали
-    // for (let i = Math.max(col - 2, 0); i < col; i++){
-    //     if (map[row][i] == currentTurn)
-    //         counter++;
-    // }
+    counter = findVerticalNeighbours(Math.max(row - 2, 0), row, [], currentTurn, col);
+    if (counter >= 3)
+        return true;
 
-    // alert(counter);
-    // if (counter >= 2)
-    //     return true;
+    counter = findVerticalNeighbours(Math.max(row - 1, 0), Math.min(row + 1, dim - 1), [], currentTurn, col);
+    if (counter >= 3)
+        return true;
 
-    /*
-    for (let i = max(col - 1, 0); i <= min(col + 1, dimension); i++){
 
-    }
+    counter = findVerticalNeighbours(row, Math.min(row + 2, dim), [], currentTurn, col);
+    if (counter >= 3)
+        return true;
 
-    for (let i = col; i <= min(col + 2, dimension); i++){
-
-    }
-*/
-    // 
+    // По диагонали
 }
 
 
