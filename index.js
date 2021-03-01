@@ -30,6 +30,9 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     console.log(desk[row][col])
+    if (desk[row][col] !== undefined) {
+        return
+    }
     if (turn % 2 === 0) {
         renderSymbolInCell(ZERO, row, col);
         desk[row][col] = ZERO;
