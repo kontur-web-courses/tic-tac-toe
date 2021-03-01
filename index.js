@@ -44,9 +44,13 @@ function cellClickHandler (row, col) {
         turn += 1;
     }
 
-    console.log(desk);
-
+    console.log(desk[row]);
+    console.log(turn)
     console.log(`Clicked on cell: ${row}, ${col}`);
+
+    if (turn === 9) {
+        alert('Победила дружба')
+    }
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
