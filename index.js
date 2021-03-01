@@ -51,8 +51,7 @@ function cellClickHandler(row, col) {
 
     let combo = findWinner(field);
 
-    if (combo.length === 0 && !existFreeSpaces(field))
-    {
+    if (combo.length === 0 && !existFreeSpaces(field)) {
         alert("Победила дружба");
     }
 
@@ -86,8 +85,7 @@ function findWinner(field) {
         if (checkLine(field, i)) {
             return createLine(i);
         }
-        if (checkColumn(field, i))
-        {
+        if (checkColumn(field, i)) {
             return createColumn(i);
         }
     }
@@ -165,14 +163,14 @@ function createLine(row) {
 }
 
 function createColumn(col) {
-    let column =[];
+    let column = [];
     for (let i = 0; i < dimension; i++) {
         column[i] = [i, col];
     }
     return column;
 }
 
-function createMainDiagonal(field) {
+function createMainDiagonal() {
     let diagonal = [];
     for (let i = 0; i < dimension; i++) {
         diagonal[i] = [i, i];
@@ -180,13 +178,13 @@ function createMainDiagonal(field) {
     return diagonal;
 }
 
-function createSideDiagonal(field) {
+function createSideDiagonal() {
     let diagonal = [];
     for (let i = 0; i < dimension; i++) {
         diagonal[i] = [i, dimension - i - 1];
     }
     return diagonal;
-}    
+}
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
