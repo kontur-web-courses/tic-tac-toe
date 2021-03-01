@@ -35,7 +35,6 @@ let field = [
     [EMPTY, EMPTY, EMPTY]];
 
 function cellClickHandler(row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
     if (field[row][col] !== EMPTY) {
         return;
@@ -43,11 +42,38 @@ function cellClickHandler(row, col) {
 
     let symbol = turn ? CROSS : ZERO;
     turn ^= 1;
-    renderSymbolInCell(symbol, row, col);
     field[row][col] = symbol;
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    renderSymbolInCell(symbol, row, col);
+
+    let combo = findWinner(field);
+
+    if (combo.length === 0 && !existFreeSpaces(field))
+    {
+        alert("Победила дружба");
+    }
+
+    if (combo.length === 0) {
+        return;
+    }
+
+    for (let coord of combo) {
+        let row = coord[0], col = coord[1];
+        renderSymbolInCell(field[row][col], row, col, '#666')
+    }
+
+    alert(`Победил ${field[row][col]}`);
+}
+
+function existFreeSpaces(field) {
+    for (let i = 0; i < dimension; i++) {
+        for (let j = 0; j < dimension; j++) {
+            if (field[i][j] === EMPTY) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 function findWinner(field) {
@@ -56,8 +82,13 @@ function findWinner(field) {
         if (checkLine(field, i)) {
             return createLine(i);
         }
+        if (checkColumn(field, i))
+        {
+            return createColumn(i);
+        }
     }
 
+    return [];
 }
 
 function checkLine(field, row) {
@@ -98,6 +129,14 @@ function createLine(row) {
         line[i] = [row, i];
     }
     return line;
+}
+
+function createColumn(col) {
+    let column =[];
+    for (let i = 0; i < dimension; i++) {
+        column[i] = [i, col];
+    }
+    return column;
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
