@@ -90,11 +90,28 @@ function isWin(row, col){
         return true;
 
 
-    counter = findVerticalNeighbours(row, Math.min(row + 2, dim), [], currentTurn, col);
+    counter = findVerticalNeighbours(row, Math.min(row + 2, dim - 1), [], currentTurn, col);
     if (counter >= 3)
         return true;
 
     // По диагонали
+    counter = findСrosswiseNeighbours([Math.max(row - 2, 0), Math.max(col - 2, 0)], [row, col], [], currentTurn, 1, 1);
+    if (counter >= 3)
+        return true;
+
+
+    counter = findСrosswiseNeighbours([Math.max(row - 1, 0), Math.max(col - 1, 0)], [Math.min(row + 1, dim - 1), Math.min(col + 1, dim - 1)], [], currentTurn, 1, 1);
+    if (counter >= 3)
+        return true;
+
+
+    counter = findСrosswiseNeighbours([row, col], [Math.min(row + 2, dim - 1), Math.min(col + 2, dim - 1)], [], currentTurn, 1, 1);
+    if (counter >= 3)
+        return true;
+
+    counter = findСrosswiseNeighbours([Math.min(row + 2, dim - 1), Math.max(col - 2, 0)], [row, col], [], currentTurn, 1, -1);
+    if (counter >= 3)
+        return true;
 }
 
 
@@ -124,10 +141,25 @@ function findСrosswiseNeighbours(startPoint, endPoint, points, e, stepRow, step
     let counter = 0;
     for (let i = startPoint[0]; i <= endPoint[0]; i = i + stepRow){
         for (let j = startPoint[1]; j <= endPoint[1]; j = j + stepCol){
+            console.log(i, j);
             if (map[i][j] === e){
                 counter += 1;
                 points.push([i, j])
-            }
+            }        
+        }
+    }
+    return counter;
+}
+
+function findСrosswise2Neighbours(startPoint, endPoint, points, e, stepRow, stepCol){
+    let counter = 0;
+    for (let i = startPoint[0]; i >= endPoint[0]; i = i + stepRow){
+        for (let j = startPoint[1]; j <= endPoint[1]; j = j + stepCol){
+            console.log(i, j);
+            if (map[i][j] === e){
+                counter += 1;
+                points.push([i, j])
+            }        
         }
     }
     return counter;
