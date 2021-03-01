@@ -51,7 +51,13 @@ function cellClickHandler (row, col) {
         renderSymbolInCell(CROSS, row, col);
     }
     if (isWin(row, col))
+    {
+        for (let i = 0; i < winPoints.length; i++)
+        {
+            let cell = findCell(winPoints[i][0], winPoints[i][1]);
+        }
         alert("Победа");
+    }
     if (stepsCounter <= 0) {
         alert('Победила дружба!');
         gameIsOn = false;
@@ -65,9 +71,8 @@ function isWin(row, col){
     //     || (row === 0  && col === dim - 1)){
     // }
     let currentTurn = map[row][col];
-
-    // По горизонтали
-    let counter = findLineNeighbours(Math.max(col - 2, 0), col, [], currentTurn, row);
+    let counter;
+    counter = findLineNeighbours(Math.max(col - 2, 0), col, [], currentTurn, row);
     if (counter >= 3)
         return true;
 
