@@ -27,15 +27,23 @@ function renderGrid (dimension) {
 }
 
 let turn = 0;
-let field = [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]]
+let field = [
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY]]
 
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    let symbol = turn == 0 ? CROSS : ZERO;
+    if (field[row][col] !== EMPTY)
+    {
+        return;
+    }
+
+    let symbol = turn ? CROSS : ZERO;
     turn ^= 1;
     renderSymbolInCell(symbol, row, col);
-    field[row][col] = turn;
+    field[row][col] = symbol;
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
