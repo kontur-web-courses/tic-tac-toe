@@ -109,6 +109,12 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
+    // 
+    desk[0] = [];
+    desk[1] = [];
+    desk[2] = [];
+    turn = 0;
+    winner = null;
     console.log('reset!');
 }
 
