@@ -26,11 +26,12 @@ function renderGrid (dimension) {
     }
 }
 
+    
 let turn = 0;
 let field = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY]]
+    [EMPTY, EMPTY, EMPTY]];
 
 function cellClickHandler (row, col) {
     // Пиши код тут
@@ -66,8 +67,17 @@ function addResetListener () {
     resetButton.addEventListener('click', resetClickHandler);
 }
 
+
 function resetClickHandler () {
     console.log('reset!');
+    turn = 0;
+    gameEnded = 0;
+    for (let i = 0; i < field.length; ++i) {
+        for(let j = 0; j < field[i].length; ++j) {
+            field[i][j] = EMPTY;
+        }
+    }
+    startGame();
 }
 
 
