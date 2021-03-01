@@ -2,13 +2,34 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
+const dimension = 3;
+const grid = [];
+
+let movesLeft;
+let isWin;
+let isCross;
+
 const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    isWin = 0;
+    movesLeft = dimension * dimension;
+    isCross = 1;
+    initGrid(dimension);
+    renderGrid(dimension);
+}
+
+function initGrid (dimension) {
+    grid.length = 0;
+    for (let i = 0; i < dimension; i++) {
+        grid.push([]);
+        for (let j = 0; j < dimension; j++) {
+            grid[i].push(EMPTY);
+        }
+    }
 }
 
 function renderGrid (dimension) {
@@ -27,13 +48,85 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
+    if (!isWin && grid[row][col] === EMPTY) {
+        const current = isCross ? CROSS : ZERO;
+        renderSymbolInCell(current, row, col);
+        grid[row][col] = current;
+        movesLeft -= 1;
+        isCross = !isCross;
+        if (checkWinner(row, col)) {
+            isWin = 1;
+            alert(`Победа ${current}`);
+        } else if (movesLeft === 0) {
+            alert("Победила дружба!");
+        }
+        if (current === CROSS) {
+            doRandomMove();
+        }
+        return true;
+    }
+    return false;
+}
 
+function checkWinner (row, col) {
+    const current = grid[row][col];
+    const red = '#ff5c5c';
+    for (let i = 0; i < dimension; i++) {
+        if (grid[row][i] !== current) {
+            break;
+        }
+        if (i === dimension - 1) {
+            for (let j = 0; j < dimension; j++) {
+                renderSymbolInCell(current, row, j, red);
+            }
+            return true;
+        }
+    }
+    for (let i = 0; i < dimension; i++) {
+        if (grid[i][col] !== current) {
+            break;
+        }
+        if (i === dimension - 1) {
+            for (let j = 0; j < dimension; j++) {
+                renderSymbolInCell(current, j, col, red);
+            }
+            return true;
+        }
+    }
+    if (row === col) {
+        for (let i = 0; i < dimension; i++) {
+            if (grid[i][i] !== current) {
+                break;
+            }
+            if (i === dimension - 1) {
+                for (let j = 0; j < dimension; j++) {
+                    renderSymbolInCell(current, j, j, red);
+                }
+                return true;
+            }
+        }
+    }
+    if (row === dimension - 1 - col) {
+        for (let i = 0; i < dimension; i++) {
+            if (grid[i][dimension - 1 - i] !== current) {
+                break;
+            }
+            if (i === dimension - 1) {
+                for (let j = 0; j < dimension; j++) {
+                    renderSymbolInCell(current, j, dimension - 1 - j, red);
+                }
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+function doRandomMove() {
+    if (!isWin) {
+        while (!cellClickHandler(Math.floor(Math.random() * dimension), Math.floor(Math.random() * dimension))) {}
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -55,6 +148,7 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    startGame();
 }
 
 
