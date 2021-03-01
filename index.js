@@ -66,6 +66,17 @@ function findLineNeighbours(minIndex, maxIndex, counter, points, e){
     return counter;
 }
 
+function findVerticalNeighbours(minIndex, maxIndex, points, e, col){
+    let counter = 0;
+    for (let i = minIndex; i <= maxIndex; i++){
+        if (map[i][col] === e){
+            counter += 1;
+            points.push([i, col])
+        }
+    }
+    return counter;
+}
+
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
