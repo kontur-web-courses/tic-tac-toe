@@ -5,6 +5,7 @@ const EMPTY = ' ';
 const container = document.getElementById('fieldWrapper');
 const desk = [[] , [], []];
 let turn = 0;
+let winner = null;
 
 startGame();
 addResetListener();
@@ -47,14 +48,51 @@ function cellClickHandler (row, col) {
     console.log(desk[row]);
     console.log(turn)
     console.log(`Clicked on cell: ${row}, ${col}`);
+    checkWin(row, col)
+    if (winner !== null) {
+        alert(winner)
+    }
 
-    if (turn === 9) {
+    if (turn === 9 && winner === null) {
         alert('Победила дружба')
     }
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
+}
+
+function checkWin (row, col) {
+    console.log(desk[row][0], desk[row][1], desk[row][2])
+    if (desk[row][0] === desk[row][1] && desk[row][2] === desk[row][1]) {
+        for (let i = 0; i < 3; i++) {
+            renderSymbolInCell(desk[row][i], row, i, '#ff0000')
+        }
+        winner = desk[row][0]
+    }
+
+    if (desk[0][col] === desk[1][col] && desk[2][col] === desk[1][col]) {
+        for (let i = 0; i < 3; i++) {
+            renderSymbolInCell(desk[i][col], i, col, '#ff0000')
+        }
+        winner = desk[0][col]
+    }
+
+    // С диагоналями вообще жесть
+
+    if (desk[0][0] === desk[1][1] && desk[1][1] === desk[2][2] && desk[0][0] !== undefined) {
+        renderSymbolInCell(desk[0][0], 0, 0, '#ff0000')
+        renderSymbolInCell(desk[1][1], 1, 1, '#ff0000')
+        renderSymbolInCell(desk[2][2], 2, 2, '#ff0000')
+        winner = desk[0][0]
+    }
+
+    if (desk[0][2] === desk[1][1] && desk[1][1] === desk[2][0] && desk[0][2] !== undefined) {
+        renderSymbolInCell(desk[0][2], 0, 2, '#ff0000')
+        renderSymbolInCell(desk[1][1], 1, 1, '#ff0000')
+        renderSymbolInCell(desk[2][0], 2, 0, '#ff0000')
+        winner = desk[0][2]
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
