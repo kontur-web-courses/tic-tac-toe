@@ -73,7 +73,7 @@ function checkGame(symbol) {
 }
 
 function cellClickHandler (row, col) {
-    if (field[GAME_SIZE * row + col])
+    if (field[GAME_SIZE * row + col] !== EMPTY)
         return;
     let symbol = lastSymbol === CROSS ? ZERO : CROSS;
     lastSymbol = symbol;
