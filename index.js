@@ -33,12 +33,8 @@ let field = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY]];
-let gameOver = false;
 
 function cellClickHandler(row, col) {
-    if (gameOver) {
-        return;
-    }
     console.log(`Clicked on cell: ${row}, ${col}`);
     if (field[row][col] !== EMPTY) {
         return;
@@ -62,11 +58,10 @@ function cellClickHandler(row, col) {
 
     for (let coord of combo) {
         let row = coord[0], col = coord[1];
-        renderSymbolInCell(field[row][col], row, col, '#FFC0CB')
+        renderSymbolInCell(field[row][col], row, col, '#666')
     }
 
     alert(`Победил ${field[row][col]}`);
-    gameOver = true;
 }
 
 function existFreeSpaces(field) {
@@ -124,9 +119,42 @@ function checkColumn(field, col) {
     return true;
 }
 
-function checkDiagonal(field, row, col) {
-
+function checkMainDiagonal(field, row, col) {
+    let symbol = field[row][col];
+    if (symbol == EMPTY) {
+        return false;
+    }
+    for (let i = 0; row + i < dimension && col + i < dimension; i++) {
+        if (symbol !== field[row + i, col + i]) {
+            return false;
+        }
+    }
+    for (let i = 1; row - i >= 0 && col - i >= 0; i++) {
+        if (symbol !== field[row + i, col + i]) {
+            return false;
+        }
+    }
+    return true;
 }
+
+function checkSideDiagonal(field, row, col) {
+    let symbol = field[row][col];
+    if (symbol == EMPTY) {
+        return false;
+    }
+    for (let i = 0; row + i < dimension && col - i >= 0; i++) {
+        if (symbol !== field[row + i, col - i]) {
+            return false;
+        }
+    }
+    for (let i = 1; row - i >= 0 && col + i < dimension; i++) {
+        if (symbol !== field[row - i, col + i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 
 function createLine(row) {
     let line = [];
@@ -143,6 +171,28 @@ function createColumn(col) {
     }
     return column;
 }
+
+function createMainDiagonal(field, row, col) {
+    let line = [];
+    for (let i = 0; row + i < dimension && col + i < dimension; i++) {
+        line[i] = [row + i, col + i];
+    }
+    for (let i = 1; row - i >= 0 && col - i >= 0; i++) {
+        line[i] = [row - i, col - i];
+    }
+    return line;
+}
+
+function createSideDiagonal(field, row, col) {
+    let line = [];
+    for (let i = 0; row + i < dimension && col - i >= 0; i++) {
+        line[i] = [row + i, col - i];
+    }
+    for (let i = 1; row - i >= 0 && col + i < dimension; i++) {
+        line[i] = [row - i, col + i];
+    }
+    return line;
+}    
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
@@ -165,9 +215,9 @@ function addResetListener() {
 function resetClickHandler() {
     console.log('reset!');
     turn = 0;
-    gameOver = 0;
-    for (let i = 0; i < field.length; ++i) {
-        for (let j = 0; j < field[i].length; ++j) {
+    gameEnded = 0;
+    for (let i = 0; i < dimension; ++i) {
+        for (let j = 0; j < dimension; ++j) {
             field[i][j] = EMPTY;
         }
     }
