@@ -30,8 +30,8 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    console.log(desk[row][col])
-    if (desk[row][col] !== undefined) {
+    console.log(desk[row][col]);
+    if (desk[row][col] !== undefined || winner !== null) {
         return
     }
     if (turn % 2 === 0) {
@@ -48,7 +48,8 @@ function cellClickHandler (row, col) {
     console.log(desk[row]);
     console.log(turn)
     console.log(`Clicked on cell: ${row}, ${col}`);
-    checkWin(row, col)
+
+    checkWin(row, col);
     if (winner !== null) {
         alert(winner)
     }
@@ -56,10 +57,6 @@ function cellClickHandler (row, col) {
     if (turn === 9 && winner === null) {
         alert('Победила дружба')
     }
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
 }
 
 function checkWin (row, col) {
