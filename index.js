@@ -1,17 +1,18 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+const dimension = 3;
 
 const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
 
-function startGame () {
-    renderGrid(3);
+function startGame() {
+    renderGrid(dimension);
 }
 
-function renderGrid (dimension) {
+function renderGrid(dimension) {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
@@ -33,11 +34,10 @@ let field = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY]];
 
-function cellClickHandler (row, col) {
+function cellClickHandler(row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (field[row][col] !== EMPTY)
-    {
+    if (field[row][col] !== EMPTY) {
         return;
     }
 
@@ -50,30 +50,49 @@ function cellClickHandler (row, col) {
      */
 }
 
-function findWinner(field)
-{
+function findWinner(field) {
+    // let result = [];
+    for (let i = 0; i < dimension; i++) {
+        if (checkLine(field, i)) {
+
+        }
+    }
 
 }
 
-function renderSymbolInCell (symbol, row, col, color = '#333') {
+function checkLine(field, row) {
+    let symbol = field[row][0];
+    if (symbol === EMPTY) {
+        return false;
+    }
+    for (let i = 0; i < dimension; i++) {
+        if (symbol !== field[row][i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function renderSymbolInCell(symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
 }
 
-function findCell (row, col) {
+function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
 }
 
-function addResetListener () {
+function addResetListener() {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
 }
 
 
-function resetClickHandler () {
+function resetClickHandler() {
     console.log('reset!');
     turn = 0;
     gameEnded = 0;
@@ -87,8 +106,9 @@ function resetClickHandler () {
 
 
 /* Test Function */
+
 /* Победа первого игрока */
-function testWin () {
+function testWin() {
     clickOnCell(0, 2);
     clickOnCell(0, 0);
     clickOnCell(2, 0);
@@ -99,7 +119,7 @@ function testWin () {
 }
 
 /* Ничья */
-function testDraw () {
+function testDraw() {
     clickOnCell(2, 0);
     clickOnCell(1, 0);
     clickOnCell(1, 1);
@@ -112,6 +132,6 @@ function testDraw () {
     clickOnCell(2, 2);
 }
 
-function clickOnCell (row, col) {
+function clickOnCell(row, col) {
     findCell(row, col).click();
 }
