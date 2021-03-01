@@ -206,7 +206,7 @@ function addResetListener() {
 
 function resetClickHandler() {
     console.log('reset!');
-    turn = 0;
+    turn = 1;
     gameEnded = 0;
     for (let i = 0; i < dimension; ++i) {
         for (let j = 0; j < dimension; ++j) {
