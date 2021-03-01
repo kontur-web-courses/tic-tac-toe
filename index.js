@@ -74,6 +74,24 @@ function checkLine(field, row) {
     return true;
 }
 
+function checkColumn(field, col) {
+    let symbol = field[0][col];
+    if (symbol === EMPTY) {
+        return false;
+    }
+    for (let i = 0; i < dimension; ++i) {
+        if (symbol !== field[i][col]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function checkDiagonal(field, row, col) {
+
+}
+
 function createLine(row) {
     let line = [];
     for (let i = 0; i < dimension; i++) {
