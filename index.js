@@ -77,6 +77,19 @@ function findVerticalNeighbours(minIndex, maxIndex, points, e, col){
     return counter;
 }
 
+function findСrosswiseNeighbours(startPoint, endPoint, points, e, stepRow, stepCol){
+    let counter = 0;
+    for (let i = startPoint[0]; i <= endPoint[0]; i = i + stepRow){
+        for (let j = startPoint[1]; j <= endPoint[1]; j = j + stepCol){
+            if (map[i][j] === e){
+                counter += 1;
+                points.push([i, j])
+            }
+        }
+    }
+    return counter;
+}
+
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
