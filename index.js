@@ -44,8 +44,6 @@ function cellClickHandler(row, col) {
         turn += 1;
     }
 
-    console.log(desk[row]);
-    console.log(turn)
     console.log(`Clicked on cell: ${row}, ${col}`);
 
     checkWin(row, col);
@@ -109,12 +107,12 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
-    // 
     desk[0] = [];
     desk[1] = [];
     desk[2] = [];
     turn = 0;
     winner = null;
+    startGame();
     console.log('reset!');
 }
 
