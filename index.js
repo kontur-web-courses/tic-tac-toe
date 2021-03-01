@@ -5,37 +5,12 @@ const EMPTY = ' ';
 const container = document.getElementById('fieldWrapper');
 
 
-class Observer {
 
-    constructor() {
-        this.symbols = [CROSS, ZERO];
-        this.count = 0;
-        this.field = [
-            ['', '', ''],
-            ['', '', ''],
-            ['', '', '']
-        ];
-    }
-
-    get_symbol() {
-        this.count = (this.count + 1) % 2;
-        return this.symbols[this.count];
-    }
-
-    check_win() {
-        let a, b, c, d, e, f, g, e, h = this.field;
-        if (a === b && a === c && a != EMPTY) {
-            alert("Win" + a);
-        } else if (d === e && d)
-    }
-}
-
-startGame();
-addResetListener();
 
 function startGame() {
     const observer = new Observer();
     renderGrid(3, observer);
+    addResetListener(observer);
 }
 
 function renderGrid(dimension, observer) {
@@ -55,10 +30,9 @@ function renderGrid(dimension, observer) {
 
 function cellClickHandler(row, col, observer) {
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    renderSymbolInCell(observer.get_symbol(), row, col);
-
+    let unit = observer.get_symbol();
+    renderSymbolInCell(unit, row, col);
+    observer.update_field(row, col, unit)
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
@@ -73,15 +47,68 @@ function findCell(row, col) {
     return targetRow.querySelectorAll('td')[col];
 }
 
-function addResetListener() {
+function addResetListener(observer) {
     const resetButton = document.getElementById('reset');
-    resetButton.addEventListener('click', resetClickHandler);
+    resetButton.addEventListener('click', () => resetClickHandler(observer));
 }
 
-function resetClickHandler() {
-    console.log('reset!');
+function resetClickHandler(observer) {
+    observer.reset();
+    renderGrid(3);
 }
 
+class Observer {
+
+    constructor() {
+        this.symbols = [CROSS, ZERO];
+        this.count = 0;
+        this.field = [
+            [EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY]
+        ];
+        this.end = false;
+    }
+
+    get_symbol() {
+        this.count = (this.count + 1) % 2;
+        return this.symbols[this.count];
+    }
+
+    update_field(i, j, unit) {
+        if (this.field[i][j] === EMPTY)
+            this.field[i][j] = unit;
+        this.check_win(i, j);
+    }
+
+    check_win(i, j) {
+        let unit = this.field[i][j]
+        if (this.field[i][0] === this.field[i][1] && this.field[i][1] === this.field[i][2]) {
+            this.end = true;
+        } else if (this.field[0][j] === this.field[1][j] && this.field[1][j] === this.field[2][j]) {
+            this.end = true;
+        } else if (this.field[0][0] === this.field[1][1] && this.field[1][1] === this.field[2][2]) {
+            this.end = this.field[0][0] !== EMPTY;
+        } else if (this.field[0][2] === this.field[1][1] && this.field[1][1] === this.field[2][0]) {
+            this.end = this.field[1][1] !== EMPTY;
+        }
+        if (this.end === true)
+            alert('Win ' + unit);
+    }
+
+    reset() {
+        this.symbols = [CROSS, ZERO];
+        this.count = 0;
+        this.field = [
+            [EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY]
+        ];
+        this.end = false;
+    }
+}
+
+startGame();
 
 /* Test Function */
 /* Победа первого игрока */
