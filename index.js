@@ -90,6 +90,14 @@ function findWinner(field) {
         {
             return createColumn(i);
         }
+        for (let j = 0; j < dimension; i++) {
+            if (checkMainDiagonal(field, i, j)) {
+                return createMainDiagonal(i, j);
+            }
+            if (checkSideDiagonal(field, i, j)) {
+                return createSideDiagonal(i, j);
+            }
+        }
     }
 
     return [];
