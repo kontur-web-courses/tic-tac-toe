@@ -36,6 +36,9 @@ let field = [
 let gameOver = false;
 
 function cellClickHandler(row, col) {
+    if (gameOver) {
+        return;
+    }
     console.log(`Clicked on cell: ${row}, ${col}`);
     if (field[row][col] !== EMPTY) {
         return;
@@ -53,7 +56,7 @@ function cellClickHandler(row, col) {
         alert("Победила дружба");
     }
 
-    if (combo.length === 0 || gameOver) {
+    if (combo.length === 0) {
         return;
     }
 
