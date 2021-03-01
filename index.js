@@ -109,9 +109,18 @@ function isWin(row, col){
     if (counter >= 3)
         return true;
 
-    counter = findСrosswiseNeighbours([Math.min(row + 2, dim - 1), Math.max(col - 2, 0)], [row, col], [], currentTurn, 1, -1);
+    counter = findСrosswise2Neighbours([Math.min(row + 2, dim - 1), Math.max(col - 2, 0)], [row, col], [], currentTurn, -1, 1);
     if (counter >= 3)
         return true;
+
+
+    counter = findСrosswise2Neighbours([Math.min(row + 1, dim - 1), Math.max(col - 1, 0)], [Math.max(row - 1, 0), Math.min(col + 1, dim - 1)], [], currentTurn, -1, 1);
+    if (counter >= 3)
+        return true;  
+
+    counter = findСrosswise2Neighbours([row, col], [Math.max(row - 2, 0), Math.min(col + 2, dim - 1)], [], currentTurn, -1, 1);
+    if (counter >= 3)
+        return true;    
 }
 
 
