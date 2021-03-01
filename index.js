@@ -1,17 +1,20 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-
+let FIELD = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
+let currentPlayer = CROSS
+let gameIsOver = false;
+let size = 3
 const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
 
-function startGame () {
-    renderGrid(3);
+function startGame() {
+    renderGrid(size);
 }
 
-function renderGrid (dimension) {
+function renderGrid(dimension) {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
@@ -26,8 +29,63 @@ function renderGrid (dimension) {
     }
 }
 
-function cellClickHandler (row, col) {
-    // Пиши код тут
+function swapPlayer() {
+    currentPlayer = currentPlayer === ZERO ? CROSS : ZERO;
+}
+function paintWinner(c1, c2, c3){
+    c1.style.color = '#FF0000';
+    c2.style.color = '#FF0000';
+    c3.style.color = '#FF0000';
+
+}
+function showResult(text){
+    alert(text)
+}
+function getWinner() {
+    for (let i = 0; i < FIELD.length; i++) {
+        if (FIELD[i][0] === FIELD[i][1] && FIELD[i][1] === FIELD[i][2] && FIELD[i][1] !== EMPTY){
+            paintWinner(findCell(i, 0), findCell(i, 1), findCell(i,2));
+            setTimeout(showResult(`Победили: ${currentPlayer}`), 1000)
+            gameIsOver = true;
+            return;
+        }
+    }
+    if (FIELD[0][0] === FIELD[1][1] && FIELD[1][1] === FIELD[2][2] && FIELD[1][1] !== EMPTY){
+        setTimeout(showResult(`Победили: ${currentPlayer}`), 1000)
+        paintWinner(findCell(0, 0), findCell(1, 1), findCell(2,2));
+        gameIsOver = true;
+        return;
+    }
+    if (FIELD[0][2] === FIELD[1][1] && FIELD[1][1] === FIELD[2][0] && FIELD[1][1] !== EMPTY){
+        setTimeout(showResult(`Победили: ${currentPlayer}`), 1000)
+        paintWinner(findCell(0, 2), findCell(1, 1), findCell(2,0));
+        gameIsOver = true;
+        return;
+    }
+    for (let i = 0; i < 3; i++) {
+        if (FIELD[0][i] === FIELD[1][i] && FIELD[1][i] === FIELD[2][i] && FIELD[0][i] !== EMPTY){
+            setTimeout(showResult(`Победили: ${currentPlayer}`), 1000)
+            paintWinner(findCell(0, i), findCell(1, i), findCell(2,i));
+            gameIsOver = true;
+            return;
+        }
+
+    }
+    let values = FIELD.flat(1)
+    if (!values.includes(EMPTY)) {
+        gameIsOver = true;
+        setTimeout(showResult("Победила дружба"), 1000)
+    }
+}
+
+function cellClickHandler(row, col) {
+    if (FIELD[row][col] !== EMPTY || gameIsOver) {
+        return;
+    }
+    renderSymbolInCell(currentPlayer, row, col);
+    FIELD[row][col] = currentPlayer;
+    getWinner();
+    swapPlayer();
     console.log(`Clicked on cell: ${row}, ${col}`);
 
 
@@ -36,31 +94,35 @@ function cellClickHandler (row, col) {
      */
 }
 
-function renderSymbolInCell (symbol, row, col, color = '#333') {
+function renderSymbolInCell(symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
 }
 
-function findCell (row, col) {
+function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
 }
 
-function addResetListener () {
+function addResetListener() {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
 }
 
-function resetClickHandler () {
+function resetClickHandler() {
+    gameIsOver = false;
+    FIELD = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
+    startGame();
     console.log('reset!');
 }
 
 
 /* Test Function */
+
 /* Победа первого игрока */
-function testWin () {
+function testWin() {
     clickOnCell(0, 2);
     clickOnCell(0, 0);
     clickOnCell(2, 0);
@@ -71,7 +133,7 @@ function testWin () {
 }
 
 /* Ничья */
-function testDraw () {
+function testDraw() {
     clickOnCell(2, 0);
     clickOnCell(1, 0);
     clickOnCell(1, 1);
@@ -84,6 +146,6 @@ function testDraw () {
     clickOnCell(2, 2);
 }
 
-function clickOnCell (row, col) {
+function clickOnCell(row, col) {
     findCell(row, col).click();
 }
