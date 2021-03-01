@@ -16,6 +16,7 @@ function renderGrid (dimension) {
 
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
+
         for (let j = 0; j < dimension; j++) {
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
@@ -28,12 +29,36 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
 
-
+    renderSymbolInCell(ZERO, row, col);
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
+}
+
+var dimension = 3;
+let map = [[], [], []];
+
+function isWinner(row, col){
+    let currentTurn = map[row][col];
+    // По горизонтали
+    let counter = 0;
+    for (let i = max(col - 2, 0); i < col; i++){
+        counter++;
+    }
+    if (counter >= 3)
+        return true;
+
+    for (let i = max(col - 1, 0); i <= min(col + 1, dimension); i++){
+
+    }
+
+    for (let i = col; i <= min(col + 2, dimension); i++){
+
+    }
+
+    // 
+
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
