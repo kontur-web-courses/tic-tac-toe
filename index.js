@@ -67,15 +67,28 @@ function isWin(row, col){
     let currentTurn = map[row][col];
 
     // По горизонтали
-    let counter = 0;
-    for (let i = Math.max(col - 2, 0); i < col; i++){
-        if (map[row][i] == currentTurn)
-            counter++;
-    }
-
-    alert(counter);
-    if (counter >= 2)
+    let counter = findLineNeighbours(Math.max(col - 2, 0), col, [], currentTurn, row);
+    if (counter >= 3)
         return true;
+
+    counter = findLineNeighbours(Math.max(col - 1, 0), Math.min(col + 1, dim - 1), [], currentTurn, row);
+    if (counter >= 3)
+        return true;
+
+
+    counter = findLineNeighbours(col, Math.min(col + 2, dim), [], currentTurn, row);
+    if (counter >= 3)
+        return true;
+
+    // По вертикали
+    // for (let i = Math.max(col - 2, 0); i < col; i++){
+    //     if (map[row][i] == currentTurn)
+    //         counter++;
+    // }
+
+    // alert(counter);
+    // if (counter >= 2)
+    //     return true;
 
     /*
     for (let i = max(col - 1, 0); i <= min(col + 1, dimension); i++){
@@ -89,12 +102,16 @@ function isWin(row, col){
     // 
 }
 
-function countNeighbours(row, col, ){
-    for(let i = 0; i < 3; i++){
-        for(let j = 0; j < 3; j++){
 
+function findLineNeighbours(minIndex, maxIndex, points, e, row){
+    let counter = 0;
+    for (let i = minIndex; i <= maxIndex; i++){
+        if (map[row][i] === e){
+            counter += 1;
+            points.push((i));
         }
     }
+    return counter;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
