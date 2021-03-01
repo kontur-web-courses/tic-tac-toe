@@ -27,7 +27,7 @@ function renderGrid(dimension) {
     }
 }
 
-    
+
 let turn = 0;
 let field = [
     [EMPTY, EMPTY, EMPTY],
@@ -54,7 +54,7 @@ function findWinner(field) {
     // let result = [];
     for (let i = 0; i < dimension; i++) {
         if (checkLine(field, i)) {
-
+            return createLine(i);
         }
     }
 
@@ -72,6 +72,14 @@ function checkLine(field, row) {
     }
 
     return true;
+}
+
+function createLine(row) {
+    let line = [];
+    for (let i = 0; i < dimension; i++) {
+        line[i] = [row, i];
+    }
+    return line;
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
@@ -97,7 +105,7 @@ function resetClickHandler() {
     turn = 0;
     gameEnded = 0;
     for (let i = 0; i < field.length; ++i) {
-        for(let j = 0; j < field[i].length; ++j) {
+        for (let j = 0; j < field[i].length; ++j) {
             field[i][j] = EMPTY;
         }
     }
