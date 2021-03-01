@@ -66,6 +66,7 @@ function cellClickHandler(row, col) {
 
 function hasWinner(row, col) {
     let hasWinner = true;
+
     let line = [];
     let coor = []
 
@@ -101,7 +102,7 @@ function hasWinner(row, col) {
     coor = [];
     for (let i = 0; i < SIZE; i++) {
         line.push(field[i][SIZE - i - 1]);
-        coor.push(i, SIZE - i - 1);
+        coor.push([i, SIZE - i - 1]);
     }
     if (line.every(e => e == line[0] && e !== EMPTY)) {
         return [true, coor];
