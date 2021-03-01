@@ -28,7 +28,7 @@ function renderGrid(dimension) {
 }
 
 
-let turn = 0;
+let turn = 1;
 let field = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
@@ -90,14 +90,12 @@ function findWinner(field) {
         {
             return createColumn(i);
         }
-        for (let j = 0; j < dimension; i++) {
-            if (checkMainDiagonal(field, i, j)) {
-                return createMainDiagonal(i, j);
-            }
-            if (checkSideDiagonal(field, i, j)) {
-                return createSideDiagonal(i, j);
-            }
-        }
+    }
+    if (checkMainDiagonal(field)) {
+        return createMainDiagonal();
+    }
+    if (checkSideDiagonal(field)) {
+        return createSideDiagonal();
     }
 
     return [];
@@ -131,36 +129,26 @@ function checkColumn(field, col) {
     return true;
 }
 
-function checkMainDiagonal(field, row, col) {
-    let symbol = field[row][col];
+function checkMainDiagonal(field) {
+    let symbol = field[0][0];
     if (symbol === EMPTY) {
         return false;
     }
-    for (let i = 0; row + i < dimension && col + i < dimension; i++) {
-        if (symbol !== field[row + i][ col + i]) {
-            return false;
-        }
-    }
-    for (let i = 1; row - i >= 0 && col - i >= 0; i++) {
-        if (symbol !== field[row + i][ col + i]) {
+    for (let i = 0; i < dimension; i++) {
+        if (symbol !== field[i][i]) {
             return false;
         }
     }
     return true;
 }
 
-function checkSideDiagonal(field, row, col) {
-    let symbol = field[row][col];
+function checkSideDiagonal(field) {
+    let symbol = field[0][dimension - 1];
     if (symbol === EMPTY) {
         return false;
     }
-    for (let i = 0; row + i < dimension && col - i >= 0; i++) {
-        if (symbol !== field[row + i][ col - i]) {
-            return false;
-        }
-    }
-    for (let i = 1; row - i >= 0 && col + i < dimension; i++) {
-        if (symbol !== field[row - i][ col + i]) {
+    for (let i = 0; i < dimension; i++) {
+        if (symbol !== field[i][dimension - i - 1]) {
             return false;
         }
     }
@@ -184,26 +172,20 @@ function createColumn(col) {
     return column;
 }
 
-function createMainDiagonal(field, row, col) {
-    let line = [];
-    for (let i = 0; row + i < dimension && col + i < dimension; i++) {
-        line[i] = [row + i, col + i];
+function createMainDiagonal(field) {
+    let diagonal = [];
+    for (let i = 0; i < dimension; i++) {
+        diagonal[i] = [i, i];
     }
-    for (let i = 1; row - i >= 0 && col - i >= 0; i++) {
-        line[i] = [row - i, col - i];
-    }
-    return line;
+    return diagonal;
 }
 
-function createSideDiagonal(field, row, col) {
-    let line = [];
-    for (let i = 0; row + i < dimension && col - i >= 0; i++) {
-        line[i] = [row + i, col - i];
+function createSideDiagonal(field) {
+    let diagonal = [];
+    for (let i = 0; i < dimension; i++) {
+        diagonal[i] = [i, dimension - i - 1];
     }
-    for (let i = 1; row - i >= 0 && col + i < dimension; i++) {
-        line[i] = [row - i, col + i];
-    }
-    return line;
+    return diagonal;
 }    
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
