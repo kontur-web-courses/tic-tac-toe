@@ -61,11 +61,11 @@ function cellClickHandler (row, col) {
             renderSymbolInCell(player, coord[0], coord[1], '#FF0000');
         }
 
-        setTimeout(alert(player), 500)
+        setTimeout(() => alert(player), 500)
     }
 
     if (--game.stepsLeft <= 0){
-        setTimeout(alert("Победила дружба"), 500)
+        setTimeout(() => alert("Победила дружба"), 500)
         return;
     }
     /* Пользоваться методом для размещения символа в клетке так:
