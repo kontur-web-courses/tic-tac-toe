@@ -33,6 +33,7 @@ let field = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY]];
+let gameOver = false;
 
 function cellClickHandler(row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
@@ -52,16 +53,17 @@ function cellClickHandler(row, col) {
         alert("Победила дружба");
     }
 
-    if (combo.length === 0) {
+    if (combo.length === 0 || gameOver) {
         return;
     }
 
     for (let coord of combo) {
         let row = coord[0], col = coord[1];
-        renderSymbolInCell(field[row][col], row, col, '#666')
+        renderSymbolInCell(field[row][col], row, col, '#FFC0CB')
     }
 
     alert(`Победил ${field[row][col]}`);
+    gameOver = true;
 }
 
 function existFreeSpaces(field) {
@@ -160,7 +162,7 @@ function addResetListener() {
 function resetClickHandler() {
     console.log('reset!');
     turn = 0;
-    gameEnded = 0;
+    gameOver = 0;
     for (let i = 0; i < field.length; ++i) {
         for (let j = 0; j < field[i].length; ++j) {
             field[i][j] = EMPTY;
