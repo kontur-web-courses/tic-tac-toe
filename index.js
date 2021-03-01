@@ -1,14 +1,18 @@
+const GAME_SIZE = 3;
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
-startGame();
+startGame(GAME_SIZE);
 addResetListener();
 
-function startGame () {
-    renderGrid(3);
+let lastSymbol = EMPTY;
+let field = new Array(GAME_SIZE ** 2).fill(EMPTY);
+
+function startGame (size) {
+    renderGrid(size);
 }
 
 function renderGrid (dimension) {
@@ -26,14 +30,57 @@ function renderGrid (dimension) {
     }
 }
 
+function checkDiagonal(symbol) {
+    let right = true;
+    let left = true;
+    for (let i = 0; i < GAME_SIZE; i++) {
+        const ri = GAME_SIZE * i + i;
+        const li = (GAME_SIZE - 1) * (i + 1);
+        right &= field[ri] === symbol;
+        left &= field[li] === symbol;
+    }
+    return right || left;
+}
+
+function checkLanes(symbol) {
+
+    for (let col = 0; col < GAME_SIZE; col++)
+    {
+        let cols = true;
+        let rows = true;
+        for (let row = 0; row < GAME_SIZE; row++)
+        {
+            const x = GAME_SIZE * col + row;
+            const y = GAME_SIZE * row + col;
+
+            rows &= field[x] === symbol;
+            cols &= field[y] === symbol;
+        }
+
+        if (cols || rows) return true;
+    }
+
+    return false;
+}
+
+function checkGame(symbol) {
+    if (!field.includes(EMPTY))
+        alert('Friendship win');
+    else if (checkDiagonal(symbol))
+        alert(`${symbol} win!`);
+    else if (checkLanes(symbol))
+        alert(`${symbol} win!`);
+}
+
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    if (field[GAME_SIZE * row + col])
+        return;
+    let symbol = lastSymbol === CROSS ? ZERO : CROSS;
+    lastSymbol = symbol;
+    field[row * GAME_SIZE + col] = symbol;
+    checkGame(symbol);
+    renderSymbolInCell(symbol, row, col);
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -54,9 +101,10 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    renderGrid(GAME_SIZE);
+    field = new Array(GAME_SIZE ** 2).fill(EMPTY);
     console.log('reset!');
 }
-
 
 /* Test Function */
 /* Победа первого игрока */
