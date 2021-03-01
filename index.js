@@ -33,8 +33,12 @@ let field = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY]];
+let gameEnded = false;
 
 function cellClickHandler(row, col) {
+    if (gameEnded) {
+        return;
+    }
     console.log(`Clicked on cell: ${row}, ${col}`);
     if (field[row][col] !== EMPTY) {
         return;
@@ -58,10 +62,11 @@ function cellClickHandler(row, col) {
 
     for (let coord of combo) {
         let row = coord[0], col = coord[1];
-        renderSymbolInCell(field[row][col], row, col, '#666')
+        renderSymbolInCell(field[row][col], row, col, '#FFC0CB')
     }
 
     alert(`Победил ${field[row][col]}`);
+    gameEnded = true;
 }
 
 function existFreeSpaces(field) {
@@ -77,7 +82,6 @@ function existFreeSpaces(field) {
 }
 
 function findWinner(field) {
-    // let result = [];
     for (let i = 0; i < dimension; i++) {
         if (checkLine(field, i)) {
             return createLine(i);
@@ -121,16 +125,16 @@ function checkColumn(field, col) {
 
 function checkMainDiagonal(field, row, col) {
     let symbol = field[row][col];
-    if (symbol == EMPTY) {
+    if (symbol === EMPTY) {
         return false;
     }
     for (let i = 0; row + i < dimension && col + i < dimension; i++) {
-        if (symbol !== field[row + i, col + i]) {
+        if (symbol !== field[row + i][ col + i]) {
             return false;
         }
     }
     for (let i = 1; row - i >= 0 && col - i >= 0; i++) {
-        if (symbol !== field[row + i, col + i]) {
+        if (symbol !== field[row + i][ col + i]) {
             return false;
         }
     }
@@ -139,16 +143,16 @@ function checkMainDiagonal(field, row, col) {
 
 function checkSideDiagonal(field, row, col) {
     let symbol = field[row][col];
-    if (symbol == EMPTY) {
+    if (symbol === EMPTY) {
         return false;
     }
     for (let i = 0; row + i < dimension && col - i >= 0; i++) {
-        if (symbol !== field[row + i, col - i]) {
+        if (symbol !== field[row + i][ col - i]) {
             return false;
         }
     }
     for (let i = 1; row - i >= 0 && col + i < dimension; i++) {
-        if (symbol !== field[row - i, col + i]) {
+        if (symbol !== field[row - i][ col + i]) {
             return false;
         }
     }
