@@ -1,6 +1,11 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+const map = [];
+let stepsCounter;
+let dim;
+let playerTurn = 0;
+let gameIsOn = true;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -13,27 +18,57 @@ function startGame () {
 
 function renderGrid (dimension) {
     container.innerHTML = '';
-
+    dim = dimension;
+    stepsCounter = dimension * dimension;
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
+        let tmpArray = [];
         for (let j = 0; j < dimension; j++) {
             const cell = document.createElement('td');
+            tmpArray.push(EMPTY);
             cell.textContent = EMPTY;
             cell.addEventListener('click', () => cellClickHandler(i, j));
             row.appendChild(cell);
         }
+        map.push(tmpArray);
         container.appendChild(row);
     }
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
+    if (map[row][col] !== EMPTY)
+        return;
 
-
-    /* Пользоваться методом для размещения символа в клетке так:
+    stepsCounter--;
+    if (playerTurn === 0){
+        map[row][col] = ZERO;
+        playerTurn = 1;
         renderSymbolInCell(ZERO, row, col);
-     */
+    } else {
+        map[row][col] = CROSS;
+        playerTurn = 0;
+        renderSymbolInCell(CROSS, row, col);
+    }
+    if (stepsCounter <= 0) {
+        alert('Победила дружба!');
+        gameIsOn = false;
+    }
+}
+
+function isWin(row, col){
+    if ((row === 0 && col === 0)
+        || (row === dim - 1  && col === dim - 1)
+        || (row === dim - 1  && col === 0)
+        || (row === 0  && col === dim - 1)){
+    }
+}
+
+function countNeighbours(row, col, ){
+    for(let i = 0; i < 3; i++){
+        for(let j = 0; j < 3; j++){
+
+        }
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
