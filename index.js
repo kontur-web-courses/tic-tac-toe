@@ -56,7 +56,6 @@ function cellClickHandler (row, col) {
 
     }
     if (isWin(row, col)) {
-        console.log(winPoints);
         for (const point of winPoints){
             let cell = findCell(point[0], point[1]);
             cell.bgColor = 'red';
@@ -105,7 +104,7 @@ function isWin(row, col){
     counter = findVerticalNeighbours(row, Math.min(row + 2, dim - 1), winPoints, currentTurn, col);
     if (counter >= 3)
         return true;
-    /*
+
     // По диагонали
     winPoints = [];
     counter = findСrosswiseNeighbours([Math.max(row - 2, 0), Math.max(col - 2, 0)], [row, col], winPoints, currentTurn, 1, 1);
@@ -137,7 +136,7 @@ function isWin(row, col){
     if (counter >= 3)
         return true;
 
-     */
+
     return false;
 }
 
@@ -165,31 +164,33 @@ function findVerticalNeighbours(minIndex, maxIndex, points, e, col){
 }
 
 function findСrosswiseNeighbours(startPoint, endPoint, points, e, stepRow, stepCol){
-    if (playerTurn === 1)
-        console.log(startPoint, endPoint);
     let counter = 0;
-    for (let i = startPoint[0]; i <= endPoint[0]; i = i + stepRow){
-        for (let j = startPoint[1]; j <= endPoint[1]; j = j + stepCol){
-            if (map[i][j] === e){
-                counter += 1;
-                points.push([i, j]);
-            }        
+    let currentRow = startPoint[0];
+    let currentCol = startPoint[1];
+
+    while (currentRow <= endPoint[0] && currentCol <= endPoint[1]) {
+        if (map[currentRow][currentCol] === e) {
+            counter += 1;
+            points.push([currentRow, currentCol]);
         }
+        currentRow += stepRow;
+        currentCol += stepCol;
     }
     return counter;
 }
 
 function findСrosswise2Neighbours(startPoint, endPoint, points, e, stepRow, stepCol){
-    if (playerTurn === 1)
-        console.log(startPoint, endPoint);
     let counter = 0;
-    for (let i = startPoint[0]; i >= endPoint[0]; i = i + stepRow){
-        for (let j = startPoint[1]; j <= endPoint[1]; j = j + stepCol){
-            if (map[i][j] === e){
-                counter += 1;
-                points.push([i, j]);
-            }        
+    let currentRow = startPoint[0];
+    let currentCol = startPoint[1];
+
+    while (currentRow >= endPoint[0] && currentCol <= endPoint[1]) {
+        if (map[currentRow][currentCol] === e) {
+            counter += 1;
+            points.push([currentRow, currentCol]);
         }
+        currentRow += stepRow;
+        currentCol += stepCol;
     }
     return counter;
 }
