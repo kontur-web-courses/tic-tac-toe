@@ -4,7 +4,7 @@ const EMPTY = ' ';
 let map = [];
 let stepsCounter;
 let dim;
-let playerTurn = 0;
+let playerTurn;
 let gameIsOn = true;
 let winPoints;
 
@@ -20,6 +20,7 @@ function startGame () {
 function renderGrid (dimension) {
     winPoints = [];
     map = [];
+    playerTurn = 0;
     container.innerHTML = '';
     dim = dimension;
     stepsCounter = dimension * dimension;
@@ -55,12 +56,15 @@ function cellClickHandler (row, col) {
 
     }
     if (isWin(row, col)) {
+        console.log(winPoints);
         for (const point of winPoints){
             let cell = findCell(point[0], point[1]);
             cell.bgColor = 'red';
         }
         alert("Победа");
+        gameIsOn = false;
     }
+
     if (stepsCounter <= 0) {
         alert('Победила дружба!');
         gameIsOn = false;
@@ -69,6 +73,7 @@ function cellClickHandler (row, col) {
 
 function isWin(row, col){
     let currentTurn = map[row][col];
+
     winPoints = [];
     // По горизонтали
     let counter = findHorizontalNeighbours(Math.max(col - 2, 0), col, winPoints, currentTurn, row);
@@ -79,6 +84,7 @@ function isWin(row, col){
     counter = findHorizontalNeighbours(Math.max(col - 1, 0), Math.min(col + 1, dim - 1), winPoints, currentTurn, row);
     if (counter >= 3)
         return true;
+
     winPoints = [];
     counter = findHorizontalNeighbours(col, Math.min(col + 2, dim), winPoints, currentTurn, row);
     if (counter >= 3)
@@ -99,7 +105,7 @@ function isWin(row, col){
     counter = findVerticalNeighbours(row, Math.min(row + 2, dim - 1), winPoints, currentTurn, col);
     if (counter >= 3)
         return true;
-
+    /*
     // По диагонали
     winPoints = [];
     counter = findСrosswiseNeighbours([Math.max(row - 2, 0), Math.max(col - 2, 0)], [row, col], winPoints, currentTurn, 1, 1);
@@ -129,7 +135,10 @@ function isWin(row, col){
     winPoints = [];
     counter = findСrosswise2Neighbours([row, col], [Math.max(row - 2, 0), Math.min(col + 2, dim - 1)], winPoints, currentTurn, -1, 1);
     if (counter >= 3)
-        return true;    
+        return true;
+
+     */
+    return false;
 }
 
 
@@ -138,7 +147,7 @@ function findHorizontalNeighbours(minIndex, maxIndex, points, e, row){
     for (let i = minIndex; i <= maxIndex; i++){
         if (map[row][i] === e){
             counter += 1;
-            points.push((i));
+            points.push([row, i]);
         }
     }
     return counter;
@@ -156,6 +165,8 @@ function findVerticalNeighbours(minIndex, maxIndex, points, e, col){
 }
 
 function findСrosswiseNeighbours(startPoint, endPoint, points, e, stepRow, stepCol){
+    if (playerTurn === 1)
+        console.log(startPoint, endPoint);
     let counter = 0;
     for (let i = startPoint[0]; i <= endPoint[0]; i = i + stepRow){
         for (let j = startPoint[1]; j <= endPoint[1]; j = j + stepCol){
@@ -169,6 +180,8 @@ function findСrosswiseNeighbours(startPoint, endPoint, points, e, stepRow, step
 }
 
 function findСrosswise2Neighbours(startPoint, endPoint, points, e, stepRow, stepCol){
+    if (playerTurn === 1)
+        console.log(startPoint, endPoint);
     let counter = 0;
     for (let i = startPoint[0]; i >= endPoint[0]; i = i + stepRow){
         for (let j = startPoint[1]; j <= endPoint[1]; j = j + stepCol){
