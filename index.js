@@ -46,54 +46,59 @@ function cellClickHandler (row, col, player, field, n) {
     if (moves === n * n)
         alert("Победила дружба");
     if (player === 1){
-        field[row][col] = CROSS;
         renderSymbolInCell(CROSS, row, col);
+        field[row][col] = CROSS;
+
         moves++;
         turn++;
     } else if (player === 0){
-        field[row][col] = ZERO;
         renderSymbolInCell(ZERO, row, col);
+        field[row][col] = ZERO;
+
         moves++;
         turn++;
     }
-    isWin(row, col, field);
+    if (moves > 4)
+        isWin(row, col, field);
     return field;
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
 }
 
-function isWin(k, m, field) {
-    let i = k +1;
-    let j = m + 1;
-    let current = field[k][m];
-    let len = field.length;
+function isWin(i, j, field) {
+    let current = field[i][j];
     if (current === undefined)
         return;
-    if (j > 1 && j < len && field[i][j - 1] === current && (field[i][j - 2] === current || field[i][j + 1] === current))
+    if (j > 0 && field[i][j - 1] === current && field[i][j - 2] === current)
         alert(`${current} win`); //строчка слева вправо
+    if (j > 0 && field[i][j - 1] === current && field[i][j + 1] === current)
+        alert(`${current} win`); //столбик сверху вниз
+    if (field[i][j + 1] === current && field[i][j + 2] === current)
+        alert(`${current} win`); //строчка справа налево
+    if (field[i][j + 1] === current && field[i][j - 1] === current)
+        alert(`${current} win`); //столбик сверху вниз
+    if (field[i + 1][j] === current)
+    {
+        if (field[i + 2][j] === current)
+            alert(`${current} win`);
+        else if (field[i - 1][j] === current)
+            alert(`${current} win`);
+    }
 
-    if (j < (len - 1) && j > 0 && field[i][j + 1] === current && (field[i][j + 2] === current || field[i][j - 1] === current))
-        alert(`${current} win`);//строчка справа влево
+    if (i > 0 && field[i - 1][j] === current)
+    {
+        if (field[i + 1][j] === current)
+            alert(`${current} win`);
+        else if (field[i - 2][j] === current)
+            alert(`${current} win`);
+    }
 
-    if (i > 1 && i < len && field[i - 1][j] === current && (field[i - 2][j] === current || field[i + 1][j] === current))
-        alert(`${current} win`);//столбик сверху вниз
 
-    if (i < (len - 1) && i > 0 &&field[i + 1][j] === current && (field[i + 2][j] === current || field[i - 1][j] === current))
-        alert(`${current} win`);//столбик снизу вверх
-
-    if (j < len && j > 1 && i < len && i > 1 && field[i - 1][j - 1] === current && (field[i - 2][j - 2] === current || field[i + 1][j + 1] === current))
-        alert(`${current} win`);//диагонали слева верх вправо вниз
-
-    if (j < (len - 1) && j > 0 && i < (len - 1) && i > 0 && field[i + 1][j + 1] === current && (field[i + 2][j + 2] === current || field[i - 1][j - 1] === current))
-        alert(`${current} win`);//диагональ справа низ влево вверх
-
-    if (j < len && j > 0 && i < (len - 1) && i > 1 && field[i - 1][j + 1] === current && (field[i - 2][j + 2] === current || field[i + 1][j - 1] === current))
-        alert(`${current} win`);//диагональ справа верх влево вниз
-
-    if (j < len && j > 1 && i < (len - 1) && i > 0 && field[i + 1][j - 1] === current && (field[i + 2][j - 2] === current || field[i - 1][j + 1] === current))
-        alert(`${current} win`);//диагональ слева низ вправо верх
-
+    /*if (field[i + 1][j + 1] === current && (field[i + 2][j + 2] === current || field[i - 1][j - 1] === current))
+        alert(${current} win); //диагональ снизу вверх справа налево
+    if (field[i - 1][j - 1] === current && (field[i - 2][j - 2] === current || field[i + 1][j + 1] === current))
+        alert(${current} win); //столбик снизу вверх*/
 }
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
@@ -114,35 +119,4 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
-}
-
-
-/* Test Function */
-/* Победа первого игрока */
-function testWin () {
-    clickOnCell(0, 2);
-    clickOnCell(0, 0);
-    clickOnCell(2, 0);
-    clickOnCell(1, 1);
-    clickOnCell(2, 2);
-    clickOnCell(1, 2);
-    clickOnCell(2, 1);
-}
-
-/* Ничья */
-function testDraw () {
-    clickOnCell(2, 0);
-    clickOnCell(1, 0);
-    clickOnCell(1, 1);
-    clickOnCell(0, 0);
-    clickOnCell(1, 2);
-    clickOnCell(1, 2);
-    clickOnCell(0, 2);
-    clickOnCell(0, 1);
-    clickOnCell(2, 1);
-    clickOnCell(2, 2);
-}
-
-function clickOnCell (row, col) {
-    findCell(row, col).click();
 }
