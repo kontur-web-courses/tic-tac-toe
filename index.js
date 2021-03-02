@@ -1,11 +1,12 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-const map = [];
+let map = [];
 let stepsCounter;
 let dim;
 let playerTurn = 0;
 let gameIsOn = true;
+let winPoints;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -17,6 +18,8 @@ function startGame () {
 }
 
 function renderGrid (dimension) {
+    winPoints = [];
+    map = [];
     container.innerHTML = '';
     dim = dimension;
     stepsCounter = dimension * dimension;
@@ -49,14 +52,16 @@ function cellClickHandler (row, col) {
         map[row][col] = CROSS;
         playerTurn = 0;
         renderSymbolInCell(CROSS, row, col);
+
     }
-    if (isWin(row, col))
-    {
-        for (let i = 0; i < winPoints.length; i++)
-        {
-            let cell = findCell(winPoints[i][0], winPoints[i][1]);
-        }
+
+    if (isWin(row, col)) {
         alert("Победа");
+
+        for (const point of winPoints){
+            let cell = findCell(point[0], point[1]);
+            cell.bgColor = 'red';
+        }
     }
     if (stepsCounter <= 0) {
         alert('Победила дружба!');
@@ -65,71 +70,10 @@ function cellClickHandler (row, col) {
 }
 
 function isWin(row, col){
-    // if ((row === 0 && col === 0)
-    //     || (row === dim - 1  && col === dim - 1)
-    //     || (row === dim - 1  && col === 0)
-    //     || (row === 0  && col === dim - 1)){
-    // }
-    let currentTurn = map[row][col];
-    let counter;
-    counter = findLineNeighbours(Math.max(col - 2, 0), col, [], currentTurn, row);
-    if (counter >= 3)
-        return true;
-
-    counter = findLineNeighbours(Math.max(col - 1, 0), Math.min(col + 1, dim - 1), [], currentTurn, row);
-    if (counter >= 3)
-        return true;
-
-
-    counter = findLineNeighbours(col, Math.min(col + 2, dim), [], currentTurn, row);
-    if (counter >= 3)
-        return true;
-
-    // По вертикали
-    counter = findVerticalNeighbours(Math.max(row - 2, 0), row, [], currentTurn, col);
-    if (counter >= 3)
-        return true;
-
-    counter = findVerticalNeighbours(Math.max(row - 1, 0), Math.min(row + 1, dim - 1), [], currentTurn, col);
-    if (counter >= 3)
-        return true;
-
-
-    counter = findVerticalNeighbours(row, Math.min(row + 2, dim - 1), [], currentTurn, col);
-    if (counter >= 3)
-        return true;
-
-    // По диагонали
-    counter = findСrosswiseNeighbours([Math.max(row - 2, 0), Math.max(col - 2, 0)], [row, col], [], currentTurn, 1, 1);
-    if (counter >= 3)
-        return true;
-
-
-    counter = findСrosswiseNeighbours([Math.max(row - 1, 0), Math.max(col - 1, 0)], [Math.min(row + 1, dim - 1), Math.min(col + 1, dim - 1)], [], currentTurn, 1, 1);
-    if (counter >= 3)
-        return true;
-
-
-    counter = findСrosswiseNeighbours([row, col], [Math.min(row + 2, dim - 1), Math.min(col + 2, dim - 1)], [], currentTurn, 1, 1);
-    if (counter >= 3)
-        return true;
-
-    counter = findСrosswise2Neighbours([Math.min(row + 2, dim - 1), Math.max(col - 2, 0)], [row, col], [], currentTurn, -1, 1);
-    if (counter >= 3)
-        return true;
-
-
-    counter = findСrosswise2Neighbours([Math.min(row + 1, dim - 1), Math.max(col - 1, 0)], [Math.max(row - 1, 0), Math.min(col + 1, dim - 1)], [], currentTurn, -1, 1);
-    if (counter >= 3)
-        return true;  
-
-    counter = findСrosswise2Neighbours([row, col], [Math.max(row - 2, 0), Math.min(col + 2, dim - 1)], [], currentTurn, -1, 1);
-    if (counter >= 3)
-        return true;    
 }
 
 
-function findLineNeighbours(minIndex, maxIndex, points, e, row){
+function findHorizontalNeighbours(minIndex, maxIndex, points, e, row){
     let counter = 0;
     for (let i = minIndex; i <= maxIndex; i++){
         if (map[row][i] === e){
@@ -158,7 +102,7 @@ function findСrosswiseNeighbours(startPoint, endPoint, points, e, stepRow, step
             console.log(i, j);
             if (map[i][j] === e){
                 counter += 1;
-                points.push([i, j])
+                points.push([i, j]);
             }        
         }
     }
@@ -169,10 +113,9 @@ function findСrosswise2Neighbours(startPoint, endPoint, points, e, stepRow, ste
     let counter = 0;
     for (let i = startPoint[0]; i >= endPoint[0]; i = i + stepRow){
         for (let j = startPoint[1]; j <= endPoint[1]; j = j + stepCol){
-            console.log(i, j);
             if (map[i][j] === e){
                 counter += 1;
-                points.push([i, j])
+                points.push([i, j]);
             }        
         }
     }
@@ -198,6 +141,7 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    renderGrid(dim);
 }
 
 
