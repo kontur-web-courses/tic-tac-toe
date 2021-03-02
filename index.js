@@ -21,6 +21,7 @@ function renderGrid (dimension) {
     winPoints = [];
     map = [];
     playerTurn = 0;
+    gameIsOn = true;
     container.innerHTML = '';
     dim = dimension;
     stepsCounter = dimension * dimension;
@@ -41,7 +42,7 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     /* Пользоваться методом для размещения символа в клетке так: */
-    if (map[row][col] !== EMPTY)
+    if (map[row][col] !== EMPTY || gameIsOn === false)
         return;
 
     stepsCounter--;
