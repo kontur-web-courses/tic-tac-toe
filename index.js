@@ -3,17 +3,15 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-let field = [
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY]
-]
 
 let remainingSteps = field.length * field[0].length;
 let diagLength = Math.min(field.length, field[0].length)
-let currentSymbol = CROSS;
 
 //console.log(field);
+let field = getStartField()
+let currentSymbol = CROSS;
+let hasWinner = false;
+
 startGame();
 addResetListener();
 
@@ -21,6 +19,11 @@ function startGame () {
     renderGrid(3);
 }
 
+function getStartField(){
+    return [[EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY]]
+}
 function renderGrid (dimension) {
     container.innerHTML = '';
 
@@ -39,7 +42,7 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
 
-    if (field[row][col] === EMPTY && remainingSteps > 0) {
+    if (field[row][col] === EMPTY && !hasWinner) {
         field[row][col] = currentSymbol;
         renderSymbolInCell(currentSymbol, row, col);
         remainingSteps--;
@@ -117,6 +120,12 @@ function checkFillingByKey(count, key, elementSelector) {
     return true;
 }
 
+function PaintWinnerCells(winSymbol, winCells){
+    for (let cell of winCells){
+        renderSymbolInCell(winSymbol, cell[0], cell[1], '#FF0000')
+    }
+}
+
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
@@ -136,6 +145,9 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    field = getStartField();
+    renderGrid(3);
+    currentSymbol = CROSS;
 }
 
 
