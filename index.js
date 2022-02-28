@@ -59,9 +59,29 @@ function cellClickHandler (row, col) {
 }
 
 function checkGame(){
+    let d = game.length;
     for (let i = 0; i < d; i++){
-        if (checkColumn()){
+        if (checkColumn(i, d)){
+            alert(`Winner is ${game[i][0]}`);
+            //покрасить
+            return;
         }
+        if (CheckRow(i, d)){
+            alert(`Winner is ${game[i][0]}`);
+            //покрасить
+            return;
+        }
+    }
+    if (CheckDiag1(d)){
+        alert(`Winner is ${game[0][0]}`);
+        //покрасить
+        return;
+    }
+    if (CheckDiag2(d)){
+        alert(`Winner is ${game[2][0]}`);
+        //покрасить
+        return;
+    }    
 }
 
 function checkColumn(row, d){
