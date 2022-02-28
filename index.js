@@ -6,9 +6,14 @@ const container = document.getElementById('fieldWrapper');
 let field = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY]]
+    [EMPTY, EMPTY, EMPTY]
+]
+
+let remainingSteps = field.length * field[0].length;
+let diagLength = Math.min(field.length, field[0].length)
 let currentSymbol = CROSS;
-console.log(field);
+
+//console.log(field);
 startGame();
 addResetListener();
 
@@ -32,18 +37,84 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    if (field[row][col] === EMPTY) {
-        field[row][col] = currentSymbol;
-        renderSymbolInCell(currentSymbol, row, col);
-        currentSymbol = currentSymbol === CROSS ? ZERO : CROSS;
-    }
-
     console.log(`Clicked on cell: ${row}, ${col}`);
 
+    if (field[row][col] === EMPTY && remainingSteps > 0) {
+        field[row][col] = currentSymbol;
+        renderSymbolInCell(currentSymbol, row, col);
+        remainingSteps--;
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+        if (checkWinBy(currentSymbol)) {
+            alert(`Winner ${currentSymbol}`);
+        } else if (remainingSteps == 0) {
+            alert("Draw");
+        }
+
+        currentSymbol = currentSymbol === CROSS ? ZERO : CROSS;
+    }
+}
+
+function checkWinBy(player) {
+    return checkRawWinBy(player) || checkColumnWinBy(player) || checkDiagWinBy(player);
+}
+
+function checkRawWinBy(player) {
+    for (let i = 0; i < field.length; i++) {
+        if (checkOneRaw(player, i)) {
+            return true
+        }
+    }
+
+    return false;
+}
+
+function checkColumnWinBy(player) {
+    for (let i = 0; i < field.length; i++) {
+        if (checkOneColumn(player, i)) {
+            return true
+        }
+    }
+
+    return false;
+}
+
+function checkOneRaw(player, index) {
+    return checkFillingByKey(field[0].length, player, (i) => field[index][i])
+}
+
+function checkOneColumn(player, index) {
+    return checkFillingByKey(field.length, player, (i) => field[i][index])
+}
+
+function checkDiagWinBy(player) {
+    return checkMainDiagBy(player) || checkSideDiagBy(player);    
+}
+
+function checkMainDiagBy(player) {
+    for (let i = 0; i < diagLength; i++) {
+        if (field[i][i] !== player)
+            return false;
+    }
+
+    return true;
+}
+
+function checkSideDiagBy(player) {
+    for (let i = 0; i < diagLength; i++) {
+        if (field[i][diagLength - i - 1] !== player)
+            return false;
+    }
+
+    return true;
+}
+
+function checkFillingByKey(count, key, elementSelector) {
+    for (let i = 0; i < count; i++) {
+        if (elementSelector(i) !== key)
+            return false;
+    }
+
+    return true;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
