@@ -36,6 +36,26 @@ function renderGrid(dimension) {
     }
 }
 
+function checkWin () {
+    let winArr = [];
+    for (let i = 0; i < 3; i ++) {
+        if ((field[i][0] === field[i][1] === field[i][2]) && (field[i][0] != EMPTY)) {
+            return [[i, 0], [i, 1], [i, 2]];
+        }
+        if (( field[0][i] === field[1][i] === field[2][i]) && (field[0][i] != EMPTY)) {
+            return [[0, i], [1, i], [2, i]];
+        }
+    }
+    if ((field[0][0] === field[1][1] === field[2][2]) && (field[0][0] != EMPTY))  {
+        return [[0,0], [1,1], [2,2]];
+    }
+    if ((field[0][2] === field[1][1] === field[2][0]) && (field[1][1] != EMPTY))  {
+        return [[0,2], [1,1], [2,0]];
+    }
+
+    return winArr;
+}
+
 function cellClickHandler(row, col) {
     if (field[row][col] !== EMPTY) return;
 
