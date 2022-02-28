@@ -105,12 +105,16 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-
     renderSymbolInCell(field.nextMove(), row, col);
     console.log(`Clicked on cell: ${row}, ${col}`);
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    
+    let win = field.whoWin;
+    if ( !win ) {
+        alert(`${ win == CROSS ? 'Крестики' : 'Нолики'} победили!`)
+    }
+    if ( ! field.isAnyMove() ) {
+        alert('Ничья, давай по-новой!')
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
