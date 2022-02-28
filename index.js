@@ -1,18 +1,26 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+const dimension = 3;
 
 const container = document.getElementById('fieldWrapper');
+let isZeroTurn = false;
+let field = []
+let turnCount = 0;
 
 startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(dimension);
 }
 
 function renderGrid (dimension) {
     container.innerHTML = '';
+
+    for (let i = 0; i < dimension; i++){
+        field.push(new Array(dimension).fill(0))
+    }
 
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
@@ -27,13 +35,23 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+
+    if (field[row][col] !== 0){
+        return;
+    }
+    renderSymbolInCell(isZeroTurn ? ZERO : CROSS, row, col)
+    isZeroTurn = !isZeroTurn;
+    field[row][col] = isZeroTurn ? 2 : 1;
+    turnCount++;
+    let possibleWinner = checkIsWinnerExist()
+    if (possibleWinner !== 0){
+        alert(`Победили: ${possibleWinner === 2 ? 'крестики' : 'нолики'}`);
+        return;
+    }
+    if (turnCount === 9)
+        alert('Победила дружба');
+    
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -41,6 +59,39 @@ function renderSymbolInCell (symbol, row, col, color = '#333') {
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
+}
+
+function checkIsWinnerExist(){
+    for (let i = 0; i < dimension; i++){
+        let check1 = checkIsWinnerInLine(i, false);
+        let check2 = checkIsWinnerInLine(i, true);
+        if(check1 !== 0)
+            return check1;
+        if(check2 !== 0)
+            return check2;
+    }
+    return 0;
+}
+
+function checkIsWinnerInLine(lineNumber, isVertical){
+    let arrayToCheck;
+    if (isVertical){
+        arrayToCheck = [];
+        for (let i = 0; i < dimension; i++){
+            arrayToCheck.push(field[i][lineNumber]);
+        }
+    } else {
+        arrayToCheck = field[lineNumber];
+    }
+    return checkIsArrayElementsWinLine(arrayToCheck);
+}
+
+function checkIsArrayElementsWinLine(array){
+    let first = array[0];
+    for (let a of array)
+        if (a !== first || first === 0)
+            return 0;
+    return first;
 }
 
 function findCell (row, col) {
