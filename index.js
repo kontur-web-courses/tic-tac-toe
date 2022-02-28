@@ -7,12 +7,13 @@ const container = document.getElementById('fieldWrapper');
 let currentStepSymbol = CROSS;
 let isPlayable = true;
 let stepsCount = 0;
+let currentDimension = 4;
 
 startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(currentDimension);
 }
 
 function renderGrid (dimension) {
@@ -39,7 +40,7 @@ function cellClickHandler (row, col) {
         renderSymbolInCell(currentStepSymbol, row, col)
         if (isAllCellsInColumnHaveSameContent(col))
         {
-            for (let i = 0; i < 3; i++)
+            for (let i = 0; i < currentDimension; i++)
             {
                 renderSymbolInCell(cell.textContent, i, col, RED);
                 isPlayable = false;
@@ -48,7 +49,7 @@ function cellClickHandler (row, col) {
             return;
         } else if (isAllCellsInRowHaveSameContent(row))
         {
-            for (let i = 0; i < 3; i++)
+            for (let i = 0; i < currentDimension; i++)
             {
                 renderSymbolInCell(cell.textContent, row, i, RED);
                 isPlayable = false;
@@ -57,7 +58,7 @@ function cellClickHandler (row, col) {
             return;
         } else if (isAllCellsInMainDiagonalHaveSameContent())
         {
-            for (let i = 0; i < 3; i++)
+            for (let i = 0; i < currentDimension; i++)
             {
                 renderSymbolInCell(cell.textContent, i, i, RED);
                 isPlayable = false;
@@ -66,7 +67,7 @@ function cellClickHandler (row, col) {
             return;
         } else if (isAllCellsInNotMainDiagonalHaveSameContent())
         {
-            for (let i = 0; i < 3; i++)
+            for (let i = 0; i < currentDimension; i++)
             {
                 renderSymbolInCell(cell.textContent, i, 2 - i, RED);
                 isPlayable = false;
@@ -76,7 +77,7 @@ function cellClickHandler (row, col) {
         }
     }
     stepsCount++;
-    if (stepsCount == 9){
+    if (stepsCount == currentDimension*currentDimension){
         alert("Победила дружба");
     }
     if (currentStepSymbol === CROSS)
@@ -97,7 +98,7 @@ function printWinner()
 function isAllCellsInColumnHaveSameContent(col)
 {
     let cell = findCell(0, col);
-    for (let i = 1; i < 3; i++) {
+    for (let i = 1; i < currentDimension; i++) {
         columnCell = findCell(i, col);
         if (!(columnCell.textContent == cell.textContent))
             return false;
@@ -109,7 +110,7 @@ function isAllCellsInMainDiagonalHaveSameContent()
 {
     let cell = findCell(0, 0);
     if (cell.textContent == EMPTY) return false;
-    for (let i = 1; i < 3; i++) {
+    for (let i = 1; i < currentDimension; i++) {
         columnCell = findCell(i, i);
         if (!(columnCell.textContent == cell.textContent))
             return false;
@@ -121,7 +122,7 @@ function isAllCellsInNotMainDiagonalHaveSameContent()
 {
     let cell = findCell(0, 2);
     if (cell.textContent == EMPTY) return false;
-    for (let i = 1; i < 3; i++) {
+    for (let i = 1; i < currentDimension; i++) {
         columnCell = findCell(i, 2 - i);
         if (!(columnCell.textContent == cell.textContent))
             return false;
@@ -132,7 +133,7 @@ function isAllCellsInNotMainDiagonalHaveSameContent()
 function isAllCellsInRowHaveSameContent(row)
 {
     let cell = findCell(row, 0);
-    for (let i = 1; i < 3; i++) {
+    for (let i = 1; i < currentDimension; i++) {
         columnCell = findCell(row, i);
         if (!(columnCell.textContent == cell.textContent))
             return false;
@@ -162,7 +163,7 @@ function resetClickHandler () {
     currentStepSymbol = CROSS;
     isPlayable = true;
     stepsCount = 0;
-    renderGrid(3);
+    renderGrid(currentDimension);
 }
 
 
