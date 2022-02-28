@@ -51,9 +51,6 @@ function cellClickHandler (row, col) {
     let playerArray = isCross ? crossCells : zeroCells;
     playerArray[row][col] = true;
     isCross = !isCross;
-    counter++;
-    if (counter === cellsCount)
-        alert('Победила дружба')
 
     let winCells = getWinCells(playerArray, row, col);
     if (winCells != null) {
@@ -62,6 +59,10 @@ function cellClickHandler (row, col) {
             findCell(cell[0], cell[1]).style.color = '#f00';
         }
     }
+
+    counter++;
+    if (counter === cellsCount && !win)
+        alert('Победила дружба')
 }
 
 function getWinCells (array, row, col) {
@@ -126,6 +127,7 @@ function resetClickHandler () {
     }
     win = false;
     counter = 0;
+    isCross = true;
 }
 
 
