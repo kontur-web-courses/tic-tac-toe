@@ -38,6 +38,69 @@ function cellClickHandler (row, col) {
         renderSymbolInCell(symbol, row, col);
         grid[row][col] = symbol;
         isZeroNow = !isZeroNow;
+        let winner = findWinner();
+        if (winner !== undefined) {
+            alert(winner);
+        }
+    }
+}
+
+function findWinner() {
+    for(let row = 0; row < grid.length; row++) {
+        let zeroCount = 0;
+        let crossCount = 0;
+        for (let col = 0; col < grid[row].length; col++) {
+            if (grid[row][col] === ZERO) zeroCount++;
+            if (grid[row][col] === CROSS) crossCount++;
+        }
+        if (zeroCount === grid.length)
+            return ZERO;
+        if (crossCount === grid.length)
+            return CROSS;
+    }
+
+    for (let col = 0; col < grid.length; col++) {
+        let zeroCount = 0;
+        let crossCount = 0;
+        for (let row = 0; row < grid.length; row++) {
+            if (grid[row][col] === ZERO) zeroCount++;
+            if (grid[row][col] === CROSS) crossCount++;
+        }
+        if (zeroCount === grid.length)
+            return ZERO;
+        if (crossCount === grid.length)
+            return CROSS;
+    }
+    let zeroCount = 0;
+    let crossCount = 0;
+    for (let row = 0; row < grid.length; row++) {
+        if (grid[row][row] === ZERO) zeroCount++;
+        if (grid[row][row] === CROSS) crossCount++;
+    }
+    if (zeroCount === grid.length)
+        return ZERO;
+    if (crossCount === grid.length)
+        return CROSS;
+
+    zeroCount = 0;
+    crossCount = 0;
+    for (let row = 0; row < grid.length; row++) {
+        if (grid[row][grid.length - 1 - row] === ZERO) zeroCount++;
+        if (grid[row][grid.length - 1 - row] === CROSS) crossCount++;
+    }
+    if (zeroCount === grid.length)
+        return ZERO;
+    if (crossCount === grid.length)
+        return CROSS;
+
+    let isDraw = true;
+    for (let row = 0; row < grid.length; row++) {
+        for (let col = 0; col < grid[row].length; col++) {
+            if (isDraw && grid[row][col] === EMPTY) isDraw = false;
+        }
+    }
+    if (isDraw) {
+        return "Победила дружба";
     }
 }
 
