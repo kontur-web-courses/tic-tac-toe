@@ -6,6 +6,7 @@ const container = document.getElementById('fieldWrapper');
 
 const grid = [[], [], []];
 for (let j = 0; j < 3; j++) {
+    grid[j] = [];
     for (let i = 0; i < 3; i++)
         grid[j].push(null);
 }
@@ -152,7 +153,13 @@ function cellClickHandler(row, col) {
     }
 
     function resetClickHandler() {
-        console.log('reset!');
+        for (let j = 0; j < 3; j++) {
+            grid[j] = [];
+            for (let i = 0; i < 3; i++)
+                grid[j].push(null);
+        }
+        currentPlayer = 0;
+        renderGrid(3);
     }
 
 
