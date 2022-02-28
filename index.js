@@ -31,57 +31,57 @@ class Field{
 
     whoWin(){
         for (let i = 0; i < self.dimension ; i++) {
-            let crossCount = 0;
-            let zerosCount = 0;
+            let crossCount = [];
+            let zerosCount = [];
             for (let j = 0; j < self.dimension ; j++) {
                 if (self.field[i][j] === ZERO)
-                    zerosCount++;
+                    zerosCount.push([i, j, ZERO]);
                 if (self.field[i][j] === CROSS)
-                    crossCount++;
+                    crossCount.push([i, j, CROSS]);
             }
-            if (crossCount === self.dimension)
-                return CROSS;
-            if (zerosCount === self.dimension)
-                return ZERO;
+            if (crossCount.length === self.dimension)
+                return crossCount;
+            if (zerosCount.length === self.dimension)
+                return zerosCount;
         }
         for (let i = 0; i < self.dimension ; i++) {
-            let crossCount = 0;
-            let zerosCount = 0;
+            let crossCount = [];
+            let zerosCount = [];
             for (let j = 0; j < self.dimension ; j++) {
                 if (self.field[j][i] === ZERO)
-                    zerosCount++;
+                    zerosCount.push([j, i, ZERO]);
                 if (self.field[j][i] === CROSS)
-                    crossCount++;
+                    crossCount.push([j, i, CROSS]);
             }
-            if (crossCount === self.dimension)
-                return CROSS;
-            if (zerosCount === self.dimension)
-                return ZERO;
+            if (crossCount.length === self.dimension)
+                return crossCount;
+            if (zerosCount.length === self.dimension)
+                return zerosCount;
         }
-        let crossCount = 0;
-        let zerosCount = 0;
+        let crossCount = [];
+        let zerosCount = [];
         for (let i = 0; i < self.dimension ; i++) {
             if (self.field[i][i] === ZERO)
-                zerosCount++;
+                zerosCount.push([i, i, ZERO]);
             if (self.field[i][i] === CROSS)
-                crossCount++;
+                crossCount.push([i, i, CROSS]);
         }
-        if (crossCount === self.dimension)
-            return CROSS;
-        if (zerosCount === self.dimension)
-            return ZERO;
-        crossCount = 0;
-        zerosCount = 0;
+        if (crossCount.length === self.dimension)
+            return crossCount;
+        if (zerosCount.length === self.dimension)
+            return zerosCount;
+        crossCount = [];
+        zerosCount = [];
         for (let i = 0; i < self.dimension ; i++) {
             if (self.field[i][self.dimension - i - 1] === ZERO)
-                zerosCount++;
+                zerosCount.push([i, self.dimension - i - 1, ZERO]);
             if (self.field[i][self.dimension - i - 1] === CROSS)
-                crossCount++;
+                crossCount.push([i, self.dimension - i - 1, CROSS])
         }
-        if (crossCount === self.dimension)
-            return CROSS;
-        if (zerosCount === self.dimension)
-            return ZERO;
+        if (crossCount.length === self.dimension)
+            return crossCount;
+        if (zerosCount.length === self.dimension)
+            return zerosCount;
         return null;
     }
 
@@ -127,8 +127,11 @@ function cellClickHandler (row, col) {
     
     let win = field.whoWin();
     if (win) {
-        alert(`${ win === CROSS ? 'Крестики' : 'Нолики'} победили!`)
+        alert(`${ win[0][2] === CROSS ? 'Крестики' : 'Нолики'} победили!`)
         field.endGame();
+        for (let winElement of win) {
+            renderSymbolInCell(winElement[2], winElement[0], winElement[1], '#f00');
+        }
     }
     if (!field.isAnyMove()) {
         alert('Ничья, давай по-новой!')
@@ -141,14 +144,6 @@ function renderSymbolInCell (symbol, row, col, color = '#333') {
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
-}
-
-function clearField () {
-    for ( let i = 0; i < field.dimension; i++ ) {
-        for ( let j = 0; j < field.dimension; j++ ) {
-                renderSymbolInCell(EMPTY, i, j);
-        }
-    }
 }
 
 function findCell (row, col) {
