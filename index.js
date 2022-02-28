@@ -4,31 +4,40 @@ const EMPTY = ' ';
 
 const EMPTY_TURNS_ALERT_TEXT = 'Победила дружба';
 
+let fieldSize = 3;
+
 const container = document.getElementById('fieldWrapper');
 const nowTurnContainer = document.getElementById('nowTurn');
+const fieldSizeContainer = document.getElementById('fieldSize');
+fieldSizeContainer.addEventListener('change', function(e)  {
+    fieldSize = parseInt(e.target.value, 10)
+    startGame();
+});
 
 let userTurn = CROSS;
-const field = [
+let field = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
 ];
-let turnCount = field.length * field[0].length;
+let turnCount = fieldSize * fieldSize;
 let gameEnded = false;
 
 startGame();
 addResetListener();
 
 function startGame() {
-    renderGrid(3);
+    renderGrid(fieldSize);
 }
 
 function renderGrid(dimension) {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
+        field[i] = [];
         const row = document.createElement('tr');
         for (let j = 0; j < dimension; j++) {
+            field[i][j] = EMPTY;
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
             cell.addEventListener('click', () => cellClickHandler(i, j));
@@ -108,14 +117,14 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
-    for (let i = 0; i < 3; i++ ) {
-        for (let j = 0; j < 3; j++ ){
+    for (let i = 0; i < fieldSize; i++ ) {
+        for (let j = 0; j < fieldSize; j++ ){
             renderSymbolInCell(EMPTY, i, j)
             field[i][j] = EMPTY;
         }
     }
     gameEnded = false;
-    turnCount = 9;
+    turnCount = fieldSize * fieldSize;
     userTurn = CROSS;
     renderWhosTurn();
 }
