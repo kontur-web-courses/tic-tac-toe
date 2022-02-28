@@ -38,38 +38,50 @@ function renderGrid(dimension) {
 }
 
 function checkWin () {
-    let winArr = [];
     for (let i = 0; i < 3; i ++) {
-        if ((field[i][0] === field[i][1] === field[i][2]) && (field[i][0] != EMPTY)) {
+        if ((field[i][0] === field[i][1] && field[i][1] === field[i][2]) && (field[i][0] !== EMPTY)) {
             return [[i, 0], [i, 1], [i, 2]];
         }
-        if (( field[0][i] === field[1][i] === field[2][i]) && (field[0][i] != EMPTY)) {
+        if (( field[0][i] === field[1][i] && field[1][i] === field[2][i]) && (field[0][i] !== EMPTY)) {
             return [[0, i], [1, i], [2, i]];
         }
     }
-    if ((field[0][0] === field[1][1] === field[2][2]) && (field[0][0] != EMPTY))  {
+    if ((field[0][0] === field[1][1] && field[1][1] === field[2][2]) && (field[0][0] !== EMPTY))  {
         return [[0,0], [1,1], [2,2]];
     }
-    if ((field[0][2] === field[1][1] === field[2][0]) && (field[1][1] != EMPTY))  {
+    if ((field[0][2] === field[1][1] && field[1][1] === field[2][0]) && (field[1][1] !== EMPTY))  {
         return [[0,2], [1,1], [2,0]];
     }
-
-    return winArr;
 }
 
 function cellClickHandler(row, col) {
-    if (field[row][col] !== EMPTY) return;
+    if (field[row][col] !== EMPTY || gameEnded) return;
 
     field[row][col] = userTurn;
     renderSymbolInCell(userTurn, row, col);
-    swapTurn()
 
-    turnCount -= 1;
-    // TODO: place checkIsWin
-    if (turnCount === 0) {
-        renderGameEnded();
-        turnCount = field.length * field[0].length;
+    const winArray = checkWin();
+    if (winArray) {
+        renderWinArray(winArray);
+        gameEnded = true;
         return;
+    }
+
+    swapTurn()
+    turnCount -= 1;
+    if (turnCount !== 0) return;
+
+    renderGameEnded();
+    gameEnded = true;
+}
+
+function renderWinArray(winArray) {
+    for (const indexesPair of winArray) {
+        const row = indexesPair[0];
+        const col = indexesPair[1];
+
+        const elementAt = field[row][col];
+        renderSymbolInCell(elementAt, row, col, 'red')
     }
 }
 
@@ -86,11 +98,7 @@ function renderSymbolInCell(symbol, row, col, color = '#333') {
 
 function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
-    const a = targetRow.querySelectorAll('td')[col];
-    if (a === undefined){
-        debugger;
-    }
-    return a;
+    return targetRow.querySelectorAll('td')[col];
 }
 
 function addResetListener() {
@@ -105,8 +113,9 @@ function resetClickHandler() {
             field[i][j] = EMPTY;
         }
     }
-    startGame();
-    console.log('reset!');
+    gameEnded = false;
+    turnCount = 9;
+    userTurn = CROSS;
 }
 
 
