@@ -31,6 +31,47 @@ function renderGrid (dimension) {
         alert("Победила дружба");
     }}
 
+function isThereWinner(){
+    for(let i = 0; i < field.length; i++){
+        if(field[0][i] === field[1][i] && field[1][i] === field[2][i]){
+            haveWinner = true;
+            if(field[0][i] == 'X'){
+                alert('Выиграл cross!');
+            }
+            else{
+                alert('Выиграл zero!');
+            }
+        }
+        if(field[i][0] === field[i][1] && field[i][1] === field[i][2]){
+            haveWinner = true;
+            if(field[i][0] == 'X'){
+                alert('Выиграл cross!');
+            }
+            else{
+                alert('Выиграл zero!');
+            }
+        }
+    }
+    if(field[0][0] === field[1][1] && field[1][1] === field[2][2]){
+        haveWinner = true;
+        if(field[0][0] == 'X'){
+            alert('Выиграл cross!');
+        }
+        else{
+            alert('Выиграл zero!');
+        }
+    }
+    if(field[0][2] === field[1][1] && field[1][1] === field[2][0]){
+        haveWinner = true;
+        if(field[0][2] == 'X'){
+            alert('Выиграл cross!');
+        }
+        else{
+            alert('Выиграл zero!');
+        }
+    }
+}
+
 function cellClickHandler (row, col) {
     // Пиши код тут
     if (field[row][col] !== EMPTY)
