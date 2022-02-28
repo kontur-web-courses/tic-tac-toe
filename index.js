@@ -3,11 +3,9 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-let field = [
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY]]
+let field = getStartField()
 let currentSymbol = CROSS;
+let hasWinner = false;
 console.log(field);
 startGame();
 addResetListener();
@@ -16,6 +14,11 @@ function startGame () {
     renderGrid(3);
 }
 
+function getStartField(){
+    return [[EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY]]
+}
 function renderGrid (dimension) {
     container.innerHTML = '';
 
@@ -32,7 +35,7 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    if (field[row][col] === EMPTY) {
+    if (field[row][col] === EMPTY && !hasWinner) {
         field[row][col] = currentSymbol;
         renderSymbolInCell(currentSymbol, row, col);
         currentSymbol = currentSymbol === CROSS ? ZERO : CROSS;
@@ -44,6 +47,12 @@ function cellClickHandler (row, col) {
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
+}
+
+function PaintWinnerCells(winSymbol, winCells){
+    for (let cell of winCells){
+        renderSymbolInCell(winSymbol, cell[0], cell[1], '#FF0000')
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -65,6 +74,9 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    field = getStartField();
+    renderGrid(3);
+    currentSymbol = CROSS;
 }
 
 
