@@ -51,8 +51,8 @@ function cellClickHandler (row, col) {
     }
     currentPlayer = (currentPlayer + 1) % 2;
 
+    console.log(isHaveWinner());
 
-    
     for (let j = 0; j < 3; j++) {
         for (let i = 0; i < 3; i++)
             if (grid[i][j] != null)
@@ -65,41 +65,59 @@ function cellClickHandler (row, col) {
 }
 
 function isHaveWinner() {
-    let res;
-    for (let j = 0; j < 3; j ++) {
-        res = grid[j].reduce(function(prevValue, currValue, index, array) {
-            if (index == 0)
-                return true;
+    let cells = findWinningCells();
+    if (cells == null)
+        return EMPTY;
 
-            return prevValue && (array[j - 1] == currValue);
-        })
+    let x = cells[0][0];
+    let y = cells[0][1];
+    let winner = grid[x][y] == 1 ? CROSS : ZERO;
+
+    return [winner, cells];
+}
+
+function findWinningCells() {
+    let sum;
+    for (let i = 0; i < 3; i++) {
+        sum = 0;
+        for (let j = 0; j < 3; j++) {
+            if (grid[i][j] == null)
+                sum = 1000;
+            sum += grid[i][j];
+        }
+        if (sum == 3 || sum == 0)
+            return [[i, 0], [i, 1], [i, 2]];
     }
-    if (res)
-        return true;
 
-    for (let j = 0; j < 3; j ++) {
-        res = grid.reduce(function(prevValue, currValue, index, array) {
-            if (index == 0)
-                return true;
-    
-            return prevValue && (array[j - 1] == currValue);
-        })
+    for (let i = 0; i < 3; i++) {
+        sum = 0;
+        for (let j = 0; j < 3; j++) {
+            if (grid[i][j] == null)
+                sum = 1000;
+            sum += grid[j][i];
+        }
+        if (sum == 3 || sum == 0)
+            return [[0, j], [1, j], [2, j]];
     }
-    if (res)
-        return true;
 
-    for (let j = 0; j < 3; j++) {
-        res = grid.reduce(function(prevValue, currValue, index, array) {
-            if (index == 0)
-                return true;
-    
-            return prevValue && (array[index - 1] == currValue);
-        })
+    for (let j = 0; j < 2; j++) {
+        sum = 0;
+        for (let i = 0; i < 3; i++) {
+            let second = j == 0 ? i : 2 - i;
+            if (grid[i][second] == null)
+                sum = 1000;
+            sum += grid[i][second];
+        }
+
+        if (sum == 3 || sum == 0) {
+            if (j == 0)
+                return [[0, 0], [1, 1], [2, 2]];
+            
+            return [[0, 2], [1, 1], [2, 0]];
+        }
     }
-    if (res)
-        return true;
 
-    return false;
+    return null;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
