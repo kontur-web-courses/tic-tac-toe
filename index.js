@@ -33,8 +33,11 @@ function renderGrid (dimension) {
 
 function isThereWinner(){
     for(let i = 0; i < field.length; i++){
-        if(field[0][i] === field[1][i] && field[1][i] === field[2][i]){
+        if(field[0][i] !== EMPTY && field[0][i] === field[1][i] && field[1][i] === field[2][i]){
             haveWinner = true;
+            renderSymbolInCell(field[0][i], 0, i, '#FF0000');
+            renderSymbolInCell(field[0][i], 1, i, '#FF0000');
+            renderSymbolInCell(field[0][i], 2, i, '#FF0000');
             if(field[0][i] == 'X'){
                 alert('Выиграл cross!');
             }
@@ -42,8 +45,11 @@ function isThereWinner(){
                 alert('Выиграл zero!');
             }
         }
-        if(field[i][0] === field[i][1] && field[i][1] === field[i][2]){
+        if(field[i][0] !== EMPTY && field[i][0] === field[i][1] && field[i][1] === field[i][2]){
             haveWinner = true;
+            renderSymbolInCell(field[i][0], i, 0, '#FF0000');
+            renderSymbolInCell(field[i][0], i, 1, '#FF0000');
+            renderSymbolInCell(field[i][0], i, 2, '#FF0000');
             if(field[i][0] == 'X'){
                 alert('Выиграл cross!');
             }
@@ -52,8 +58,11 @@ function isThereWinner(){
             }
         }
     }
-    if(field[0][0] === field[1][1] && field[1][1] === field[2][2]){
+    if(field[0][0] !== EMPTY && field[0][0] === field[1][1] && field[1][1] === field[2][2]){
         haveWinner = true;
+        renderSymbolInCell(field[0][0], 0, 0, '#FF0000');
+        renderSymbolInCell(field[1][1], 1, 1, '#FF0000');
+        renderSymbolInCell(field[2][2], 1, 2, '#FF0000');
         if(field[0][0] == 'X'){
             alert('Выиграл cross!');
         }
@@ -61,8 +70,11 @@ function isThereWinner(){
             alert('Выиграл zero!');
         }
     }
-    if(field[0][2] === field[1][1] && field[1][1] === field[2][0]){
+    if(field[0][2] !== EMPTY && field[0][2] === field[1][1] && field[1][1] === field[2][0]){
         haveWinner = true;
+        renderSymbolInCell(field[0][2], 0, 2, '#FF0000');
+        renderSymbolInCell(field[0][2], 1, 1, '#FF0000');
+        renderSymbolInCell(field[0][2], 2, 0, '#FF0000');
         if(field[0][2] == 'X'){
             alert('Выиграл cross!');
         }
