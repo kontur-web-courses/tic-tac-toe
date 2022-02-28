@@ -3,7 +3,26 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
+class Field{
+    constructor(dimension){
+        self.dimension = dimension;
+        self.field = [];
+        for (let i = 0; i < dimension; i++) {
+            let temp = [];
+            for (let i = 0; i < dimension; i++) {
+               temp.push(0);
+            }
+            self.field.push(temp);
+        }
+    }
+    checkWin(){
 
+    }
+
+    nextMove(col, row){
+
+    }
+}
 startGame();
 addResetListener();
 
