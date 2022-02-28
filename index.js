@@ -12,6 +12,7 @@ class gridMem {
         this.winner = undefined;
         this.turnCount = 0;
         this.turnValue = CROSS;
+        this.winCells = [];
     }
 
 
@@ -58,6 +59,26 @@ class gridMem {
         if (flagY || flagX || flagDp || flagDm) {
             this.winner = this.turnValue;
             this.isEnd = true;
+            if(flagY){
+                for(let i = 0; i < 3; i++){
+                    this.winCells.push([i, y]);
+                }
+            }
+            if(flagX){
+                for(let i = 0; i < 3; i++){
+                    this.winCells.push([x, i]);
+                }
+            }
+            if(flagDp){
+                for(let i = 0; i < 3; i++){
+                    this.winCells.push([i, i]);
+                }
+            }
+            if(flagDm){
+                for(let i = 0; i < 3; i++){
+                    this.winCells.push([i, 2 - i]);
+                }
+            }
             return;
         }
         if (this.turnCount === 3 ** 2) {
@@ -68,13 +89,14 @@ class gridMem {
 }
 
 
-let grMem = new gridMem();
+let grMem;
 const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
 
 function startGame() {
+    grMem = new gridMem();
     renderGrid(3);
 }
 
