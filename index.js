@@ -44,7 +44,6 @@ function cellClickHandler (row, col) {
         return;
     }
     if (isCross) {
-
         renderSymbolInCell(CROSS, row, col);
     } else {
         renderSymbolInCell(ZERO, row, col);
@@ -118,8 +117,15 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
-    
-    console.log('reset!');
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            zeroCells[i][j] = false;
+            crossCells[i][j] = false;
+            renderSymbolInCell(EMPTY, i, j);
+        }
+    }
+    win = false;
+    counter = 0;
 }
 
 
