@@ -4,14 +4,17 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
-const grid = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+const grid = [[], [], []];
+for (var j = 0; j < 3; j++){
+    for (var i = 0; i < 3; i++)
+        grid[j].push(null);
+}
 let currentPlayer = 0;
 
 startGame();
 addResetListener();
 
 function startGame () {
-    grid = 
     renderGrid(3);
 }
 
@@ -32,12 +35,13 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
+    if (grid[row][col] != null)
+        return;
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (currentPlayer == 0)
-        {
-            grid[row][col] = 0;
-            renderSymbolInCell(ZERO, row, col);
-        }
+    if (currentPlayer == 0) {
+        grid[row][col] = 0;
+        renderSymbolInCell(ZERO, row, col);
+    }
     else {
         grid[row][col] = 1;
         renderSymbolInCell(CROSS, row, col);
