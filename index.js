@@ -5,6 +5,8 @@ const RED = "#FF0000";
 
 const container = document.getElementById('fieldWrapper');
 let currentStepSymbol = CROSS;
+let isPlayable = true;
+let stepsCount = 0;
 
 startGame();
 addResetListener();
@@ -31,20 +33,107 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
+    if (!isPlayable) return;
     var cell = findCell(row, col);
     if (cell.textContent === EMPTY){
         renderSymbolInCell(currentStepSymbol, row, col)
-        if (currentStepSymbol === CROSS)
-            currentStepSymbol = ZERO;
-        else
-            currentStepSymbol = CROSS;
-        for (let i = 0; i < 3; i++){
-            columnCell = findCell(i, col);
-            if (!columnCell.textContent == cell.textContent)
-                isGood = false;
+        if (isAllCellsInColumnHaveSameContent(col))
+        {
+            for (let i = 0; i < 3; i++)
+            {
+                renderSymbolInCell(cell.textContent, i, col, RED);
+                isPlayable = false;
+            }
+            return;
+        } else if (isAllCellsInRowHaveSameContent(row))
+        {
+            for (let i = 0; i < 3; i++)
+            {
+                renderSymbolInCell(cell.textContent, row, i, RED);
+                isPlayable = false;
+            }
+            return;
+        } else if (isAllCellsInMainDiagonalHaveSameContent())
+        {
+            for (let i = 0; i < 3; i++)
+            {
+                renderSymbolInCell(cell.textContent, i, i, RED);
+                isPlayable = false;
+            }
+            return;
+        } else if (isAllCellsInNotMainDiagonalHaveSameContent())
+        {
+            for (let i = 0; i < 3; i++)
+            {
+                renderSymbolInCell(cell.textContent, i, 2 - i, RED);
+                isPlayable = false;
+            }
+            return;
         }
     }
+    stepsCount++;
+    if (stepsCount == 9){
+        alert("Победила дружба");
+    }
+    if (currentStepSymbol === CROSS)
+        currentStepSymbol = ZERO;
+    else
+        currentStepSymbol = CROSS;
+}
+
+function printWinner()
+{
+    if (!isPlayable) {
+        alert(currentStepSymbol);
+        return true;
+    }
+    return false;
+}
+
+function isAllCellsInColumnHaveSameContent(col)
+{
+    let cell = findCell(0, col);
+    for (let i = 1; i < 3; i++) {
+        columnCell = findCell(i, col);
+        if (!(columnCell.textContent == cell.textContent))
+            return false;
+    }
+    return true;
+}
+
+function isAllCellsInMainDiagonalHaveSameContent()
+{
+    let cell = findCell(0, 0);
+    if (cell.textContent == EMPTY) return false;
+    for (let i = 1; i < 3; i++) {
+        columnCell = findCell(i, i);
+        if (!(columnCell.textContent == cell.textContent))
+            return false;
+    }
+    return true;
+}
+
+function isAllCellsInNotMainDiagonalHaveSameContent()
+{
+    let cell = findCell(0, 2);
+    if (cell.textContent == EMPTY) return false;
+    for (let i = 1; i < 3; i++) {
+        columnCell = findCell(i, 2 - i);
+        if (!(columnCell.textContent == cell.textContent))
+            return false;
+    }
+    return true;
+}
+
+function isAllCellsInRowHaveSameContent(row)
+{
+    let cell = findCell(row, 0);
+    for (let i = 1; i < 3; i++) {
+        columnCell = findCell(row, i);
+        if (!(columnCell.textContent == cell.textContent))
+            return false;
+    }
+    return true;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -67,6 +156,8 @@ function addResetListener () {
 function resetClickHandler () {
     console.log('reset!');
     currentStepSymbol = CROSS;
+    isPlayable = true;
+    stepsCount = 0;
     renderGrid(3);
 }
 
