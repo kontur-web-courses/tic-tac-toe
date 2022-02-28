@@ -1,7 +1,9 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-
+let grid = [[' ',' ',' '],[' ',' ',' '],[' ',' ',' ']]
+let count = 0;
+let gameNotOverFlag = true;
 const container = document.getElementById('fieldWrapper');
 
 startGame();
@@ -27,13 +29,100 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
+    if (count % 2 === 0 && grid[row][col] === ' ' && gameNotOverFlag) {
+        renderSymbolInCell(CROSS, row, col);
+        grid[row][col] = 'X'
+        let winner1 = checkWinner(grid);
+        if (winner1 !== 'no'){
+            alert(winner1);
+            gameNotOverFlag = false;
+        }
+        count += 1;
+    } else if (grid[row][col] === ' '&& gameNotOverFlag){
         renderSymbolInCell(ZERO, row, col);
-     */
+        grid[row][col] = '0'
+        let winner2 = checkWinner(grid);
+        if (winner2 !== 'no'){
+            alert(winner2);
+            gameNotOverFlag = false;
+        }
+        count += 1;
+    }
+    if (count === 9){
+        alert('Победила дружба')
+    }
+
+}
+
+function checkWinner (grid) {
+    if (grid[0][0] === grid[0][1] && grid[0][1] === grid[0][2] && grid[0][0] === '0'){
+        renderSymbolInCell(ZERO, 0, 0, 'red'), renderSymbolInCell(ZERO, 0, 1, 'red'), renderSymbolInCell(ZERO, 0, 2, 'red');
+        return 'Победа второго игрока';
+    }
+    if (grid[1][0] === grid[1][1] && grid[1][1] === grid[1][2] && grid[1][0] === '0'){
+        renderSymbolInCell(ZERO, 1, 0, 'red'), renderSymbolInCell(ZERO, 1, 1, 'red'), renderSymbolInCell(ZERO, 1, 2, 'red');
+        return 'Победа второго игрока';
+    }
+    if (grid[2][0] === grid[2][1] && grid[2][1] === grid[2][2] && grid[2][0] === '0'){
+        renderSymbolInCell(ZERO, 2, 0, 'red'), renderSymbolInCell(ZERO, 2, 1, 'red'), renderSymbolInCell(ZERO, 2, 2, 'red');
+        return 'Победа второго игрока';
+    }
+    if (grid[0][0] === grid[1][0] && grid[1][0] === grid[2][0] && grid[2][0] === '0'){
+        renderSymbolInCell(ZERO, 0, 0, 'red'), renderSymbolInCell(ZERO, 1, 0, 'red'), renderSymbolInCell(ZERO, 2, 0, 'red');
+        return 'Победа второго игрока';
+    }
+    if (grid[0][1] === grid[1][1] && grid[1][1] === grid[2][1] && grid[2][1] === '0'){
+        renderSymbolInCell(ZERO, 0, 1, 'red'), renderSymbolInCell(ZERO, 1, 1, 'red'), renderSymbolInCell(ZERO, 2, 1, 'red');
+        return 'Победа второго игрока';
+    }
+    if (grid[0][2] === grid[1][2] && grid[1][2] === grid[2][2] && grid[2][2] === '0'){
+        renderSymbolInCell(ZERO, 0, 2, 'red'), renderSymbolInCell(ZERO, 1, 2, 'red'), renderSymbolInCell(ZERO, 2, 2, 'red');
+        return 'Победа второго игрока';
+    }
+    if (grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2] && grid[2][2] === '0'){
+        renderSymbolInCell(ZERO, 0, 0, 'red'), renderSymbolInCell(ZERO, 1, 1, 'red'), renderSymbolInCell(ZERO, 2, 2, 'red');
+        return 'Победа второго игрока';
+    }
+    if (grid[0][2] === grid[1][1] && grid[1][1] === grid[2][0] && grid[2][0] === '0'){
+        renderSymbolInCell(ZERO, 0, 2, 'red'), renderSymbolInCell(ZERO, 1, 1, 'red'), renderSymbolInCell(ZERO, 2, 0, 'red');
+        return 'Победа второго игрока';
+    }
+
+
+    if (grid[0][0] === grid[0][1] && grid[0][1] === grid[0][2] && grid[0][0] === 'X'){
+        renderSymbolInCell(CROSS, 0, 0, 'red'), renderSymbolInCell(CROSS, 0, 1, 'red'), renderSymbolInCell(CROSS, 0, 2, 'red');
+        return 'Победа первого игрока';
+    }
+    if (grid[1][0] === grid[1][1] && grid[1][1] === grid[1][2] && grid[1][0] === 'X'){
+        renderSymbolInCell(CROSS, 1, 0, 'red'), renderSymbolInCell(CROSS, 1, 1, 'red'), renderSymbolInCell(CROSS, 1, 2, 'red');
+        return 'Победа первого игрока';
+    }
+    if (grid[2][0] === grid[2][1] && grid[2][1] === grid[2][2] && grid[2][0] === 'X'){
+        renderSymbolInCell(CROSS, 2, 0, 'red'), renderSymbolInCell(CROSS, 2, 1, 'red'), renderSymbolInCell(CROSS, 2, 2, 'red');
+        return 'Победа первого игрока';
+    }
+    if (grid[0][0] === grid[1][0] && grid[1][0] === grid[2][0] && grid[2][0] === 'X'){
+        renderSymbolInCell(CROSS, 0, 0, 'red'), renderSymbolInCell(CROSS, 1, 0, 'red'), renderSymbolInCell(CROSS, 2, 0, 'red');
+        return 'Победа первого игрока';
+    }
+    if (grid[0][1] === grid[1][1] && grid[1][1] === grid[2][1] && grid[2][1] === 'X'){
+        renderSymbolInCell(CROSS, 0, 1, 'red'), renderSymbolInCell(CROSS, 1, 1, 'red'), renderSymbolInCell(CROSS, 2, 1, 'red');
+        return 'Победа первого игрока';
+    }
+    if (grid[0][2] === grid[1][2] && grid[1][2] === grid[2][2] && grid[2][2] === 'X'){
+        renderSymbolInCell(CROSS, 0, 2, 'red'), renderSymbolInCell(CROSS, 1, 2, 'red'), renderSymbolInCell(CROSS, 2, 2, 'red');
+        return 'Победа первого игрока';
+    }
+    if (grid[0][0] === grid[1][1] && grid[1][1] === grid[2][2] && grid[2][2] === 'X'){
+        renderSymbolInCell(CROSS, 0, 0, 'red'), renderSymbolInCell(CROSS, 1, 1, 'red'), renderSymbolInCell(CROSS, 2, 2, 'red');
+        return 'Победа первого игрока';
+    }
+    if (grid[0][2] === grid[1][1] && grid[1][1] === grid[2][0] && grid[2][0] === 'X'){
+        renderSymbolInCell(CROSS, 0, 2, 'red'), renderSymbolInCell(CROSS, 1, 1, 'red'), renderSymbolInCell(CROSS, 2, 0, 'red');
+        return 'Победа первого игрока';
+    }
+    return 'no';
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -54,6 +143,11 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    for (i = 0; i<= 2; i++){
+        for(j = 0; j<= 2; j++){
+            renderSymbolInCell(EMPTY, i, j);
+        }
+    }
     console.log('reset!');
 }
 
