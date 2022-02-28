@@ -11,29 +11,81 @@ class Field{
         self.nextChar = CROSS;
         for (let i = 0; i < dimension; i++) {
             let temp = [];
-            for (let i = 0; i < dimension; i++) {
-               temp.push(0);
+            for (let j = 0; j < dimension; j++) {
+               temp.push(EMPTY);
             }
             self.field.push(temp);
         }
     }
-    checkWin(){
-
+    whoWin(){
+        for (let i = 0; i < self.dimension ; i++) {
+            let crossCount = 0;
+            let zerosCount = 0;
+            for (let j = 0; j < self.dimension ; j++) {
+                if (self.field[i][j] === ZERO)
+                    zerosCount++;
+                if (self.field[i][j] === CROSS)
+                    crossCount++;
+            }
+            if (crossCount === 3)
+                return CROSS;
+            if (zerosCount === 3)
+                return ZERO;
+        }
+        for (let i = 0; i < self.dimension ; i++) {
+            let crossCount = 0;
+            let zerosCount = 0;
+            for (let j = 0; j < self.dimension ; j++) {
+                if (self.field[j][i] === ZERO)
+                    zerosCount++;
+                if (self.field[j][i] === CROSS)
+                    crossCount++;
+            }
+            if (crossCount === 3)
+                return CROSS;
+            if (zerosCount === 3)
+                return ZERO;
+        }
+        for (let i = 0; i < self.dimension ; i++) {
+            let crossCount = 0;
+            let zerosCount = 0;
+            if (self.field[i][i] === ZERO)
+                zerosCount++;
+            if (self.field[i][i] === CROSS)
+                crossCount++;
+            if (crossCount === 3)
+                return CROSS;
+            if (zerosCount === 3)
+                return ZERO;
+        }
+        for (let i = 0; i < self.dimension ; i++) {
+            let crossCount = 0;
+            let zerosCount = 0;
+            if (self.field[i][self.dimension - i - 1] === ZERO)
+                zerosCount++;
+            if (self.field[i][self.dimension - i - 1] === CROSS)
+                crossCount++;
+            if (crossCount === 3)
+                return CROSS;
+            if (zerosCount === 3)
+                return ZERO;
+        }
+        return null;
     }
 
     nextMove(col, row){
-        if (self.field[row, col] == EMPTY) {
-            self.field[row, col] = nextChar;
+        if (self.field[row][col] === EMPTY) {
+            self.field[row][col] = self.nextChar;
             self.nextChar = (self.nextChar === CROSS) ? ZERO : CROSS;
         }
-        return self.field[row, col];
+        return self.field[row][col];
     }
 }
 startGame();
 addResetListener();
 
 function startGame () {
-    filed = Filed(3)
+    filed = new Filed(3)
     renderGrid(3);
 }
 
