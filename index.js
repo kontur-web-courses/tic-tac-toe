@@ -3,6 +3,11 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
+const field = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+];
 
 startGame();
 addResetListener();
@@ -29,7 +34,6 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
