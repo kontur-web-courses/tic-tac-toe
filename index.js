@@ -140,6 +140,14 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    for (let row = 0; row < grid.length; row++) {
+        for (let col = 0; col < grid.length; col++) {
+            renderSymbolInCell(EMPTY, row, col);
+            grid[row][col] = EMPTY;
+        }
+    }
+    isWinnerFound = false;
+    isZeroNow = true;
     console.log('reset!');
 }
 
