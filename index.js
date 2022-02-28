@@ -2,8 +2,8 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 let FIELD = [[EMPTY, EMPTY, EMPTY],
-            [EMPTY, EMPTY, EMPTY],
-            [EMPTY, EMPTY, EMPTY]]
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY]]
 let SIZE = FIELD.length * FIELD[0].length
 let SYMBOLS = [CROSS, ZERO]
 let TURN = 0;
@@ -35,18 +35,40 @@ function renderGrid(dimension) {
 function cellClickHandler(row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (FIELD[row][col] === EMPTY){
-        renderSymbolInCell(SYMBOLS[TURN], row, col)
+    if (FIELD[row][col] === EMPTY) {
+        FIELD[row][col] = SYMBOLS[TURN];
+        renderSymbolInCell(SYMBOLS[TURN], row, col);
+        TURN += 1;
+        TURN %= 2;
     }
-    if (TURN_COUNTER === SIZE){
+    if (TURN_COUNTER === SIZE) {
         alert("Победила дружба")
     }
-    TURN +=1
-    TURN %= 2
+    if(defineWin()) alert('wow');
+    //defineWin();
 
+}
 
+function defineWin() {
+    //row
+    for (let i = 0; i < FIELD.length; ++i) {
+        let initCell = FIELD[i][0];
+        let isWin = true;
+        for (const cell of FIELD[i]) {
+            if (cell === EMPTY || cell !== initCell) isWin = false;
+        }
+        if (isWin) return isWin;
+    }
 
-
+    //col
+    for (let i = 0; i < FIELD.length; ++i) {
+        let initCell = FIELD[0][i];
+        let isWin = true;
+        for (const cell of FIELD[i]) {
+            if (cell === EMPTY || cell !== initCell) isWin = false;
+        }
+        if (isWin) return isWin;
+    }
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
