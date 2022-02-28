@@ -123,6 +123,7 @@ function resetClickHandler() {
             renderSymbolInCell(EMPTY, i, j)
         }
     }
+    WIN = false
     TURN_COUNTER = 0
 }
 
