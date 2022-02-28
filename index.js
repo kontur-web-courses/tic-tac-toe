@@ -12,8 +12,6 @@ let zeroCells = [
 
 let isCross = true;
 let counter = 0;
-// let dimension;
-// let cellsCount;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -45,24 +43,27 @@ function cellClickHandler (row, col) {
         return;
     }
     if (isCross) {
+
         renderSymbolInCell(CROSS, row, col);
     } else {
         renderSymbolInCell(ZERO, row, col);
     }
-    console.log(`Clicked on cell: ${row}, ${col}`);
+    let playerArray = isCross ? crossCells : zeroCells;
+    playerArray[row][col] = true;
     isCross = !isCross;
     counter++;
     if (counter === cellsCount)
         alert('Победила дружба')
 
-    let playerArray = isCross ? crossCells : zeroCells;
-    console.log(winCheck(playerArray, row, col).toString());
-    console.log(winCheck(playerArray, row, col) != null);
-    if (winCheck(playerArray, row, col) != null)
-        alert("Пиздец");
+    let winCells = getWinCells(playerArray, row, col);
+    if (winCells != null) {
+        for (let cell of winCells) {
+            findCell(cell[0], cell[1]).style.color = '#f00';
+        }
+    }
 }
 
-function winCheck (array, row, col) {
+function getWinCells (array, row, col) {
     let winInRow = true;
     let winInCol = true;
     for (let i = 0; i < 3; i++) {
