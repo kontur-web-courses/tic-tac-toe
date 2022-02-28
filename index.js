@@ -5,8 +5,8 @@ const EMPTY = ' ';
 const container = document.getElementById('fieldWrapper');
 
 const grid = [[], [], []];
-for (var j = 0; j < 3; j++){
-    for (var i = 0; i < 3; i++)
+for (let j = 0; j < 3; j++){
+    for (let i = 0; i < 3; i++)
         grid[j].push(null);
 }
 let currentPlayer = 0;
@@ -37,17 +37,28 @@ function cellClickHandler (row, col) {
     // Пиши код тут
     if (grid[row][col] != null)
         return;
+    let count = 0
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (currentPlayer == 0) {
+    if (currentPlayer === 0) {
         grid[row][col] = 0;
+        console.log(count)
         renderSymbolInCell(ZERO, row, col);
     }
     else {
         grid[row][col] = 1;
+        console.log(count)
         renderSymbolInCell(CROSS, row, col);
     }
     currentPlayer = (currentPlayer + 1) % 2;
-     
+    for (let j = 0; j < 3; j++) {
+        for (let i = 0; i < 3; i++)
+            if (grid[i][j] != null)
+                count += 1
+    }
+    if (count === 9)
+    {
+        setTimeout('alert("Победила дружба")', 1000)
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
