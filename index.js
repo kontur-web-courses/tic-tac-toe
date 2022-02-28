@@ -12,7 +12,7 @@ class Field{
         for (let i = 0; i < dimension; i++) {
             let temp = [];
             for (let j = 0; j < dimension; j++) {
-               temp.push(EMPTY);
+                temp.push(EMPTY);
             }
             self.field.push(temp);
         }
@@ -121,7 +121,7 @@ function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
     
     let win = field.whoWin();
-    if ( !win ) {
+    if ( win ) {
         alert(`${ win === CROSS ? 'Крестики' : 'Нолики'} победили!`)
     }
     if ( ! field.isAnyMove() ) {
@@ -136,6 +136,14 @@ function renderSymbolInCell (symbol, row, col, color = '#333') {
     targetCell.style.color = color;
 }
 
+function clearField () {
+    for ( let i = 0; i < filed.dimension; i++ ) {
+        for ( let j = 0; j < filed.dimension; j++ ) {
+                renderSymbolInCell(EMPTY, i, j);
+        }
+    }
+}
+
 function findCell (row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
@@ -147,6 +155,8 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    field = new Field(3);
+    clearField();
     console.log('reset!');
 }
 
