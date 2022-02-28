@@ -12,6 +12,7 @@ let zeroCells = [
 
 let isCross = true;
 let counter = 0;
+let win = false;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -39,7 +40,7 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    if (crossCells[row][col] || zeroCells[row][col]) {
+    if (crossCells[row][col] || zeroCells[row][col] || win) {
         return;
     }
     if (isCross) {
@@ -57,6 +58,7 @@ function cellClickHandler (row, col) {
 
     let winCells = getWinCells(playerArray, row, col);
     if (winCells != null) {
+        win = true;
         for (let cell of winCells) {
             findCell(cell[0], cell[1]).style.color = '#f00';
         }
