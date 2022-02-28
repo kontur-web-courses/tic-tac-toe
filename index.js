@@ -4,9 +4,9 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 const field = [
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
 ];
 
 startGame();
