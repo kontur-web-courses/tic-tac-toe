@@ -6,6 +6,7 @@ const container = document.getElementById('fieldWrapper');
 let field = new Array([EMPTY, EMPTY, EMPTY], [EMPTY,EMPTY,EMPTY], [EMPTY,EMPTY,EMPTY])
 let player = 1;
 let haveWinner = false;
+let countEmptyCells = 9;
 
 startGame();
 addResetListener();
@@ -27,47 +28,47 @@ function renderGrid (dimension) {
         }
         container.appendChild(row);
     }
-    if (!haveWinner) {
-        alert("Победила дружба");
-    }}
+}
 
 function isThereWinner(){
-    for(let i = 0; i < field.length; i++){
-        if(field[0][i] !== EMPTY && field[0][i] === field[1][i] && field[1][i] === field[2][i]){
-            haveWinner = true;
-            renderSymbolInCell(field[0][i], 0, i, '#FF0000');
-            renderSymbolInCell(field[0][i], 1, i, '#FF0000');
-            renderSymbolInCell(field[0][i], 2, i, '#FF0000');
-            if(field[0][i] == 'X'){
-                alert('Выиграл cross!');
+
+    if (!haveWinner && countEmptyCells === 0) {
+        alert("Победила дружба");
+    } else {
+        for (let i = 0; i < field.length; i++) {
+            if (field[0][i] !== EMPTY && field[0][i] === field[1][i] && field[1][i] === field[2][i]) {
+                haveWinner = true;
+                renderSymbolInCell(field[0][i], 0, i, '#FF0000');
+                renderSymbolInCell(field[0][i], 1, i, '#FF0000');
+                renderSymbolInCell(field[0][i], 2, i, '#FF0000');
+                if (field[0][i] == 'X') {
+                    alert('Выиграл cross!');
+                } else {
+                    alert('Выиграл zero!');
+                }
             }
-            else{
+            if (field[i][0] !== EMPTY && field[i][0] === field[i][1] && field[i][1] === field[i][2]) {
+                haveWinner = true;
+                renderSymbolInCell(field[i][0], i, 0, '#FF0000');
+                renderSymbolInCell(field[i][0], i, 1, '#FF0000');
+                renderSymbolInCell(field[i][0], i, 2, '#FF0000');
+                if (field[i][0] == 'X') {
+                    alert('Выиграл cross!');
+                } else {
+                    alert('Выиграл zero!');
+                }
+            }
+        }
+        if (field[0][0] !== EMPTY && field[0][0] === field[1][1] && field[1][1] === field[2][2]) {
+            haveWinner = true;
+            renderSymbolInCell(field[0][0], 0, 0, '#FF0000');
+            renderSymbolInCell(field[1][1], 1, 1, '#FF0000');
+            renderSymbolInCell(field[2][2], 2, 2, '#FF0000');
+            if (field[0][0] == 'X') {
+                alert('Выиграл cross!');
+            } else {
                 alert('Выиграл zero!');
             }
-        }
-        if(field[i][0] !== EMPTY && field[i][0] === field[i][1] && field[i][1] === field[i][2]){
-            haveWinner = true;
-            renderSymbolInCell(field[i][0], i, 0, '#FF0000');
-            renderSymbolInCell(field[i][0], i, 1, '#FF0000');
-            renderSymbolInCell(field[i][0], i, 2, '#FF0000');
-            if(field[i][0] == 'X'){
-                alert('Выиграл cross!');
-            }
-            else{
-                alert('Выиграл zero!');
-            }
-        }
-    }
-    if(field[0][0] !== EMPTY && field[0][0] === field[1][1] && field[1][1] === field[2][2]){
-        haveWinner = true;
-        renderSymbolInCell(field[0][0], 0, 0, '#FF0000');
-        renderSymbolInCell(field[1][1], 1, 1, '#FF0000');
-        renderSymbolInCell(field[2][2], 1, 2, '#FF0000');
-        if(field[0][0] == 'X'){
-            alert('Выиграл cross!');
-        }
-        else{
-            alert('Выиграл zero!');
         }
     }
     if(field[0][2] !== EMPTY && field[0][2] === field[1][1] && field[1][1] === field[2][0]){
@@ -86,16 +87,20 @@ function isThereWinner(){
 
 function cellClickHandler (row, col) {
     // Пиши код тут
-    if (field[row][col] !== EMPTY)
+    if (field[row][col] === EMPTY)
     {
+        countEmptyCells -= 1;
         console.log(`Clicked on cell: ${row}, ${col}`);
         if (player === 1) {
             field[row][col] = 'X';
             renderSymbolInCell(CROSS, row, col);
+            player = 2;
         } else {
             field[row][col] = 'O';
             renderSymbolInCell(ZERO, row, col);
+            player = 1;
         }
+        isThereWinner();
     }
 
     /* Пользоваться методом для размещения символа в клетке так:
