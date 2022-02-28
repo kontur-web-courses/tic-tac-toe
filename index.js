@@ -39,32 +39,94 @@ function swapPlayers() {
 
 field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
 transposedField = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
+
 gameWon = false;
 
 function cellClickHandler (row, col) {
 
-    if (field[row][col] === EMPTY){
-        field[row][col] = currentPlayer;
-        transposedField[col][row] = currentPlayer;
-        renderSymbolInCell(currentPlayer, row, col);
-        checkRowsAndColumns();
-        checkDiagonals();
-        currentTurn +=1;
-        swapPlayers();
+    if (!gameWon) {
+        if (field[row][col] === EMPTY){
+            field[row][col] = currentPlayer;
+            transposedField[col][row] = currentPlayer;
+            renderSymbolInCell(currentPlayer, row, col);
+            gameWon = checkRowsAndColumns() || gameWon;
+            gameWon = checkDiagonals() || gameWon;
+
+
+            console.log(gameWon);
+            if (gameWon) {
+                colorWins(row, col)
+            }
+
+            console.log(gameWon);
+            currentTurn +=1;
+            swapPlayers();
+        }
+
+        if (currentTurn === 9 && !gameWon) {
+            alert('Победила дружба!!!! ураураура11!1!');
+        }
     }
 
-    if (currentTurn === 9) {
-        alert('Победила дружба!!!! ураураура11!1!');
+
+}
+
+function colorWins(row, col) {
+    let columnCoordinates = []
+    let rowCoordinates = []
+    let mainDiagonal = []
+    let sideDiagonal = []
+    for (let i = 0; i < 3; i++){
+        let rowTile = field[row][i]
+        if (rowTile == currentPlayer){
+            columnCoordinates.push([row, i])
+        }
+
+        let columnTile = field[i][col]
+        if (columnTile == currentPlayer) {
+            rowCoordinates.push([i, col])
+        }
+
+        let mainTile = field[i][i]
+        if (mainTile == currentPlayer) {
+            mainDiagonal.push([i, i])
+        }
+
+        let sideTile = field[i][2-i]
+        if (sideTile == currentPlayer) {
+            sideDiagonal.push([i,2-i])
+        }
+
     }
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+
+    if (columnCoordinates.length === 3) {
+        for (let elem of columnCoordinates) {
+            renderSymbolInCell(currentPlayer, elem[0], elem[1], '#ff0000')
+        }
+    }
+
+    if (rowCoordinates.length === 3) {
+        for (let elem of rowCoordinates) {
+            renderSymbolInCell(currentPlayer, elem[0], elem[1], '#ff0000')
+        }
+    }
+
+    if (mainDiagonal.length === 3) {
+        for (let elem of mainDiagonal) {
+            renderSymbolInCell(currentPlayer, elem[0], elem[1], '#ff0000')
+        }
+    }
+
+
+    if (sideDiagonal.length === 3) {
+        for (let elem of sideDiagonal) {
+            renderSymbolInCell(currentPlayer, elem[0], elem[1], '#ff0000')
+        }
+    }
 }
 
 
 function checkRowsAndColumns(){
-    let winRow = -1;
-    let winColumn = -1;
     for (let i = 0; i < 3; i++) {
         let rowBreakFlag = true;
         let columnBreakFlag = true;
@@ -76,25 +138,20 @@ function checkRowsAndColumns(){
 
             if (rowCurrentTile != currentPlayer) {
                 rowBreakFlag = false;
-            } else {
-                winRow = i
             }
 
             if (columnCurrentTile != currentPlayer) {
                 columnBreakFlag = false;
-                break;
-            } else {
-                winColumn = j
             }
         }
 
-        console.log(`winRow = ${winRow}`);
-        console.log(`winColumn= ${winColumn}`);
         if (columnBreakFlag || rowBreakFlag) {
             alert(`Победил ${currentPlayer}`)
+            return true;
         }
     }
 
+    return false;
 }
 
 function checkDiagonals() {
@@ -115,8 +172,9 @@ function checkDiagonals() {
 
     if (mainFlag || sideFlag) {
         alert(`Победил ${currentPlayer}`)
+        return true;
     }
-
+    return false;
 }
 
 
@@ -141,6 +199,7 @@ function addResetListener () {
 function resetClickHandler () {
     currentPlayer = CROSS
     currentTurn = 0
+    gameWon = false;
 
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
@@ -148,7 +207,6 @@ function resetClickHandler () {
             transposedField[j][i] = EMPTY
             renderSymbolInCell(EMPTY, i, j)
         }
-
 
     }
     console.log('reset!');
