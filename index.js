@@ -1,6 +1,7 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let flag = 0;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -36,6 +37,8 @@ function renderGrid(dimension) {
 
 function cellClickHandler(row, col) {
     // Пиши код тут
+    if (flag === 1)
+        return;
     if (grid[row][col] != null)
         return;
     let count = 0
@@ -51,7 +54,6 @@ function cellClickHandler(row, col) {
     }
     currentPlayer = (currentPlayer + 1) % 2;
 
-    console.log(isHaveWinner());
 
     for (let j = 0; j < 3; j++) {
         for (let i = 0; i < 3; i++)
@@ -68,6 +70,7 @@ function cellClickHandler(row, col) {
             const targetCell = findCell(k[j][0],k[j][1]);
             targetCell.style.color = '#f00';
             }
+        flag = 1;
         }
     if (isHaveWinner()[0] === ZERO) {
         setTimeout('alert("Победил O")', 1000)
@@ -76,6 +79,7 @@ function cellClickHandler(row, col) {
             const targetCell = findCell(k[j][0],k[j][1]);
             targetCell.style.color = '#f00';
         }
+        flag =1;
     }
 }
 
@@ -155,6 +159,7 @@ function cellClickHandler(row, col) {
     function resetClickHandler() {
         for (let j = 0; j < 3; j++) {
             grid[j] = [];
+            flag = 0;
             for (let i = 0; i < 3; i++)
                 grid[j].push(null);
         }
