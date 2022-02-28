@@ -8,6 +8,7 @@ class Field{
     constructor(dimension){
         self.dimension = dimension;
         self.field = [];
+        self.nextChar = CROSS;
         for (let i = 0; i < dimension; i++) {
             let temp = [];
             for (let i = 0; i < dimension; i++) {
@@ -21,7 +22,11 @@ class Field{
     }
 
     nextMove(col, row){
-
+        if (self.field[row, col] == EMPTY) {
+            self.field[row, col] = nextChar;
+            self.nextChar = (self.nextChar === CROSS) ? ZERO : CROSS;
+        }
+        return self.field[row, col];
     }
 }
 startGame();
@@ -48,10 +53,9 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+
+    renderSymbolInCell(field.nextMove(), row, col);
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
