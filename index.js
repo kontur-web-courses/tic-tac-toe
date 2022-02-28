@@ -8,6 +8,7 @@ let SIZE = FIELD.length * FIELD[0].length
 let SYMBOLS = [CROSS, ZERO]
 let TURN = 0;
 let TURN_COUNTER = 0
+let WIN = false;
 const container = document.getElementById('fieldWrapper');
 
 startGame();
@@ -34,21 +35,22 @@ function renderGrid(dimension) {
 
 function cellClickHandler(row, col) {
     // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
-    if (FIELD[row][col] === EMPTY) {
-        FIELD[row][col] = SYMBOLS[TURN];
-        renderSymbolInCell(SYMBOLS[TURN], row, col);
-        TURN += 1;
-        TURN %= 2;
-        TURN_COUNTER+=1
-        console.log(TURN_COUNTER)
+    if(!WIN) {
+        console.log(`Clicked on cell: ${row}, ${col}`);
+        if (FIELD[row][col] === EMPTY) {
+            FIELD[row][col] = SYMBOLS[TURN];
+            renderSymbolInCell(SYMBOLS[TURN], row, col);
+            TURN += 1;
+            TURN %= 2;
+            TURN_COUNTER += 1
+            console.log(TURN_COUNTER)
+        }
+        if (TURN_COUNTER >= SIZE) {
+            alert("Победила дружба")
+        }
+        WIN = defineWin();
+        if (WIN) alert(TURN);
     }
-    if (TURN_COUNTER >= SIZE) {
-        alert("Победила дружба")
-    }
-    if(defineWin()) alert('wow');
-    //defineWin();
-
 }
 
 function defineWin() {
