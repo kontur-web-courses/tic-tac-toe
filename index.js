@@ -1,8 +1,10 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-let grid = [];
 const container = document.getElementById('fieldWrapper');
+
+let grid = [];
+let isZeroNow = true;
 
 startGame();
 addResetListener();
@@ -30,13 +32,13 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    let symbol = isZeroNow ? ZERO : CROSS;
+    if (grid[row][col] === EMPTY) {
+        renderSymbolInCell(symbol, row, col);
+        grid[row][col] = symbol;
+        isZeroNow = !isZeroNow;
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
