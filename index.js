@@ -9,7 +9,7 @@ let fieldSize = 3;
 const container = document.getElementById('fieldWrapper');
 const nowTurnContainer = document.getElementById('nowTurn');
 const fieldSizeContainer = document.getElementById('fieldSize');
-fieldSizeContainer.addEventListener('change', function(e)  {
+fieldSizeContainer.addEventListener('change', function (e) {
     fieldSize = parseInt(e.target.value, 10)
     startGame();
 });
@@ -47,21 +47,24 @@ function renderGrid(dimension) {
     }
 }
 
-function checkWin () {
-    for (let i = 0; i < 3; i ++) {
-        if ((field[i][0] === field[i][1] && field[i][1] === field[i][2]) && (field[i][0] !== EMPTY)) {
-            return [[i, 0], [i, 1], [i, 2]];
+function checkWin(x, y) {
+    if (1 < x && x < fieldSize - 3 && 1 < y && y < fieldSize - 3) {
+        for (let i = -1; i < 2; i++) {
+            if ((field[x + i][y] === field[x + i][y] && field[x + i][y] === field[x + i][y]) && (field[x + i][y] !== EMPTY)) {
+                return [[x + i, y], [x + i, y], [x + i, y]];
+            }
+            if ((field[x][y + i] === field[x][y + i] && field[x][y + i] === field[x][y + i]) && (field[x][y + i] !== EMPTY)) {
+                return [[x, y + i], [x, y + i], [x, y + i]];
+            }
         }
-        if (( field[0][i] === field[1][i] && field[1][i] === field[2][i]) && (field[0][i] !== EMPTY)) {
-            return [[0, i], [1, i], [2, i]];
+        if ((field[x + 0][y + 0] === field[x + 1][y + 1] && field[x + 1][y + 1] === field[x + 2][y + 2]) && (field[x + 0][y + 0] !== EMPTY)) {
+            return [[x + 0, y + 0], [x + 1, y + 1], [x + 2, y + 2]];
+        }
+        if ((field[x + 0][y + 2] === field[x + 1][y + 1] && field[x + 1][y + 1] === field[x + 2][y + 0]) && (field[x + 1][y + 1] !== EMPTY)) {
+            return [[x + 0, y + 2], [x + 1, y + 1], [x + 2, y + 0]];
         }
     }
-    if ((field[0][0] === field[1][1] && field[1][1] === field[2][2]) && (field[0][0] !== EMPTY))  {
-        return [[0,0], [1,1], [2,2]];
-    }
-    if ((field[0][2] === field[1][1] && field[1][1] === field[2][0]) && (field[1][1] !== EMPTY))  {
-        return [[0,2], [1,1], [2,0]];
-    }
+
 }
 
 function cellClickHandler(row, col) {
@@ -117,8 +120,8 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
-    for (let i = 0; i < fieldSize; i++ ) {
-        for (let j = 0; j < fieldSize; j++ ){
+    for (let i = 0; i < fieldSize; i++) {
+        for (let j = 0; j < fieldSize; j++) {
             renderSymbolInCell(EMPTY, i, j)
             field[i][j] = EMPTY;
         }
