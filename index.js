@@ -1,28 +1,22 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-let grMem = new gridMem();
-const container = document.getElementById('fieldWrapper');
-
-startGame();
-addResetListener();
-
-function startGame() {
-    renderGrid(3);
-}
 
 class gridMem {
-    field = [[EMPTY, EMPTY, EMPTY],
-        [EMPTY, EMPTY, EMPTY],
-        [EMPTY, EMPTY, EMPTY]];
-    isEnd = false;
-    isDraw = false;
-    winner = undefined;
-    turnCount = 0;
-    turnValue = CROSS
+    constructor() {
+        this.field = [[EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY],
+            [EMPTY, EMPTY, EMPTY]];
+        this.isEnd = false;
+        this.isDraw = false;
+        this.winner = undefined;
+        this.turnCount = 0;
+        this.turnValue = CROSS;
+    }
+
 
     addTurn(x, y) {
-        if (this.field[x][y] !== EMPTY) {
+        if (this.field[x][y] !== EMPTY || this.isEnd) {
             return false;
         }
         this.turnCount++;
@@ -73,6 +67,17 @@ class gridMem {
     }
 }
 
+
+let grMem = new gridMem();
+const container = document.getElementById('fieldWrapper');
+
+startGame();
+addResetListener();
+
+function startGame() {
+    renderGrid(3);
+}
+
 function renderGrid(dimension) {
     container.innerHTML = '';
 
@@ -89,11 +94,11 @@ function renderGrid(dimension) {
 }
 
 function cellClickHandler(row, col) {
-    let resultFlag = grMem.addTurn(row, col);
     console.log(`Clicked on cell: ${row}, ${col}`);
+    let resultFlag = grMem.addTurn(row, col);
     if (resultFlag) {
         renderSymbolInCell(grMem.turnValue, row, col);
-        grMem.swapSymbol()
+        grMem.swapSymbol();
     }
 
     /* Пользоваться методом для размещения символа в клетке так:
