@@ -7,7 +7,7 @@ let FIELD = [[EMPTY, EMPTY, EMPTY],
 let SIZE = FIELD.length * FIELD[0].length
 let SYMBOLS = [CROSS, ZERO]
 let TURN = 0;
-let TURN_COUNTER
+let TURN_COUNTER = 0
 const container = document.getElementById('fieldWrapper');
 
 startGame();
@@ -37,11 +37,13 @@ function cellClickHandler(row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
     if (FIELD[row][col] === EMPTY) {
         FIELD[row][col] = SYMBOLS[TURN];
+        TURN_COUNTER+=1
         renderSymbolInCell(SYMBOLS[TURN], row, col);
         TURN += 1;
         TURN %= 2;
+        console.log(TURN_COUNTER)
     }
-    if (TURN_COUNTER === SIZE) {
+    if (TURN_COUNTER >= SIZE) {
         alert("Победила дружба")
     }
     if(defineWin()) alert('wow');
@@ -89,7 +91,17 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
-    console.log('reset!');
+    FIELD = [
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY]];
+    TURN = 1
+
+    for (let i = 0; i<FIELD.length; i++){
+        for (let j = 0; j<FIELD.length; j++){
+            renderSymbolInCell(EMPTY, i, j)
+        }
+    }
 }
 
 
