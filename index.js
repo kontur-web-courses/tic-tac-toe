@@ -4,13 +4,13 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+let field = getStartField()
+let currentSymbol = CROSS;
+let hasWinner = false;
 let remainingSteps = field.length * field[0].length;
 let diagLength = Math.min(field.length, field[0].length)
 
 //console.log(field);
-let field = getStartField()
-let currentSymbol = CROSS;
-let hasWinner = false;
 
 startGame();
 addResetListener();
@@ -49,6 +49,7 @@ function cellClickHandler (row, col) {
 
         if (checkWinBy(currentSymbol)) {
             alert(`Winner ${currentSymbol}`);
+            hasWinner = true;
         } else if (remainingSteps == 0) {
             alert("Draw");
         }
@@ -145,6 +146,8 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    hasWinner = false;
+    remainingSteps = field.length * field[0].length;
     field = getStartField();
     renderGrid(3);
     currentSymbol = CROSS;
