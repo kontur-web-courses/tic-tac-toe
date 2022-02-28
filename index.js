@@ -10,6 +10,11 @@ let zeroCells = [
     [false, false, false],
     [false, false, false]];
 
+let isCross = true;
+let counter = 0;
+// let dimension;
+// let cellsCount;
+
 const container = document.getElementById('fieldWrapper');
 
 startGame();
@@ -21,6 +26,7 @@ function startGame () {
 
 function renderGrid (dimension) {
     container.innerHTML = '';
+    cellsCount = dimension * dimension;
 
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
@@ -35,12 +41,28 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    if (crossCells[row][col] || zeroCells[row][col])
-        alert();
+    if (crossCells[row][col] || zeroCells[row][col]) {
+        return;
+    }
+    if (isCross) {
+        renderSymbolInCell(CROSS, row, col);
+    } else {
+        renderSymbolInCell(ZERO, row, col);
+    }
+    console.log(`Clicked on cell: ${row}, ${col}`);
+    isCross = !isCross;
+    counter++;
+    if (counter === cellsCount)
+        alert('Победила дружба')
+
+    let playerArray = isCross ? crossCells : zeroCells;
+    console.log(winCheck(playerArray, row, col).toString());
+    console.log(winCheck(playerArray, row, col) != null);
+    if (winCheck(playerArray, row, col) != null)
+        alert("Пиздец");
 }
 
 function winCheck (array, row, col) {
-    //let win = false;
     let winInRow = true;
     let winInCol = true;
     for (let i = 0; i < 3; i++) {
@@ -54,7 +76,7 @@ function winCheck (array, row, col) {
     if (winInCol)
         return [[0, col], [1, col], [2, col]];
     if (row === 1 && col !== 1 || row !== 1 && col === 1)
-        return false;
+        return null;
 
     let win = true;
     if (row === col){
@@ -65,12 +87,12 @@ function winCheck (array, row, col) {
         if (win)
             return [[0, 0], [1, 1], [2, 2]];
         if (row !== 1)
-            return false;
+            return null;
     }
 
     for (let i = 0; i < 3; i++) {
         if (!array[i][i])
-            return false;
+            return null;
     }
     return [[0, 2], [1, 1], [2, 0]];
 }
@@ -93,6 +115,7 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    
     console.log('reset!');
 }
 
