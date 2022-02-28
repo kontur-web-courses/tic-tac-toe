@@ -63,18 +63,46 @@ function cellClickHandler (row, col) {
 
 function checkWinner (value) {
     // 3 горизонтали, 3 вертикали, 2 диагонали
-    const value1 = field[0].every( v => v === value );
-    const value2 = field[1].every( v => v === value );
-    const value3 = field[2].every( v => v === value );
-    const value4 = [field[0][0], field[1][0], field[2][0]].every( v => v === value)
-    const value5 = [field[0][1], field[1][1], field[2][1]].every( v => v === value)
-    const value6 = [field[0][2], field[1][2], field[2][2]].every( v => v === value)
-    const value7 = [field[0][0], field[1][1], field[2][2]].every( v => v === value)
-    const value8 = [field[0][2], field[1][1], field[2][0]].every( v => v === value)
-    if (value1 || value2 || value3 || value4 || value5 || value6 || value7 || value8) {
-        return true;
+    if (field[0].every( v => v === value)){
+        colorInRedHorizontal(0)
+    } else if (field[1].every( v => v === value )){
+        colorInRedHorizontal(1)
+    } else if (field[2].every( v => v === value )){
+        colorInRedHorizontal(2)
+    } else if ([field[0][0], field[1][0], field[2][0]].every( v => v === value)){
+        colorInRedVertical(0)
+    } else if ([field[0][1], field[1][1], field[2][1]].every( v => v === value)){
+        colorInRedVertical(1)
+    } else if ([field[0][2], field[1][2], field[2][2]].every( v => v === value)){
+        colorInRedVertical(2)
+    } else if ([field[0][0], field[1][1], field[2][2]].every( v => v === value)){
+        for (let i = 0; i < 3; i++){
+            const targetCell = findCell(i, i);
+            targetCell.style.color = '#e63c3c';
+        }
+    } else if ([field[0][2], field[1][1], field[2][0]].every( v => v === value)){
+        for (let j = 2; j >= 0; j--){
+            const targetCell = findCell(2 - j, j);
+            targetCell.style.color = '#e63c3c';
+        }
+    } else {
+        return false;
     }
-    return false;
+    return true;
+}
+
+function colorInRedHorizontal(row){
+    for (let i = 0; i < 3; i++){
+        const targetCell = findCell(row, i);
+        targetCell.style.color = '#e63c3c';
+    }
+}
+
+function colorInRedVertical(column){
+    for (let i = 0; i < 3; i++){
+        const targetCell = findCell(i, column);
+        targetCell.style.color = '#e63c3c';
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -95,6 +123,9 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    canPlay = true;
+    startGame();
+    turn = 1;
     console.log('reset!');
 }
 
