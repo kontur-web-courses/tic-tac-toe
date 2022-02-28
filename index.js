@@ -47,7 +47,46 @@ function cellClickHandler (row, col) {
         renderSymbolInCell(CROSS, row, col);
     }
     currentPlayer = (currentPlayer + 1) % 2;
-     
+    
+    
+}
+
+function isHaveWinner() {
+    let res;
+    for (let j = 0; j < 3; j ++) {
+        res = grid[j].reduce(function(prevValue, currValue, index, array) {
+            if (index == 0)
+                return true;
+
+            return prevValue && (array[j - 1] == currValue);
+        })
+    }
+    if (res)
+        return true;
+
+    for (let j = 0; j < 3; j ++) {
+        res = grid.reduce(function(prevValue, currValue, index, array) {
+            if (index == 0)
+                return true;
+    
+            return prevValue && (array[j - 1] == currValue);
+        })
+    }
+    if (res)
+        return true;
+
+    for (let j = 0; j < 3; j++) {
+        res = grid.reduce(function(prevValue, currValue, index, array) {
+            if (index == 0)
+                return true;
+    
+            return prevValue && (array[index - 1] == currValue);
+        })
+    }
+    if (res)
+        return true;
+
+    return false;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
