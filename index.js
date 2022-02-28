@@ -3,7 +3,12 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-
+let field = [
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY]]
+let currentSymbol = CROSS;
+console.log(field);
 startGame();
 addResetListener();
 
@@ -27,7 +32,12 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    if (field[row][col] === EMPTY) {
+        field[row][col] = currentSymbol;
+        renderSymbolInCell(currentSymbol, row, col);
+        currentSymbol = currentSymbol === CROSS ? ZERO : CROSS;
+    }
+
     console.log(`Clicked on cell: ${row}, ${col}`);
 
 
