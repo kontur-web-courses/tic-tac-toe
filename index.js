@@ -44,12 +44,14 @@ function cellClickHandler (row, col) {
         game[row][col] = CROSS;
         renderSymbolInCell(CROSS, row, col);
         turn = !turn;
+        checkGame();
         return;
     }
     
     game[row][col] = ZERO;
     renderSymbolInCell(ZERO, row, col)
     turn = !turn;
+    checkGame();
     return;
     
 
