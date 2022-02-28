@@ -44,6 +44,7 @@ function cellClickHandler (row, col) {
                 renderSymbolInCell(cell.textContent, i, col, RED);
                 isPlayable = false;
             }
+            printWinner()
             return;
         } else if (isAllCellsInRowHaveSameContent(row))
         {
@@ -52,6 +53,7 @@ function cellClickHandler (row, col) {
                 renderSymbolInCell(cell.textContent, row, i, RED);
                 isPlayable = false;
             }
+            printWinner()
             return;
         } else if (isAllCellsInMainDiagonalHaveSameContent())
         {
@@ -60,6 +62,7 @@ function cellClickHandler (row, col) {
                 renderSymbolInCell(cell.textContent, i, i, RED);
                 isPlayable = false;
             }
+            printWinner()
             return;
         } else if (isAllCellsInNotMainDiagonalHaveSameContent())
         {
@@ -68,6 +71,7 @@ function cellClickHandler (row, col) {
                 renderSymbolInCell(cell.textContent, i, 2 - i, RED);
                 isPlayable = false;
             }
+            printWinner()
             return;
         }
     }
