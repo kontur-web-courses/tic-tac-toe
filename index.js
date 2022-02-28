@@ -1,8 +1,10 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+const RED = "#FF0000";
 
 const container = document.getElementById('fieldWrapper');
+let currentStepSymbol = CROSS;
 
 startGame();
 addResetListener();
@@ -30,10 +32,19 @@ function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    var cell = findCell(row, col);
+    if (cell.textContent === EMPTY){
+        renderSymbolInCell(currentStepSymbol, row, col)
+        if (currentStepSymbol === CROSS)
+            currentStepSymbol = ZERO;
+        else
+            currentStepSymbol = CROSS;
+        for (let i = 0; i < 3; i++){
+            columnCell = findCell(i, col);
+            if (!columnCell.textContent == cell.textContent)
+                isGood = false;
+        }
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -55,6 +66,8 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    currentStepSymbol = CROSS;
+    renderGrid(3);
 }
 
 
