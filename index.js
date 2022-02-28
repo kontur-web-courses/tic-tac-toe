@@ -37,10 +37,10 @@ function cellClickHandler(row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
     if (FIELD[row][col] === EMPTY) {
         FIELD[row][col] = SYMBOLS[TURN];
-        TURN_COUNTER+=1
         renderSymbolInCell(SYMBOLS[TURN], row, col);
         TURN += 1;
         TURN %= 2;
+        TURN_COUNTER+=1
         console.log(TURN_COUNTER)
     }
     if (TURN_COUNTER >= SIZE) {
@@ -102,6 +102,7 @@ function resetClickHandler() {
             renderSymbolInCell(EMPTY, i, j)
         }
     }
+    TURN_COUNTER = 0
 }
 
 
