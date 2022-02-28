@@ -86,7 +86,11 @@ function renderSymbolInCell(symbol, row, col, color = '#333') {
 
 function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
-    return targetRow.querySelectorAll('td')[col];
+    const a = targetRow.querySelectorAll('td')[col];
+    if (a === undefined){
+        debugger;
+    }
+    return a;
 }
 
 function addResetListener() {
@@ -95,6 +99,13 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
+    for (let i = 0; i < 3; i++ ) {
+        for (let j = 0; j < 3; j++ ){
+            renderSymbolInCell(EMPTY, i, j)
+            field[i][j] = EMPTY;
+        }
+    }
+    startGame();
     console.log('reset!');
 }
 
