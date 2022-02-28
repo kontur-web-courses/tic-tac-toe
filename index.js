@@ -136,6 +136,35 @@ function isAllCellsInRowHaveSameContent(row)
     return true;
 }
 
+function checkLine(row){
+    const targetRow = container.querySelectorAll('tr')[row];
+    const symbol = targetRow[0].textContent;
+    for(cell of targetRow){
+        if(cell.textContent !== symbol){
+            return false;
+        }
+    }
+    return true;
+}
+
+function checkMainDiagonal(){
+    const symbol = findCell(0, 0);
+    for(let i = 0; i<3; i++){
+        if(findCell(i, i) !== symbol)
+            return false;
+    }
+    return true;
+}
+
+function checkSecondaryDiagonal(){
+    const symbol = findCell(0, 2);
+    for(let i = 0; i<3; i++){
+        if(findCell(0+i, 2-i) !== symbol)
+            return false;
+    }
+    return true;
+}
+
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
