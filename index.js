@@ -49,8 +49,12 @@ function winCheck (array, row, col) {
         if (!array[i][col])
             winInCol = false;
     }
-    if (winInRow || winInCol || row === 1 && col !== 1 || row !== 1 && col === 1)
-        return winInRow || winInCol;
+    if (winInRow)
+        return [[row, 0], [row, 1], [row, 2]];
+    if (winInCol)
+        return [[0, col], [1, col], [2, col]];
+    if (row === 1 && col !== 1 || row !== 1 && col === 1)
+        return false;
 
     let win = true;
     if (row === col){
@@ -58,15 +62,17 @@ function winCheck (array, row, col) {
             if (!array[i][i])
                 win = false;
         }
-        if (win || row !== 2)
-            return win
+        if (win)
+            return [[0, 0], [1, 1], [2, 2]];
+        if (row !== 1)
+            return false;
     }
 
     for (let i = 0; i < 3; i++) {
         if (!array[i][i])
             return false;
     }
-    return true;
+    return [[0, 2], [1, 1], [2, 0]];
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
