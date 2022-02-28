@@ -9,6 +9,7 @@ let currentSymbol = CROSS;
 let hasWinner = false;
 let remainingSteps = field.length * field[0].length;
 let diagLength = Math.min(field.length, field[0].length)
+let winCells = [];
 
 //console.log(field);
 
@@ -48,6 +49,7 @@ function cellClickHandler (row, col) {
         remainingSteps--;
 
         if (checkWinBy(currentSymbol)) {
+            PaintWinnerCells(currentSymbol);
             alert(`Winner ${currentSymbol}`);
             hasWinner = true;
         } else if (remainingSteps == 0) {
@@ -99,7 +101,7 @@ function checkMainDiagBy(player) {
         if (field[i][i] !== player)
             return false;
     }
-
+    winCells = [[0, 0], [1, 1], [2, 2]];
     return true;
 }
 
@@ -108,7 +110,7 @@ function checkSideDiagBy(player) {
         if (field[i][diagLength - i - 1] !== player)
             return false;
     }
-
+    winCells = [[0,2], [1,1],[2,0]];
     return true;
 }
 
@@ -121,7 +123,7 @@ function checkFillingByKey(count, key, elementSelector) {
     return true;
 }
 
-function PaintWinnerCells(winSymbol, winCells){
+function PaintWinnerCells(winSymbol){
     for (let cell of winCells){
         renderSymbolInCell(winSymbol, cell[0], cell[1], '#FF0000')
     }
