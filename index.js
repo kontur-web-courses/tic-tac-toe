@@ -115,7 +115,7 @@ function checkColumn(row, d) {
 
 function renderColumn(row, d) {
     for (let i = 0; i < d; i++) {
-        renderSymbolInCell(game[row][i], row, i);
+        renderSymbolInCell(game[row][i], row, i, 'red');
     }
 }
 
@@ -131,7 +131,7 @@ function CheckRow(col, d) {
 
 function renderRow(col, d) {
     for (let i = 0; i < d; i++) {
-        renderSymbolInCell(game[i][col], i, col);
+        renderSymbolInCell(game[i][col], i, col, 'red');
     }
 }
 
@@ -147,7 +147,7 @@ function CheckDiag1(d) {
 
 function RenderDiag1(d) {
     for (let i = 1; i < d; i++) {
-        renderSymbolInCell(game[i][i], i, i);
+        renderSymbolInCell(game[i][i], i, i, 'red');
     }
 }
 
@@ -163,7 +163,7 @@ function CheckDiag2(d) {
 
 function RenderDiag2(d) {
     for (let i = 1; i < d; i++) {
-        renderSymbolInCell(game[d - i][i], d - i, i);
+        renderSymbolInCell(game[d - i][i], d - i, i, 'red');
     }
 }
 
