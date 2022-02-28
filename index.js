@@ -94,10 +94,10 @@ function CheckDiag1(d){
     return e != EMPTY;
 }
 
-function CheckDiag2(arr, d){
-    let e = arr[d][0];
+function CheckDiag2(d){
+    let e = game[d][0];
     for (let i = 1; i < d; i++){
-        if (e != arr[d - i][i]){
+        if (e != game[d - i][i]){
             return false;
         }
     }
