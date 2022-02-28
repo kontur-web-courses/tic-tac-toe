@@ -5,25 +5,26 @@ const EMPTY = ' ';
 const container = document.getElementById('fieldWrapper');
 
 let game = [];
-let turn = true; // true - X;
+let isCross = true;
+let win = false;
 
 startGame();
 addResetListener();
 
-function startGame () {
+function startGame() {
     renderGrid(3);
 }
 
-function renderGrid (dimension) {
+function renderGrid(dimension) {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
-        game.push([]);
         const row = document.createElement('tr');
+        game.push([]);
         for (let j = 0; j < dimension; j++) {
-            game[i].push(EMPTY);
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
+            game[i].push(EMPTY);
             cell.addEventListener('click', () => cellClickHandler(i, j));
             row.appendChild(cell);
         }
@@ -31,126 +32,143 @@ function renderGrid (dimension) {
     }
 }
 
-function cellClickHandler (row, col) {
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
-    
-    if (game[row][col] != EMPTY){
-        console.log('Занято');
+function cellClickHandler(row, col) {
+
+    if (win) {
         return;
     }
-    
-    if (turn){
+
+    if (game[row][col] != EMPTY) {
+        console.log("the cell is taken");
+        return;
+    }
+
+    if (isCross) {
         game[row][col] = CROSS;
         renderSymbolInCell(CROSS, row, col);
-        turn = !turn;
-        checkGame();
-        return;
-    }
-    
-    game[row][col] = ZERO;
-    renderSymbolInCell(ZERO, row, col)
-    turn = !turn;
-    checkGame();
-    return;
-    
-
-    /* Пользоваться методом для размещения символа в клетке так:
+        isCross = false;
+    } else {
+        game[row][col] = ZERO;
         renderSymbolInCell(ZERO, row, col);
-     */
+        isCross = true;
+    }
+    console.log(`Clicked on cell: ${row}, ${col}`);
+
+    checkGame();
+
+    if (noFreeCells()) {
+        alert('победила дружба');
+    }
+
 }
 
-function checkGame(){
+function noFreeCells() {
+    for (const row of game) {
+        for (const cell of row) {
+            if (cell === EMPTY) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function checkGame() {
     let d = game.length;
-    for (let i = 0; i < d; i++){
-        if (checkColumn(i, d)){
+    for (let i = 0; i < d; i++) {
+        if (checkColumn(i, d)) {
             alert(`Winner is ${game[i][0]}`);
+            win = true;
             //покрасить
             return;
         }
-        if (CheckRow(i, d)){
+        if (CheckRow(i, d)) {
             alert(`Winner is ${game[i][0]}`);
+            win = true;
             //покрасить
             return;
         }
     }
-    if (CheckDiag1(d)){
+    if (CheckDiag1(d)) {
         alert(`Winner is ${game[0][0]}`);
+        win = true;
         //покрасить
         return;
     }
-    if (CheckDiag2(d)){
+    if (CheckDiag2(d)) {
         alert(`Winner is ${game[2][0]}`);
+        win = true;
         //покрасить
         return;
-    }    
+    }
 }
 
-function checkColumn(row, d){
+function checkColumn(row, d) {
     let e = game[row][0];
-    for (let i = 1; i < d; i++){
-        if (e != game[row][i]){
+    for (let i = 1; i < d; i++) {
+        if (e != game[row][i]) {
             return false;
         }
     }
     return e != EMPTY;
 }
 
-function CheckRow(col, d){
+function CheckRow(col, d) {
     let e = game[0][col];
-    for (let i = 1; i < d; i++){
-        if (e != game[i][col]){
+    for (let i = 1; i < d; i++) {
+        if (e != game[i][col]) {
             return false;
         }
     }
     return e != EMPTY;
 }
 
-function CheckDiag1(d){
+function CheckDiag1(d) {
     let e = game[0][0];
-    for (let i = 1; i < d; i++){
-        if (e != game[i][i]){
+    for (let i = 1; i < d; i++) {
+        if (e != game[i][i]) {
             return false;
         }
     }
     return e != EMPTY;
 }
 
-function CheckDiag2(d){
+function CheckDiag2(d) {
     let e = game[d][0];
-    for (let i = 1; i < d; i++){
-        if (e != game[d - i][i]){
+    for (let i = 1; i < d; i++) {
+        if (e != game[d - i][i]) {
             return false;
         }
     }
     return e != EMPTY;
 }
 
-function renderSymbolInCell (symbol, row, col, color = '#333') {
+
+function renderSymbolInCell(symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
 }
 
-function findCell (row, col) {
+function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
 }
 
-function addResetListener () {
+function addResetListener() {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
 }
 
-function resetClickHandler () {
+function resetClickHandler() {
     console.log('reset!');
 }
 
 
 /* Test Function */
 /* Победа первого игрока */
-function testWin () {
+function testWin() {
     clickOnCell(0, 2);
     clickOnCell(0, 0);
     clickOnCell(2, 0);
@@ -161,7 +179,7 @@ function testWin () {
 }
 
 /* Ничья */
-function testDraw () {
+function testDraw() {
     clickOnCell(2, 0);
     clickOnCell(1, 0);
     clickOnCell(1, 1);
@@ -174,6 +192,6 @@ function testDraw () {
     clickOnCell(2, 2);
 }
 
-function clickOnCell (row, col) {
+function clickOnCell(row, col) {
     findCell(row, col).click();
 }
