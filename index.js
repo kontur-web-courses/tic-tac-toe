@@ -2,6 +2,8 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
+const EMPTY_TURNS_ALERT_TEXT = 'Победила дружба';
+
 const container = document.getElementById('fieldWrapper');
 
 let userTurn = CROSS;
@@ -10,6 +12,7 @@ const field = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
 ];
+let turnCount = field.length * field[0].length;
 
 startGame();
 addResetListener();
@@ -39,6 +42,18 @@ function cellClickHandler(row, col) {
     field[row][col] = userTurn;
     renderSymbolInCell(userTurn, row, col);
     swapTurn()
+
+    turnCount -= 1;
+    // TODO: place checkIsWin
+    if (turnCount === 0) {
+        renderGameEnded();
+        turnCount = field.length * field[0].length;
+        return;
+    }
+}
+
+function renderGameEnded() {
+    alert(EMPTY_TURNS_ALERT_TEXT);
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
