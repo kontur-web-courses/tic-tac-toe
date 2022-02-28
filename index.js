@@ -7,6 +7,7 @@ const container = document.getElementById('fieldWrapper');
 class Field{
     constructor(dimension){
         self.dimension = dimension;
+        self.is_ended = 0;
         self.field = [];
         self.nextChar = CROSS;
         for (let i = 0; i < dimension; i++) {
@@ -57,35 +58,39 @@ class Field{
             if (zerosCount === self.dimension)
                 return ZERO;
         }
+        let crossCount = 0;
+        let zerosCount = 0;
         for (let i = 0; i < self.dimension ; i++) {
-            let crossCount = 0;
-            let zerosCount = 0;
             if (self.field[i][i] === ZERO)
                 zerosCount++;
             if (self.field[i][i] === CROSS)
                 crossCount++;
-            if (crossCount === self.dimension)
-                return CROSS;
-            if (zerosCount === self.dimension)
-                return ZERO;
         }
+        if (crossCount === self.dimension)
+            return CROSS;
+        if (zerosCount === self.dimension)
+            return ZERO;
+        crossCount = 0;
+        zerosCount = 0;
         for (let i = 0; i < self.dimension ; i++) {
-            let crossCount = 0;
-            let zerosCount = 0;
             if (self.field[i][self.dimension - i - 1] === ZERO)
                 zerosCount++;
             if (self.field[i][self.dimension - i - 1] === CROSS)
                 crossCount++;
-            if (crossCount === self.dimension)
-                return CROSS;
-            if (zerosCount === self.dimension)
-                return ZERO;
         }
+        if (crossCount === self.dimension)
+            return CROSS;
+        if (zerosCount === self.dimension)
+            return ZERO;
         return null;
     }
 
+    endGame(){
+        self.is_ended = true;
+    }
+
     nextMove(row, col){
-        if (self.field[row][col] === EMPTY) {
+        if (!self.is_ended && self.field[row][col] === EMPTY) {
             self.field[row][col] = self.nextChar;
             self.nextChar = (self.nextChar === CROSS) ? ZERO : CROSS;
         }
@@ -121,11 +126,13 @@ function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
     
     let win = field.whoWin();
-    if ( win ) {
+    if (win) {
         alert(`${ win === CROSS ? 'Крестики' : 'Нолики'} победили!`)
+        field.endGame();
     }
-    if ( ! field.isAnyMove() ) {
+    if (!field.isAnyMove()) {
         alert('Ничья, давай по-новой!')
+        field.endGame();
     }
 }
 
@@ -137,8 +144,8 @@ function renderSymbolInCell (symbol, row, col, color = '#333') {
 }
 
 function clearField () {
-    for ( let i = 0; i < filed.dimension; i++ ) {
-        for ( let j = 0; j < filed.dimension; j++ ) {
+    for ( let i = 0; i < field.dimension; i++ ) {
+        for ( let j = 0; j < field.dimension; j++ ) {
                 renderSymbolInCell(EMPTY, i, j);
         }
     }
@@ -156,7 +163,7 @@ function addResetListener () {
 
 function resetClickHandler () {
     field = new Field(3);
-    clearField();
+    renderGrid(3);
     console.log('reset!');
 }
 
