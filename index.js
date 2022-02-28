@@ -27,6 +27,10 @@ class gridMem {
 
     swapSymbol(){
         this.turnValue = this.turnValue === CROSS ? ZERO : CROSS;
+        if (this.isDraw)
+            alert('Победила дружба');
+        if (this.winner !== undefined)
+            alert(`Победил ${this.winner}`);
     }
 
     checkEnd(x, y) {
@@ -113,6 +117,11 @@ function renderSymbolInCell(symbol, row, col, color = '#333') {
     targetCell.style.color = color;
 }
 
+function swapColorInCell(row, col, color = 'red'){
+    const targetCell = findCell(row, col);
+    targetCell.style.backgroundColor = color;
+}
+
 function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
@@ -125,6 +134,7 @@ function addResetListener() {
 
 function resetClickHandler() {
     console.log('reset!');
+    startGame();
 }
 
 
