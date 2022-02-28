@@ -25,9 +25,11 @@ function renderGrid (dimension) {
         container.appendChild(row);
     }
 }
-
+let number = 0
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    if (number % 2 == 0) renderSymbolInCell(CROSS, row, col);
+    else renderSymbolInCell(ZERO, row, col);
+    number += 1;
     console.log(`Clicked on cell: ${row}, ${col}`);
 
 
