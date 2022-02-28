@@ -4,6 +4,9 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+let game = [];
+let turn = true; // true - X;
+
 startGame();
 addResetListener();
 
@@ -15,8 +18,10 @@ function renderGrid (dimension) {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
+        game.push([]);
         const row = document.createElement('tr');
         for (let j = 0; j < dimension; j++) {
+            game[i].push(EMPTY);
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
             cell.addEventListener('click', () => cellClickHandler(i, j));
@@ -29,11 +34,72 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
+    
+    if (game[row][col] != EMPTY){
+        console.log('Занято');
+        return;
+    }
+    
+    if (turn){
+        game[row][col] = CROSS;
+        renderSymbolInCell(CROSS, row, col);
+        turn = !turn;
+        return;
+    }
+    
+    game[row][col] = ZERO;
+    renderSymbolInCell(ZERO, row, col)
+    turn = !turn;
+    return;
+    
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
+}
+
+function checkGame(){
+    
+}
+
+function checkColumn(arr, row, d){
+    let e = arr[row][0];
+    for (let i = 1; i < d; i++){
+        if (e != arr[row][i]){
+            return false;
+        }
+    }
+    return e != EMPTY;
+}
+
+function CheckRow(arr, col, d){
+    let e = arr[0][col];
+    for (let i = 1; i < d; i++){
+        if (e != arr[i][col]){
+            return false;
+        }
+    }
+    return e != EMPTY;
+}
+
+function CheckDiag1(arr, d){
+    let e = arr[0][0];
+    for (let i = 1; i < d; i++){
+        if (e != arr[i][i]){
+            return false;
+        }
+    }
+    return e != EMPTY;
+}
+
+function CheckDiag2(arr, d){
+    let e = arr[d][0];
+    for (let i = 1; i < d; i++){
+        if (e != arr[d - i][i]){
+            return false;
+        }
+    }
+    return e != EMPTY;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
