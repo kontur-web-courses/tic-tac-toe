@@ -26,15 +26,100 @@ function renderGrid (dimension) {
     }
 }
 
+currentPlayer = CROSS;
+currentTurn = 0;
+
+function swapPlayers() {
+    if (currentTurn % 2 === 0) {
+        currentPlayer = CROSS;
+    } else {
+        currentPlayer = ZERO;
+    }
+}
+
+field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
+transposedField = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
+gameWon = false;
+
 function cellClickHandler (row, col) {
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
 
+    if (field[row][col] === EMPTY){
+        field[row][col] = currentPlayer;
+        transposedField[col][row] = currentPlayer;
+        renderSymbolInCell(currentPlayer, row, col);
+        checkRowsAndColumns();
+        checkDiagonals();
+        currentTurn +=1;
+        swapPlayers();
+    }
 
+    if (currentTurn === 9) {
+        alert('Победила дружба!!!! ураураура11!1!');
+    }
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
 }
+
+
+function checkRowsAndColumns(){
+    let winRow = -1;
+    let winColumn = -1;
+    for (let i = 0; i < 3; i++) {
+        let rowBreakFlag = true;
+        let columnBreakFlag = true;
+        let row = field[i];
+        let column = transposedField[i];
+        for (let j = 0; j < 3; j++) {
+            const rowCurrentTile = row[j];
+            const columnCurrentTile = column[j];
+
+            if (rowCurrentTile != currentPlayer) {
+                rowBreakFlag = false;
+            } else {
+                winRow = i
+            }
+
+            if (columnCurrentTile != currentPlayer) {
+                columnBreakFlag = false;
+                break;
+            } else {
+                winColumn = j
+            }
+        }
+
+        console.log(`winRow = ${winRow}`);
+        console.log(`winColumn= ${winColumn}`);
+        if (columnBreakFlag || rowBreakFlag) {
+            alert(`Победил ${currentPlayer}`)
+        }
+    }
+
+}
+
+function checkDiagonals() {
+    let mainFlag = true;
+    let sideFlag = true;
+    for (let i = 0; i < 3; i++) {
+        const mainTile = field[i][i];
+        const sideTile = field[i][2-i];
+
+        if (mainTile != currentPlayer) {
+            mainFlag = false;
+        }
+
+        if (sideTile != currentPlayer) {
+            sideFlag = false;
+        }
+    }
+
+    if (mainFlag || sideFlag) {
+        alert(`Победил ${currentPlayer}`)
+    }
+
+}
+
+
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
@@ -54,6 +139,18 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    currentPlayer = CROSS
+    currentTurn = 0
+
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            field[i][j] = EMPTY
+            transposedField[j][i] = EMPTY
+            renderSymbolInCell(EMPTY, i, j)
+        }
+
+
+    }
     console.log('reset!');
 }
 
