@@ -47,7 +47,7 @@ function cellClickHandler (row, col) {
     }
 }
 
-function checkLine(){
+function checkLine(row){
     const targetRow = container.querySelectorAll('tr')[row];
     const symbol = targetRow[0].textContent;
     for(cell of targetRow){
