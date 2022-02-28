@@ -33,6 +33,8 @@ function renderGrid(dimension) {
 }
 
 function cellClickHandler(row, col) {
+    console.log(game);
+
 
     if (win) {
         return;
@@ -54,7 +56,9 @@ function cellClickHandler(row, col) {
     }
     console.log(`Clicked on cell: ${row}, ${col}`);
 
-    checkGame();
+    if (checkGame()) {
+        return;
+    }
 
     if (noFreeCells()) {
         alert('победила дружба');
@@ -80,27 +84,28 @@ function checkGame() {
             alert(`Winner is ${game[i][0]}`);
             win = true;
             renderColumn(i, d);
-            return;
+            return true;
         }
         if (CheckRow(i, d)) {
             alert(`Winner is ${game[i][0]}`);
             win = true;
             renderRow(i, d);
-            return;
+            return true;
         }
     }
     if (CheckDiag1(d)) {
         alert(`Winner is ${game[0][0]}`);
         win = true;
         RenderDiag1(d)
-        return;
+        return true;
     }
     if (CheckDiag2(d)) {
         alert(`Winner is ${game[2][0]}`);
         win = true;
         RenderDiag2(d);
-        return;
+        return true;
     }
+    return false;
 }
 
 function checkColumn(row, d) {
@@ -146,15 +151,15 @@ function CheckDiag1(d) {
 }
 
 function RenderDiag1(d) {
-    for (let i = 1; i < d; i++) {
+    for (let i = 0; i < d; i++) {
         renderSymbolInCell(game[i][i], i, i, 'red');
     }
 }
 
 function CheckDiag2(d) {
-    let e = game[d][0];
+    let e = game[d - 1][0];
     for (let i = 1; i < d; i++) {
-        if (e != game[d - i][i]) {
+        if (e != game[d - 1 - i][i]) {
             return false;
         }
     }
@@ -162,8 +167,8 @@ function CheckDiag2(d) {
 }
 
 function RenderDiag2(d) {
-    for (let i = 1; i < d; i++) {
-        renderSymbolInCell(game[d - i][i], d - i, i, 'red');
+    for (let i = 0; i < d; i++) {
+        renderSymbolInCell(game[d - 1 - i][i], d - 1 - i, i, 'red');
     }
 }
 
@@ -186,6 +191,11 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
+    let d = game.length;
+    game = [];
+    renderGrid(d);
+    isCross = true;
+    win = false;
     console.log('reset!');
 }
 
