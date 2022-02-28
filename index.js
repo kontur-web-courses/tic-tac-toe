@@ -1,6 +1,14 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let crossCells = [
+    [false, false, false],
+    [false, false, false],
+    [false, false, false]];
+let zeroCells = [
+    [false, false, false],
+    [false, false, false],
+    [false, false, false]];
 
 const container = document.getElementById('fieldWrapper');
 
@@ -27,13 +35,38 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
+    if (crossCells[row][col] || zeroCells[row][col])
+        alert();
+}
 
+function winCheck (array, row, col) {
+    //let win = false;
+    let winInRow = true;
+    let winInCol = true;
+    for (let i = 0; i < 3; i++) {
+        if (!array[row][i])
+            winInRow = false;
+        if (!array[i][col])
+            winInCol = false;
+    }
+    if (winInRow || winInCol || row === 1 && col !== 1 || row !== 1 && col === 1)
+        return winInRow || winInCol;
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    let win = true;
+    if (row === col){
+        for (let i = 0; i < 3; i++) {
+            if (!array[i][i])
+                win = false;
+        }
+        if (win || row !== 2)
+            return win
+    }
+
+    for (let i = 0; i < 3; i++) {
+        if (!array[i][i])
+            return false;
+    }
+    return true;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
