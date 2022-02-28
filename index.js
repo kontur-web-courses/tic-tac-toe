@@ -40,12 +40,12 @@ function cellClickHandler (row, col) {
         return;
     }
     renderSymbolInCell(isZeroTurn ? ZERO : CROSS, row, col)
-    isZeroTurn = !isZeroTurn;
     field[row][col] = isZeroTurn ? 2 : 1;
+    isZeroTurn = !isZeroTurn;
     turnCount++;
     let possibleWinner = checkIsWinnerExist()
     if (possibleWinner !== 0){
-        alert(`Победили: ${possibleWinner === 2 ? 'крестики' : 'нолики'}`);
+        alert(`Победили: ${possibleWinner === 1 ? 'крестики' : 'нолики'}`);
         return;
     }
     if (turnCount === 9)
