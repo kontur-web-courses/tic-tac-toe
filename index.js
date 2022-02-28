@@ -5,9 +5,14 @@ const EMPTY = ' ';
 const EMPTY_TURNS_ALERT_TEXT = 'Победила дружба';
 
 let fieldSize = 3;
+let isAIEnabled = false;
 
 const container = document.getElementById('fieldWrapper');
 const nowTurnContainer = document.getElementById('nowTurn');
+const isAIEnabledContainer = document.getElementById('isAIEnabled');
+isAIEnabledContainer.addEventListener('change', function (e) {
+    isAIEnabled = Boolean(e.target.value);
+})
 const fieldSizeContainer = document.getElementById('fieldSize');
 fieldSizeContainer.addEventListener('change', function (e) {
     fieldSize = parseInt(e.target.value, 10)
