@@ -79,26 +79,26 @@ function checkGame() {
         if (checkColumn(i, d)) {
             alert(`Winner is ${game[i][0]}`);
             win = true;
-            //покрасить
+            renderColumn(i, d);
             return;
         }
         if (CheckRow(i, d)) {
             alert(`Winner is ${game[i][0]}`);
             win = true;
-            //покрасить
+            renderRow(i, d);
             return;
         }
     }
     if (CheckDiag1(d)) {
         alert(`Winner is ${game[0][0]}`);
         win = true;
-        //покрасить
+        RenderDiag1(d)
         return;
     }
     if (CheckDiag2(d)) {
         alert(`Winner is ${game[2][0]}`);
         win = true;
-        //покрасить
+        RenderDiag2(d);
         return;
     }
 }
@@ -113,6 +113,12 @@ function checkColumn(row, d) {
     return e != EMPTY;
 }
 
+function renderColumn(row, d) {
+    for (let i = 0; i < d; i++) {
+        renderSymbolInCell(game[row][i], row, i);
+    }
+}
+
 function CheckRow(col, d) {
     let e = game[0][col];
     for (let i = 1; i < d; i++) {
@@ -121,6 +127,12 @@ function CheckRow(col, d) {
         }
     }
     return e != EMPTY;
+}
+
+function renderRow(col, d) {
+    for (let i = 0; i < d; i++) {
+        renderSymbolInCell(game[i][col], i, col);
+    }
 }
 
 function CheckDiag1(d) {
@@ -133,6 +145,12 @@ function CheckDiag1(d) {
     return e != EMPTY;
 }
 
+function RenderDiag1(d) {
+    for (let i = 1; i < d; i++) {
+        renderSymbolInCell(game[i][i], i, i);
+    }
+}
+
 function CheckDiag2(d) {
     let e = game[d][0];
     for (let i = 1; i < d; i++) {
@@ -141,6 +159,12 @@ function CheckDiag2(d) {
         }
     }
     return e != EMPTY;
+}
+
+function RenderDiag2(d) {
+    for (let i = 1; i < d; i++) {
+        renderSymbolInCell(game[d - i][i], d - i, i);
+    }
 }
 
 
