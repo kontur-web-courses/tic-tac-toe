@@ -117,6 +117,7 @@ addResetListener();
 
 function startGame() {
     let size = prompt('Введите размер поля', 3)
+	console.log("Start");
     renderGrid(Number(size));
 }
 
