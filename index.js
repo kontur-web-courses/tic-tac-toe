@@ -5,6 +5,7 @@ const EMPTY = ' ';
 const container = document.getElementById('fieldWrapper');
 let field = new Array([EMPTY, EMPTY, EMPTY], [EMPTY,EMPTY,EMPTY], [EMPTY,EMPTY,EMPTY])
 let player = 1;
+let haveWinner = false;
 
 startGame();
 addResetListener();
@@ -26,18 +27,22 @@ function renderGrid (dimension) {
         }
         container.appendChild(row);
     }
-}
+    if (!haveWinner) {
+        alert("Победила дружба");
+    }}
 
 function cellClickHandler (row, col) {
     // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
-    if (player === 1){
-        field[row][col] = 'X';
-        renderSymbolInCell(CROSS, row, col);
-    }
-    else{
-        field[row][col] = 'O';
-        renderSymbolInCell(ZERO, row, col);
+    if (field[row][col] !== EMPTY)
+    {
+        console.log(`Clicked on cell: ${row}, ${col}`);
+        if (player === 1) {
+            field[row][col] = 'X';
+            renderSymbolInCell(CROSS, row, col);
+        } else {
+            field[row][col] = 'O';
+            renderSymbolInCell(ZERO, row, col);
+        }
     }
 
     /* Пользоваться методом для размещения символа в клетке так:
