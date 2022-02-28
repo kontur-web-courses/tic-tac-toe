@@ -56,8 +56,8 @@ function defineWin() {
     for (let i = 0; i < FIELD.length; ++i) {
         let initCell = FIELD[i][0];
         let isWin = true;
-        for (const cell of FIELD[i]) {
-            if (cell === EMPTY || cell !== initCell) isWin = false;
+        for (let j = 0; j < FIELD[i].length; ++j) {
+            if (FIELD[i][j] === EMPTY || FIELD[i][j] !== initCell) isWin = false;
         }
         if (isWin) return isWin;
     }
@@ -66,11 +66,30 @@ function defineWin() {
     for (let i = 0; i < FIELD.length; ++i) {
         let initCell = FIELD[0][i];
         let isWin = true;
-        for (const cell of FIELD[i]) {
-            if (cell === EMPTY || cell !== initCell) isWin = false;
+        for (let j = 0; j < FIELD[i].length; ++j) {
+            if (FIELD[j][i] === EMPTY || FIELD[j][i] !== initCell) isWin = false;
         }
         if (isWin) return isWin;
     }
+
+    // diag
+    let isWin = true;
+    for (let i = 0; i < FIELD.length; ++i) {
+        let initCell = FIELD[0][0];
+        if (FIELD[i][i] === EMPTY || FIELD[i][i] !== initCell) {
+            isWin = false;
+        }
+    }
+    if (isWin) return isWin;
+
+    isWin = true;
+    for (let i = 0; i < FIELD.length; ++i) {
+        let initCell = FIELD[0][FIELD.length - 1];
+        if (FIELD[i][FIELD.length - i - 1] === EMPTY || FIELD[i][FIELD.length - i - 1] !== initCell) {
+            isWin = false;
+        }
+    }
+    if (isWin) return isWin;
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
