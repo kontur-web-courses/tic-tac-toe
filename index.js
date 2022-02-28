@@ -92,19 +92,19 @@ function findWinningCells() {
     for (let i = 0; i < 3; i++) {
         sum = 0;
         for (let j = 0; j < 3; j++) {
-            if (grid[i][j] == null)
+            if (grid[j][i] == null)
                 sum = 1000;
             sum += grid[j][i];
         }
         if (sum == 3 || sum == 0)
-            return [[0, j], [1, j], [2, j]];
+            return [[0, i], [1, i], [2, i]];
     }
 
     for (let j = 0; j < 2; j++) {
         sum = 0;
         for (let i = 0; i < 3; i++) {
             let second = j == 0 ? i : 2 - i;
-            if (grid[i][second] == null)
+            if (grid[i][j] == null)
                 sum = 1000;
             sum += grid[i][second];
         }
