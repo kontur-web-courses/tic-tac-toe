@@ -1,7 +1,7 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-let field;
+
 
 const container = document.getElementById('fieldWrapper');
 class Field{
@@ -84,7 +84,7 @@ class Field{
         return null;
     }
 
-    nextMove(col, row){
+    nextMove(row, col){
         if (self.field[row][col] === EMPTY) {
             self.field[row][col] = self.nextChar;
             self.nextChar = (self.nextChar === CROSS) ? ZERO : CROSS;
@@ -92,12 +92,13 @@ class Field{
         return self.field[row][col];
     }
 }
-startGame();
+let field = startGame();
 addResetListener();
 
 function startGame () {
-    filed = new Field(3)
+    let filed = new Field(3)
     renderGrid(3);
+    return filed;
 }
 
 function renderGrid (dimension) {
@@ -116,12 +117,12 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    renderSymbolInCell(field.nextMove(), row, col);
+    renderSymbolInCell(field.nextMove(row, col), row, col);
     console.log(`Clicked on cell: ${row}, ${col}`);
     
-    let win = field.whoWin;
+    let win = field.whoWin();
     if ( !win ) {
-        alert(`${ win == CROSS ? 'Крестики' : 'Нолики'} победили!`)
+        alert(`${ win === CROSS ? 'Крестики' : 'Нолики'} победили!`)
     }
     if ( ! field.isAnyMove() ) {
         alert('Ничья, давай по-новой!')
