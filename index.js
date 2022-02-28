@@ -59,33 +59,35 @@ function cellClickHandler (row, col) {
 }
 
 function checkGame(){
-    
+    for (let i = 0; i < d; i++){
+        if (checkColumn()){
+        }
 }
 
-function checkColumn(arr, row, d){
-    let e = arr[row][0];
+function checkColumn(row, d){
+    let e = game[row][0];
     for (let i = 1; i < d; i++){
-        if (e != arr[row][i]){
+        if (e != game[row][i]){
             return false;
         }
     }
     return e != EMPTY;
 }
 
-function CheckRow(arr, col, d){
-    let e = arr[0][col];
+function CheckRow(col, d){
+    let e = game[0][col];
     for (let i = 1; i < d; i++){
-        if (e != arr[i][col]){
+        if (e != game[i][col]){
             return false;
         }
     }
     return e != EMPTY;
 }
 
-function CheckDiag1(arr, d){
-    let e = arr[0][0];
+function CheckDiag1(d){
+    let e = game[0][0];
     for (let i = 1; i < d; i++){
-        if (e != arr[i][i]){
+        if (e != game[i][i]){
             return false;
         }
     }
