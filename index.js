@@ -5,6 +5,7 @@ const container = document.getElementById('fieldWrapper');
 
 let grid = [];
 let isZeroNow = true;
+let isWinnerFound = false;
 
 startGame();
 addResetListener();
@@ -34,64 +35,81 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
     let symbol = isZeroNow ? ZERO : CROSS;
-    if (grid[row][col] === EMPTY) {
+    if (grid[row][col] === EMPTY && !isWinnerFound) {
         renderSymbolInCell(symbol, row, col);
         grid[row][col] = symbol;
         isZeroNow = !isZeroNow;
-        let winner = findWinner();
-        if (winner !== undefined) {
-            alert(winner);
+        let cells = findWinnerCells();
+        if (cells !== undefined) {
+            if (cells === null)
+                alert('Победила дружба!')
+            else {
+                let symbol = grid[cells[0][0]][cells[0][1]];
+                for (let cell of cells)
+                    renderSymbolInCell(symbol, cell[0], cell[1], '#F00')
+                alert(symbol);
+            }
+            isWinnerFound = true;
         }
     }
 }
 
-function findWinner() {
+function findWinnerCells() {
     for(let row = 0; row < grid.length; row++) {
-        let zeroCount = 0;
-        let crossCount = 0;
+        let zeros = [];
+        let crosses = [];
         for (let col = 0; col < grid[row].length; col++) {
-            if (grid[row][col] === ZERO) zeroCount++;
-            if (grid[row][col] === CROSS) crossCount++;
+            if (grid[row][col] === ZERO)
+                zeros.push([row, col])
+            if (grid[row][col] === CROSS)
+                crosses.push([row, col])
         }
-        if (zeroCount === grid.length)
-            return ZERO;
-        if (crossCount === grid.length)
-            return CROSS;
+        if (zeros.length === grid.length)
+            return zeros;
+        if (crosses.length === grid.length)
+            return crosses;
     }
 
     for (let col = 0; col < grid.length; col++) {
-        let zeroCount = 0;
-        let crossCount = 0;
+        let zeros = [];
+        let crosses = [];
         for (let row = 0; row < grid.length; row++) {
-            if (grid[row][col] === ZERO) zeroCount++;
-            if (grid[row][col] === CROSS) crossCount++;
+            if (grid[row][col] === ZERO)
+                zeros.push([row, col]);
+            if (grid[row][col] === CROSS)
+                crosses.push([row, col])
         }
-        if (zeroCount === grid.length)
-            return ZERO;
-        if (crossCount === grid.length)
-            return CROSS;
+        if (zeros.length === grid.length)
+            return zeros;
+        if (crosses.length === grid.length)
+            return crosses;
     }
-    let zeroCount = 0;
-    let crossCount = 0;
+    let zeros = [];
+    let crosses = [];
     for (let row = 0; row < grid.length; row++) {
-        if (grid[row][row] === ZERO) zeroCount++;
-        if (grid[row][row] === CROSS) crossCount++;
+        if (grid[row][row] === ZERO)
+            zeros.push([row, row]);
+        if (grid[row][row] === CROSS)
+            crosses.push([row, row])
     }
-    if (zeroCount === grid.length)
-        return ZERO;
-    if (crossCount === grid.length)
-        return CROSS;
+    if (zeros.length === grid.length)
+        return zeros;
+    if (crosses.length === grid.length)
+        return crosses;
 
-    zeroCount = 0;
-    crossCount = 0;
+    zeros = [];
+    crosses = [];
     for (let row = 0; row < grid.length; row++) {
-        if (grid[row][grid.length - 1 - row] === ZERO) zeroCount++;
-        if (grid[row][grid.length - 1 - row] === CROSS) crossCount++;
+        let index = grid.length - 1 - row;
+        if (grid[row][index] === ZERO)
+            zeros.push([row, index]);
+        if (grid[row][index] === CROSS)
+            crosses.push([row, index])
     }
-    if (zeroCount === grid.length)
-        return ZERO;
-    if (crossCount === grid.length)
-        return CROSS;
+    if (zeros.length === grid.length)
+        return zeros;
+    if (crosses.length === grid.length)
+        return crosses;
 
     let isDraw = true;
     for (let row = 0; row < grid.length; row++) {
@@ -100,7 +118,7 @@ function findWinner() {
         }
     }
     if (isDraw) {
-        return "Победила дружба";
+        return null;
     }
 }
 
