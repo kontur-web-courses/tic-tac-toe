@@ -31,7 +31,6 @@ function renderGrid (dimension) {
 }
 
 function isThereWinner(){
-
     if (!haveWinner && countEmptyCells === 0) {
         alert("Победила дружба");
     } else {
@@ -87,7 +86,7 @@ function isThereWinner(){
 
 function cellClickHandler (row, col) {
     // Пиши код тут
-    if (field[row][col] === EMPTY)
+    if (field[row][col] === EMPTY && !haveWinner)
     {
         countEmptyCells -= 1;
         console.log(`Clicked on cell: ${row}, ${col}`);
