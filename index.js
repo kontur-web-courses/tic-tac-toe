@@ -2,6 +2,19 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
+let items = [
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY]
+];
+let count = items.length * items[0].length;
+
+let click = 1;
+
+function changeSymbol(){
+    click = (click + 1) % 2;
+}
+
 const container = document.getElementById('fieldWrapper');
 
 startGame();
@@ -28,12 +41,73 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
+    if (items[row][col] === EMPTY){
+        changeSymbol();
+        count -= 1;
+        if (click === 1) {
+            renderSymbolInCell(ZERO, row, col);
+            items[row][col] = ZERO;
+        } else {
+            renderSymbolInCell(CROSS, row, col);
+            items[row][col] = CROSS;
+        }
+    }
+
+    //findWinner(items, 3);
+
+    if (count === 0){
+        alert('Победила дружба');
+    }
+
+
+
+    //alert(`Clicked on cell: ${row}, ${col}`);
+    //renderSymbolInCell(ZERO, row, col);
 
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
+}
+
+function findWinner(array, length){
+    let value = array[0][0]
+    let count = 0
+    for(let i = 0; i < array.length && count !== length; i++){
+        value = array[i][0]
+        for(let j = 0; j < array[i].length && count !== length; j++){
+            if(value.trim().length > 0 && array[i][j] === value){
+                count+=1;
+                if (count === 3){
+                    alert(value);
+                    break;
+                }
+            }
+            else{
+                count = 0;
+                break
+            }
+        }
+    }
+
+    count = 0;
+
+    for(let i = 0; i < array[i].length && count !== length; i++){
+        value = array[0][i]
+        for(let j = 0; j < array.length && count !== length; j++){
+            if(value.trim().length > 0 && array[j][i] === value){
+                count+=1;
+                if (count === 3){
+                    alert(value);
+                    break;
+                }
+            }
+            else{
+                count = 0;
+                break
+            }
+        }
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -54,7 +128,14 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+
     console.log('reset!');
+    items = [
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY]];
+    click = 1;
+    startGame();
 }
 
 
