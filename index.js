@@ -5,6 +5,7 @@ const EMPTY = ' ';
 const EMPTY_TURNS_ALERT_TEXT = 'Победила дружба';
 
 const container = document.getElementById('fieldWrapper');
+const nowTurnContainer = document.getElementById('nowTurn');
 
 let userTurn = CROSS;
 const field = [
@@ -116,11 +117,17 @@ function resetClickHandler() {
     gameEnded = false;
     turnCount = 9;
     userTurn = CROSS;
+    renderWhosTurn();
 }
 
 
 function swapTurn() {
     userTurn = userTurn === CROSS ? ZERO : CROSS;
+    renderWhosTurn();
+}
+
+function renderWhosTurn() {
+    nowTurnContainer.innerText = `Сейчас ходит ${userTurn}`;
 }
 
 
