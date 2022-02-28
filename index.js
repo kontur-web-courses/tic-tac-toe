@@ -13,6 +13,7 @@ const field = [
     [EMPTY, EMPTY, EMPTY],
 ];
 let turnCount = field.length * field[0].length;
+let gameEnded = false;
 
 startGame();
 addResetListener();
