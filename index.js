@@ -4,11 +4,16 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+let field;
+let turn = 1;
+let canPlay = true;
+
 startGame();
 addResetListener();
 
 function startGame () {
     renderGrid(3);
+    field = [[EMPTY,EMPTY,EMPTY],[EMPTY,EMPTY,EMPTY],[EMPTY,EMPTY,EMPTY]];
 }
 
 function renderGrid (dimension) {
@@ -27,13 +32,49 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    if (!canPlay)
+        return;
     console.log(`Clicked on cell: ${row}, ${col}`);
+    const a = turn % 2 === 0 ? ZERO : CROSS;
+    if (field[row][col] === EMPTY) {
+        field[row][col] = a;
+        renderSymbolInCell(a, row, col); }
+    const winner1 = checkWinner(ZERO);
+    const winner2 = checkWinner(CROSS);
+    if (winner1){
+        canPlay = false;
+        setTimeout(() => alert('Победили нолики!'), 50)
+    }
+    else if (winner2) {
+        canPlay = false;
+        setTimeout(() => alert('Победили крестики!'), 50)
+    }
+    else {
+        turn++;
+        if (turn === 10)
+        {
+            canPlay = false;
+            setTimeout(() => alert('Победила дружба! <3'), 50)
+        }
+    }
 
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+}
+
+function checkWinner (value) {
+    // 3 горизонтали, 3 вертикали, 2 диагонали
+    const value1 = field[0].every( v => v === value );
+    const value2 = field[1].every( v => v === value );
+    const value3 = field[2].every( v => v === value );
+    const value4 = [field[0][0], field[1][0], field[2][0]].every( v => v === value)
+    const value5 = [field[0][1], field[1][1], field[2][1]].every( v => v === value)
+    const value6 = [field[0][2], field[1][2], field[2][2]].every( v => v === value)
+    const value7 = [field[0][0], field[1][1], field[2][2]].every( v => v === value)
+    const value8 = [field[0][2], field[1][1], field[2][0]].every( v => v === value)
+    if (value1 || value2 || value3 || value4 || value5 || value6 || value7 || value8) {
+        return true;
+    }
+    return false;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
