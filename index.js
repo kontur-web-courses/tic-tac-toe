@@ -105,7 +105,7 @@ function cellClickHandler (row, col) {
             renderSymbolInCell(ZERO, x[0], x[1], '#F00')
         }
     }
-    if (turn === 9)
+    if (turn === 9 && isWin === false)
         alert('Победила дружба')
 
     /* Пользоваться методом для размещения символа в клетке так:
