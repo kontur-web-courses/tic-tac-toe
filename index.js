@@ -63,32 +63,46 @@ function cellClickHandler (row, col) {
 
 function checkWinner (value) {
     // 3 горизонтали, 3 вертикали, 2 диагонали
+    let a = false;
     if (field[0].every( v => v === value)){
         colorInRedHorizontal(0)
-    } else if (field[1].every( v => v === value )){
+        a = true;
+    }
+    if (field[1].every( v => v === value )){
         colorInRedHorizontal(1)
-    } else if (field[2].every( v => v === value )){
+        a = true;
+    }
+    if (field[2].every( v => v === value )){
         colorInRedHorizontal(2)
-    } else if ([field[0][0], field[1][0], field[2][0]].every( v => v === value)){
+        a = true;
+    }
+    if ([field[0][0], field[1][0], field[2][0]].every( v => v === value)){
         colorInRedVertical(0)
-    } else if ([field[0][1], field[1][1], field[2][1]].every( v => v === value)){
+        a = true;
+    }
+    if ([field[0][1], field[1][1], field[2][1]].every( v => v === value)){
         colorInRedVertical(1)
-    } else if ([field[0][2], field[1][2], field[2][2]].every( v => v === value)){
+        a = true;
+    }
+    if ([field[0][2], field[1][2], field[2][2]].every( v => v === value)){
         colorInRedVertical(2)
-    } else if ([field[0][0], field[1][1], field[2][2]].every( v => v === value)){
+        a = true;
+    }
+    if ([field[0][0], field[1][1], field[2][2]].every( v => v === value)){
         for (let i = 0; i < 3; i++){
             const targetCell = findCell(i, i);
             targetCell.style.color = '#e63c3c';
         }
-    } else if ([field[0][2], field[1][1], field[2][0]].every( v => v === value)){
+        a = true;
+    }
+    if ([field[0][2], field[1][1], field[2][0]].every( v => v === value)){
         for (let j = 2; j >= 0; j--){
             const targetCell = findCell(2 - j, j);
             targetCell.style.color = '#e63c3c';
         }
-    } else {
-        return false;
+        a = true;
     }
-    return true;
+    return a;
 }
 
 function colorInRedHorizontal(row){
