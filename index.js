@@ -17,6 +17,17 @@ class Field{
             self.field.push(temp);
         }
     }
+
+    isAnyMove(){
+        for (let i = 0; i < self.dimension ; i++) {
+            for (let j = 0; j < self.dimension ; j++) {
+                if (self.field[i][j] === EMPTY)
+                    return true;
+            }
+        }
+        return false;
+    }
+
     whoWin(){
         for (let i = 0; i < self.dimension ; i++) {
             let crossCount = 0;
@@ -27,9 +38,9 @@ class Field{
                 if (self.field[i][j] === CROSS)
                     crossCount++;
             }
-            if (crossCount === 3)
+            if (crossCount === self.dimension)
                 return CROSS;
-            if (zerosCount === 3)
+            if (zerosCount === self.dimension)
                 return ZERO;
         }
         for (let i = 0; i < self.dimension ; i++) {
@@ -41,9 +52,9 @@ class Field{
                 if (self.field[j][i] === CROSS)
                     crossCount++;
             }
-            if (crossCount === 3)
+            if (crossCount === self.dimension)
                 return CROSS;
-            if (zerosCount === 3)
+            if (zerosCount === self.dimension)
                 return ZERO;
         }
         for (let i = 0; i < self.dimension ; i++) {
@@ -53,9 +64,9 @@ class Field{
                 zerosCount++;
             if (self.field[i][i] === CROSS)
                 crossCount++;
-            if (crossCount === 3)
+            if (crossCount === self.dimension)
                 return CROSS;
-            if (zerosCount === 3)
+            if (zerosCount === self.dimension)
                 return ZERO;
         }
         for (let i = 0; i < self.dimension ; i++) {
@@ -65,9 +76,9 @@ class Field{
                 zerosCount++;
             if (self.field[i][self.dimension - i - 1] === CROSS)
                 crossCount++;
-            if (crossCount === 3)
+            if (crossCount === self.dimension)
                 return CROSS;
-            if (zerosCount === 3)
+            if (zerosCount === self.dimension)
                 return ZERO;
         }
         return null;
@@ -85,7 +96,7 @@ startGame();
 addResetListener();
 
 function startGame () {
-    filed = new Filed(3)
+    filed = new Field(3)
     renderGrid(3);
 }
 
