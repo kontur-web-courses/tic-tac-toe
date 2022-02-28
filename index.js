@@ -1,6 +1,10 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let isCross = true;
+let counter = 0;
+let dimension;
+let cellsCount;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -13,6 +17,7 @@ function startGame () {
 
 function renderGrid (dimension) {
     container.innerHTML = '';
+    cellsCount = dimension * dimension;
 
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
@@ -28,8 +33,19 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
+    if (findCell(row, col).textContent !== ' ') {
+        return;
+    }
+    if (isCross) {
+        renderSymbolInCell(CROSS, row, col);
+    } else {
+        renderSymbolInCell(ZERO, row, col);
+    }
     console.log(`Clicked on cell: ${row}, ${col}`);
-
+    isCross = !isCross;
+    counter++;
+    if (counter === cellsCount)
+        alert('Победила дружба')
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
@@ -54,6 +70,7 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    
     console.log('reset!');
 }
 
