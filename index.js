@@ -1,6 +1,7 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let field;
 
 const container = document.getElementById('fieldWrapper');
 class Field{
@@ -27,6 +28,7 @@ startGame();
 addResetListener();
 
 function startGame () {
+    filed = Filed(3)
     renderGrid(3);
 }
 
