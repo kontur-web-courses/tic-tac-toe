@@ -1,10 +1,11 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-const dimension = 3
+let field;
+let dimension;
 const container = document.getElementById('fieldWrapper');
 
-let field = new Array(dimension * dimension).fill(EMPTY, 0);
+
 console.log(field);
 let playerToMove = 1;
 let filledCount = 0;
@@ -13,6 +14,9 @@ startGame();
 addResetListener();
 
 function startGame () {
+    dimension = prompt('Выбери размер игрового поля', 3);
+    field = new Array(dimension * dimension).fill(EMPTY, 0);
+    filledCount = 0;
     renderGrid(dimension);
 }
 
@@ -63,7 +67,7 @@ function checkWinner(len) {
     for (let i = 0; i < dimension; i++) {
         for (let j = 0; j < dimension; j++) {
             let start = field[getIndex(i, j)];
-            if (start == EMPTY)
+            if (start === EMPTY)
                 continue;
             if (i + len - 1 < dimension && j + len - 1 < dimension) {
                 let check = true;
@@ -168,6 +172,8 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    startGame()
+    /*dimension = prompt('Выбери размер игрового поля', 3)
     field.fill(EMPTY, 0);
     filledCount = 0;
     playerToMove = 1;
@@ -176,7 +182,7 @@ function resetClickHandler () {
             renderSymbolInCell(EMPTY, i, j);
             findCell(i, j).style.background = '';
         }
-    }
+    }*/
 }
 
 
