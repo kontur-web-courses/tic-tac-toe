@@ -78,7 +78,7 @@ function checkRowColumn(team, dim) {
     for (const element of team) {
         rowCounter += element[0] === dim ? 1 : 0;
         colCounter += element[1] === dim ? 1 : 0;
-        if (rowCounter === dimension - 1 || colCounter == dimension - 1) {
+        if (rowCounter === dimension || colCounter === dimension) {
             return true
         }
     }
