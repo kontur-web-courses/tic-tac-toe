@@ -2,6 +2,9 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
+let boardSize = 3;
+let board = Array(boardSize).fill(Array(boardSize).fill(EMPTY));
+
 const container = document.getElementById('fieldWrapper');
 
 startGame();
@@ -18,7 +21,7 @@ function renderGrid (dimension) {
         const row = document.createElement('tr');
         for (let j = 0; j < dimension; j++) {
             const cell = document.createElement('td');
-            cell.textContent = EMPTY;
+            cell.textContent = board[i][j]
             cell.addEventListener('click', () => cellClickHandler(i, j));
             row.appendChild(cell);
         }
