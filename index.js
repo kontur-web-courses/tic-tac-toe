@@ -1,6 +1,7 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+const NO = 'No';
 
 const container = document.getElementById('fieldWrapper');
 
@@ -24,6 +25,58 @@ function renderGrid (dimension) {
         }
         container.appendChild(row);
     }
+}
+
+function checkWinCondition(){
+    for(let i = 0; i < grid.size(); i++){
+        let countZero = 0;
+        let countCross = 0;
+        for(let j of grid[i]) {
+            if (j === ZERO)
+                countZero++;
+            if (j === CROSS)
+                countCross++;
+        }
+
+        if (array.size() === countZero)
+            return ZERO
+        if (array.size() === countCross)
+            return CROSS
+    }
+
+
+    for(let i = 0; i < grid.size(); i++){
+        let countZero = 0;
+        let countCross = 0;
+        for(let j = 0; j < grid.size(); j++) {
+            if (grid[j][i] === ZERO)
+                countZero++;
+            if (grid[j][i] === CROSS)
+                countCross++;
+        }
+
+        if (array.size() === countZero)
+            return ZERO
+        if (array.size() === countCross)
+            return CROSS
+    }
+
+    let countZero = 0;
+    let countCross = 0;
+
+    for(let i = 0; i < grid.size(); i++) {
+        if (grid[i][i] === ZERO)
+            countZero++;
+        if (grid[i][i] === CROSS)
+            countCross++;
+    }
+
+    if (array.size() === countZero)
+        return ZERO
+    if (array.size() === countCross)
+        return CROSS
+
+    return NO;
 }
 
 function cellClickHandler (row, col) {
