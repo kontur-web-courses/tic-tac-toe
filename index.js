@@ -6,6 +6,7 @@ let boardSize;
 let board;
 let currentPlayer;
 let isGameOver;
+let numberOfClicks;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -17,6 +18,7 @@ function startGame () {
     board = createBoard(boardSize);
     currentPlayer = CROSS;
     isGameOver = false;
+    numberOfClicks = 0;
     renderGrid(boardSize);
 }
 
@@ -109,6 +111,9 @@ function checkRows() {
         const row = board[i];
         const winner = getMostFrequentElement(row);
         if (winner !== EMPTY) {
+            for (let j = 0; j < boardSize; j++) {
+              colorCell(i, j, '#FF0000');
+            }
             return winner;
         }
     }
@@ -142,9 +147,15 @@ function checkDiagonals() {
     const winner1 = getMostFrequentElement(diagonal1);
     const winner2 = getMostFrequentElement(diagonal2);
     if (winner1 !== EMPTY) {
+        for (let i = 0; i < boardSize; i++) {
+          colorCell(i, i, '#FF0000');
+        }
         return winner1;
     }
     if (winner2 !== EMPTY) {
+        for (let i = 0; i < boardSize; i++) {
+          colorCell(i, boardSize - i - 1, '#FF0000');
+      }
         return winner2;
     }
 
@@ -160,6 +171,11 @@ function renderSymbolInCell (symbol, row, col, color = '#333') {
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
+}
+
+function colorCell(row, col, color) {
+  const targetCell = findCell(row, col);
+  targetCell.style.color = color;
 }
 
 function findCell (row, col) {
