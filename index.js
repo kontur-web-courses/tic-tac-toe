@@ -2,6 +2,7 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 let step = 0;
+let field = new Array(10).fill(EMPTY)
 
 const container = document.getElementById('fieldWrapper');
 
@@ -28,7 +29,7 @@ function renderGrid(dimension) {
 }
 
 function cellClickHandler(row, col) {
-    // Пиши код тут
+    renderSymbolInCell(ZERO, row, col);
     console.log(`Clicked on cell: ${row}, ${col}`);
     let cell = findCell(row, col);
 
@@ -48,6 +49,10 @@ function cellClickHandler(row, col) {
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
+}
+
+function defineWinner() {
+
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
