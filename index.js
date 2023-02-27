@@ -34,30 +34,50 @@ function getOppositeTurn(){
     return CROSS;
 }
 
-function hasOtherMoves(){
+function findFreeCells(){
+    let res = [];
     for (let i = 0; i < 3; i++){
         for (let j = 0; j < 3; j++)
         {
             if (field[i][j] === EMPTY)
-                return true;
+                res.push([i, j]);
         }
     }
-    return false;
+    return res;
+}
+
+function hasOtherMoves(){
+    return findFreeCells().length > 0;
+}
+
+function makeMove(row, col){
+    if (field[row][col] !== EMPTY)
+        return false;
+
+    field[row][col] = turn;
+    renderSymbolInCell(turn, row, col);
+
+    turn = getOppositeTurn();
+
+    if (!hasOtherMoves()) {
+        alert("Победила дружба");
+        return false;
+    }
+    return true
 }
 
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (field[row][col] !== EMPTY)
-        return;
-
-    field[row][col] = turn;
-
-    renderSymbolInCell(turn, row, col);
-    turn = getOppositeTurn();
-
-    if (!hasOtherMoves())
-        alert("Победила дружба")
+    let exodus = makeMove(row, col);
+    if (exodus){
+        let freeCells = findFreeCells();
+        let i = Math.floor(Math.random() * freeCells.length);
+        let row1 = freeCells[i][0];
+        let col1 = freeCells[i][1];
+        console.log(`kek ${row1} ${col1}`);
+        makeMove(row1, col1);
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
