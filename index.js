@@ -1,6 +1,7 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let ISCROSS = true;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -27,20 +28,18 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    renderSymbolInCell(ISCROSS ? CROSS : ZERO, row, col);
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
-    targetCell.textContent = symbol;
-    targetCell.style.color = color;
+    if (targetCell.textContent === ' ') {
+        targetCell.textContent = symbol;
+        targetCell.style.color = color;
+        ISCROSS = !ISCROSS;
+    }
 }
 
 function findCell (row, col) {
