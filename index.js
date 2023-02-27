@@ -13,7 +13,7 @@ let BOARD_SIZE = 3;
 let PLAYER = CROSS;
 let WINNER = null;
 
-
+resetGame();
 startGame();
 addResetListener();
 
