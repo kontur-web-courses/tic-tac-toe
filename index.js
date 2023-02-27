@@ -2,8 +2,9 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 let step = 0;
-let crosses = []
-let zeros = []
+let crosses = [];
+let zeros = [];
+let dimension = 3;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -11,7 +12,7 @@ startGame();
 addResetListener();
 
 function startGame() {
-    renderGrid(3);
+    renderGrid(dimension);
 }
 
 function renderGrid(dimension) {
@@ -53,7 +54,42 @@ function cellClickHandler(row, col) {
 }
 
 function defineWinner() {
+    for (let i = 0; i < dimension; i++) {
+        if (checkRowColumn(crosses, i))
+            return 'CROSS';
+        if (checkRowColumn(zeros, i))
+            return 'ZERO';
+    }
+    if (checkDiagonals(crosses))
+        return 'CROSS';
+    if (checkDiagonals(zeros))
+        return 'ZERO';
+    return null;
+}
 
+function checkRowColumn(team, dim) {
+    let rowCounter = 0;
+    let colCounter = 0;
+    for (const element of team) {
+        rowCounter += element[0] === dim ? 1 : 0;
+        colCounter += element[1] === dim ? 1 : 0;
+        if (rowCounter === dimension - 1 || colCounter == dimension - 1) {
+            return true
+        }
+    }
+    return false
+}
+
+function checkDiagonals(team) {
+    let diagonalCounter = 0;
+    let reverseDiagonalCounter = 0;
+    for (let element of team) {
+        diagonalCounter += element[0] === element[1]
+        reverseDiagonalCounter += element[0] === dimension - element[1] - 1
+    }
+    if (diagonalCounter === dimension || reverseDiagonalCounter === dimension)
+        return true
+    return false
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
@@ -74,7 +110,7 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
-    renderGrid(3);
+    renderGrid(dimension);
     step = 0;
     console.log('reset!');
 }
