@@ -2,16 +2,22 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
+const TIE = 'tie';
+const CROSS_WIN = 'cross win';
+const ZERO_WIN = 'zero win';
+const PLAY = 'play';
+
 const container = document.getElementById('fieldWrapper');
 let field = [
     [EMPTY] * 3,
-] * 3
+] * 3;
+let map_dimention = 3
 
 startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(map_dimention);
 }
 
 function renderGrid (dimension) {
@@ -37,6 +43,48 @@ function cellClickHandler (row, col) {
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
+}
+
+function isEndGame() {
+    for (let cellType in [ZERO, CROSS]) {
+        for (let row = 0; row < map_dimention; row++) {
+            let count_match = 0;
+            for (let column = 0; column < map_dimention; column++) {
+                if (field[row][column] === cell_type) {
+                    count_match++;
+                }
+            }
+            if (count_match === map_dimention) {
+                return true;
+            }
+        }
+        for (let column = 0; column < map_dimention; column++) {
+            let count_match = 0;
+            for (let row = 0; row < map_dimention; row++) {
+                if (field[row][column] === cellType) {
+                    count_match++;
+                }
+            }
+            if (count_match === map_dimention) {
+                return true;
+            }
+        }
+
+        let countMatchDiagonal1 = 0;
+        let countMatchDiagonal2 = 0;
+        for (let i = 0; i < map_dimention; i++) {
+            if (field[i][i] === cellType)
+                countMatchDiagonal1++;
+            if (field[i][map_dimention - i - 1] === cellType)
+                countMatchDiagonal2++;
+        }
+
+        if (countMatchDiagonal1 === map_dimention || countMatchDiagonal2 === map_dimention)
+            return true;
+    }
+
+
+    return PLAY;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
