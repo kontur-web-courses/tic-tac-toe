@@ -32,7 +32,9 @@ let isWin = false;
 
 function cellClickHandler(row, col) {
     // Пиши код тут
+/*
     console.log(`Clicked on cell: ${row}, ${col}`);
+*/
     if (isWin) {
         return;
     }
@@ -56,12 +58,11 @@ function cellClickHandler(row, col) {
     if (checkFieldFilled()) {
         alert("Победила дружба");
         isWin = true;
-        return;
     }
 
-    if (is_zero) {
+/*    if (isZero) {
         botTurn();
-    }
+    }*/
 }
 
 function botTurn() {
@@ -76,7 +77,7 @@ function botTurn() {
 }
 
 function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
+    return Math.floor(Math.random());
 }
 
 function hasWinner(col, row, current_turn) {
@@ -157,7 +158,9 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
+/*
     console.log('reset!');
+*/
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             field[i][j] = 0;
