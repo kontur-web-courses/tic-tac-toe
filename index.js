@@ -12,6 +12,18 @@ function startGame () {
 }
 
 let grid = []
+
+function initGrid(gridSize){
+    for (let i = 0, i < gridSize, i++){
+        for (let j = 0, j < gridSize, j++){
+            grid[i][j] = EMPTY
+        }
+    }
+}
+
+function resetGrid(){
+    initGrid(grid.length)
+}
 function renderGrid (dimension) {
     container.innerHTML = '';
 
