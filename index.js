@@ -2,6 +2,8 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
+let arr = [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]]
+let TURN = 0;
 const container = document.getElementById('fieldWrapper');
 
 startGame();
@@ -28,12 +30,61 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
 
+    if (TURN % 2 === 0) {
+        if (arr[row][col] === -1) {
+            TURN += 1;
+            renderSymbolInCell(ZERO, row, col);
 
+            console.log(`Clicked on cell: ${row}, ${col}`);
+            arr[row][col] = ZERO;
+            if (arr[row][0] === arr[row][1] && arr[row][1] === arr[row][2]){
+                setTimeout(() => alert("Победили нолики"));
+            }
+            if (arr[0][col] === arr[1][col] && arr[1][col] === arr[2][col]){
+                setTimeout(() => alert("Победили нолики"));
+            }
+            if (arr[0][0] === arr[1][1] && arr[1][1] === arr[2][2] && arr[0][0] === arr[2][2] && arr[0][0] !== -1){
+                setTimeout(() => alert("Победили нолики"));
+            }
+            // if ( && arr[1][1] === arr[0][2] && arr[0][0] !== -1){
+            //     setTimeout(() => alert("Победили нолики"));
+            // }
+        }
+    } else {
+        if (arr[row][col] === -1) {
+            TURN += 1;
+            renderSymbolInCell(CROSS, row, col);
+
+            console.log(`Clicked on cell: ${row}, ${col}`);
+            arr[row][col] = CROSS;
+            if (arr[row][0] === arr[row][1] && arr[row][1] === arr[row][2]){
+                setTimeout(() => alert("Победили крестики"));
+            }
+            if (arr[0][col] === arr[1][col] && arr[1][col] === arr[2][col] ){
+                setTimeout(() => alert("Победили крестики"));
+            }
+            if (arr[2][0] === arr[1][1] && arr[1][1] === arr[0][2] && arr[0][0] !== -1){
+                setTimeout(() => alert("Победили крестики"));
+            }
+            if (arr[0][0] === arr[1][1] && arr[1][1] === arr[2][2] && arr[0][0] !== -1){
+                setTimeout(() => alert("Победили крестики"));
+            }
+        }
+
+    }
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
+    if (TURN === 9){
+        setTimeout(() => alert("Победила дружба!"));
+    }
+}
+
+function end(){
+    if (TURN === 9){
+        setTimeout(() => alert("Победила дружба!"));
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -41,6 +92,7 @@ function renderSymbolInCell (symbol, row, col, color = '#333') {
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
+
 }
 
 function findCell (row, col) {
@@ -55,6 +107,7 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    startGame();
 }
 
 
