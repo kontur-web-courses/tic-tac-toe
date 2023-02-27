@@ -34,9 +34,46 @@ function renderGrid (dimension) {
 }
 
 function checkWin() {
+    const rows = gameTable;
+    const cols = [[], [], []];
+    const diags = [[], []];
 
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            cols[i][j] = gameTable[j][i];
+            if (i === j) {
+                diags[0][i] = gameTable[i][j];
+            }
+            if (i + j === 2) {
+                diags[1][i] = gameTable[i][j];
+            }
+        }
+    }
+
+    for (let i = 0; i < 3; i++) {
+        if (rows[i].every(cell => cell === currentPlayer)) {
+            for (let j = 0; j < 3; j++) {
+                renderSymbolInCell(currentPlayer, i, j, '#ff0000');
+            }
+            return true;
+        }
+        if (cols[i].every(cell => cell === currentPlayer)) {
+            for (let j = 0; j < 3; j++) {
+                renderSymbolInCell(currentPlayer, j, i, '#ff0000');
+            }
+            return true;
+        }
+
+    }
+    for (let i = 0; i < 2; i++) {
+        if (diags[i].every(cell => cell === currentPlayer)) {
+            for (let j = 0; j < 3; j++) {
+                renderSymbolInCell(currentPlayer, j, i === 0 ? j : 2 - j, '#ff0000');
+            }
+            return true;
+        }
+    }
 }
-
 
 function resetGame() {
     currentPlayer = CROSS;
@@ -48,8 +85,8 @@ function resetGame() {
     renderGrid(3);
 }
 
-function checkDraw() {
-    return false;
+function checkFullness() {
+    return gameTable.every(row => row.every(cell => cell !== EMPTY));
 }
 
 function cellClickHandler (row, col) {
@@ -62,16 +99,19 @@ function cellClickHandler (row, col) {
 
         if (checkWin()) {
             setTimeout(() => {
-                console.log(`Player ${currentPlayer} won!`);
+                alert(`Победили ${currentPlayer}!`);
                 resetGame();
             }, 0);
-        } else if (checkDraw()) {
+        } else if (checkFullness()) {
             setTimeout(() => {
-                console.log('Draw!');
+                alert('Победила дружба!');
                 resetGame();
             }, 0);
         } else {
             currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
+            if (currentPlayer === ZERO) {
+                aiTurn();
+            }
         }
     }
 }
@@ -96,6 +136,18 @@ function addResetListener () {
 function resetClickHandler () {
     console.log('reset!');
     resetGame();
+}
+
+function aiTurn() {
+    let row = Math.floor(Math.random() * 3);
+    let col = Math.floor(Math.random() * 3);
+
+    while (gameTable[row][col] !== EMPTY) {
+        row = Math.floor(Math.random() * 3);
+        col = Math.floor(Math.random() * 3);
+    }
+
+    cellClickHandler(row, col);
 }
 
 
