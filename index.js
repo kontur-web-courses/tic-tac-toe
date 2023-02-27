@@ -48,6 +48,7 @@ function cellClickHandler(row, col) {
     }
     field[row][col] = is_zero ? 2 : 1;
     let current_turn = is_zero ? 2 : 1;
+
     if (field[row][0] === current_turn && field[row][1] === current_turn && field[row][2] === current_turn) {
         alert(is_zero ? CROSS : ZERO);
         is_win = true;
@@ -58,15 +59,22 @@ function cellClickHandler(row, col) {
         is_win = true;
         return;
     }
-}
 
-function onDiag(row, col) {
-    return row === col || row === 0 && (col === 0 || col === 2) || row === 3 && (col === 0 || col === 2);
+    if (field[0][0] === current_turn && field[1][1] === current_turn && field[2][2] === current_turn) {
+        alert(is_zero ? CROSS : ZERO);
+        is_win = true;
+        return;
+    }
+
+    if (field[0][2] === current_turn && field[1][1] === current_turn && field[2][0] === current_turn) {
+        alert(is_zero ? CROSS : ZERO);
+        is_win = true;
+        return;
+    }
 }
 
 function isFill(row, col) {
     const targetCell = findCell(row, col);
-
     return targetCell.textContent !== EMPTY
 }
 
