@@ -62,6 +62,7 @@ function addResizeArray () {
 
 function resetClickHandler () {
     console.log('reset!');
+    startGame(size);
 }
 
 function resizeClickHandler () {
