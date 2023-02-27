@@ -13,6 +13,7 @@ let field = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY]];
 let stepCounter = 0;
+let winner = null;
 
 startGame();
 addResetListener();
@@ -39,15 +40,16 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код ту
     let symbolInCell = field[row][col];
-    if (symbolInCell === EMPTY) {
+    if (symbolInCell === EMPTY && winner !== null) {
         let newSymbol = (player === PLAYER1) ? ZERO : CROSS;
         field[row][col] = player;
         player = (player === PLAYER1) ? PLAYER2 : PLAYER1;
         stepCounter++;
         renderSymbolInCell(newSymbol, row, col);
     }
-    let winner = checkWinner();
+    winner = checkWinner();
     if (winner === PLAYER1) {
+
         alert(`player 1 (${PLAYER1}) won`);
     }
     if (winner === PLAYER2) {
@@ -106,6 +108,7 @@ function checkWinner() {
             || countFirstDiagPlayer2 === 3 || countSecondDiagPlayer2 === 3) {
             return PLAYER2;
         }
+        return null;
     }
 }
 
