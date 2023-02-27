@@ -16,6 +16,7 @@ addResetListener();
 function startGame() {
     step_count = dimension * dimension;
     field = []
+    turn = CROSS;
     renderGrid(dimension);
 }
 
@@ -62,7 +63,12 @@ function cellClickHandler(row, col) {
 
     if (step_count === 0) {
         alert('Победила дружба');
+        return;
     }
+
+    if (turn === ZERO) {AI_move();}
+
+
 
     for (let i = 0; i < dimension; i++){
         console.log(field[i])
@@ -131,6 +137,18 @@ function findWinner() {
 
     return undefined;
 
+}
+
+
+function AI_move(){
+    for (let i = 0; i < dimension; i++){
+        for (let j = 0; j < dimension; j++){
+            if (field[i][j] === EMPTY) {
+                cellClickHandler(i, j)
+                return
+            }
+        }
+    }
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
