@@ -44,6 +44,7 @@ function cellClickHandler (row, col) {
     console.log(board);
     renderSymbolInCell(board[row][col], row, col)
     console.log(`Clicked on cell: ${row}, ${col}`);
+    isVictory();
 
 
     /* Пользоваться методом для размещения символа в клетке так:
@@ -53,6 +54,34 @@ function cellClickHandler (row, col) {
         alert("Победила дружба");
     }
 }
+function isVictory() {
+    checkVictoryHorizontal(board);
+    checkVictoryHorizontal(transpose(board))
+}
+
+function transpose(matrix) {
+    return matrix[0].map((col, i) => matrix.map(row => row[i]));
+}
+
+function checkVictoryHorizontal(board) {
+    for (let i = 0; i < currentDimension; i++){
+        let counter = 1;
+        let prevSymbol = board[i][0];
+        for (let j = 1; j < currentDimension; j++){
+            if (board[i][j] === prevSymbol && board[i][j] !== EMPTY) {
+                counter++;
+            } else {
+                prevSymbol = board[i][j];
+            }
+        }
+        if (counter >= 3){
+            alert(`Победитель ${prevSymbol}`);
+            return true;
+        }
+    }
+    return false;
+}
+
 
 function getCurrentSymbol() {
     if (currentSymbol === CROSS) {
