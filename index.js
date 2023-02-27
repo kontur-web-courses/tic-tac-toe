@@ -50,7 +50,7 @@ function cellClickHandler(row, col) {
     let winner = defineWinner();
 
     if (winner !== null) {
-        alert(winner);
+        alert(`WINNER - ${winner}`);
     }
 
     if (step === dimension * dimension) {
@@ -92,9 +92,9 @@ function checkDiagonals(team) {
         diagonalCounter += element[0] === element[1]
         reverseDiagonalCounter += element[0] === dimension - element[1] - 1
     }
-    if (diagonalCounter === dimension || reverseDiagonalCounter === dimension)
-        return true
-    return false
+
+    return diagonalCounter === dimension || reverseDiagonalCounter === dimension;
+
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
