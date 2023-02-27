@@ -12,6 +12,10 @@ addResetListener();
 
 function startGame() {
     renderGrid(dimensionsCount);
+    clearField();
+}
+
+function clearField(){
     for (let row = 0; row < dimensionsCount; row++) {
         field[row] = [];
         for (let col = 0; col < dimensionsCount; col++) {
@@ -65,9 +69,8 @@ function addResetListener() {
 
 function resetClickHandler() {
     isCross = true;
-    field = [[EMPTY, EMPTY, EMPTY],
-        [EMPTY, EMPTY, EMPTY],
-        [EMPTY, EMPTY, EMPTY]];
+
+    clearField();
 
     for (let row = 0; row < dimensionsCount; row++) {
         for (let col = 0; col < dimensionsCount; col++) {
