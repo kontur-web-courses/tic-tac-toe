@@ -198,6 +198,7 @@ function resetClickHandler() {
     resetGame(readBoardSize());
     startGame();
     addResetListener();
+    addSizeChangeListener();
 }
 
 function resetGame(newSize) {
@@ -209,6 +210,7 @@ function resetGame(newSize) {
 
     PLAYER = CROSS;
     OCCUPIED_CELLS = 0;
+    WINNER = null;
 }
 
 /* Test Function */
