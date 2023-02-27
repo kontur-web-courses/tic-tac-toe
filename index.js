@@ -13,7 +13,6 @@ function startGame () {
 
 function renderGrid (dimension) {
     container.innerHTML = '';
-
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
         for (let j = 0; j < dimension; j++) {
@@ -26,14 +25,20 @@ function renderGrid (dimension) {
     }
 }
 
+let person = true;
+
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    console.log(person)
+    if (person){
+        renderSymbolInCell(CROSS, row, col);
+        person = false;
+    }else {
+        renderSymbolInCell(ZERO, row, col);
+        person = true;
+    }
+
     console.log(`Clicked on cell: ${row}, ${col}`);
 
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
