@@ -57,6 +57,7 @@ function cellClickHandler(row, col) {
     }
     else if (turn === 10) {
         setTimeout(() => alert("Ничья! :D"));
+        end = true;
         return;
     }
     while(true){
@@ -64,19 +65,20 @@ function cellClickHandler(row, col) {
         let col1 = getRandomInt(3);
         if (field[row1][col1] === EMPTY) {
             field[row1][col1] = ZERO;
-            renderSymbolInCell(ZERO, row, col);
+            renderSymbolInCell(ZERO, row1, col1);
             turn++;
+            console.log(`bot ${row1} ${col1}`)
             break;
         }
     }
     const winner1 = checkWinner();
-    console.log(winner);
+    console.log(winner1);
     if (winner1[0]) {
         end = true;
-        renderSymbolInCell(t, winner1[1][0], winner1[1][1], "red");
-        renderSymbolInCell(t, winner1[2][0], winner1[2][1], "red");
-        renderSymbolInCell(t, winner1[3][0], winner1[3][1], "red");
-        setTimeout(() => alert(`Win ${t}`));
+        renderSymbolInCell(ZERO, winner1[1][0], winner1[1][1], "red");
+        renderSymbolInCell(ZERO, winner1[2][0], winner1[2][1], "red");
+        renderSymbolInCell(ZERO, winner1[3][0], winner1[3][1], "red");
+        setTimeout(() => alert(`Win ${ZERO}`));
     }
     else if (turn === 10) {
         setTimeout(() => alert("Ничья! :D"));
