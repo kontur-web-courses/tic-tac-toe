@@ -40,6 +40,7 @@ function cellClickHandler (row, col) {
             arr[row][col] = ZERO;
             motion++;
             isWinner(ZERO)
+
         } else {
             renderSymbolInCell(CROSS, row, col);
             arr[row][col] = CROSS;
