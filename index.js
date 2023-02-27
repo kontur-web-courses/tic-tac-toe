@@ -2,7 +2,7 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
-let arr = [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]]
+let arr = [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]];
 let TURN = 0;
 const container = document.getElementById('fieldWrapper');
 
@@ -11,6 +11,7 @@ addResetListener();
 
 function startGame () {
     renderGrid(3);
+    arr = [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]]
     TURN = 0;
 }
 
