@@ -79,6 +79,14 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    for (let i = 0; i < 3; i++){
+        for (let j = 0; j < 3; j++)
+        {
+            field[i][j] = EMPTY;
+            renderSymbolInCell(EMPTY, i, j)
+        }
+    }
+    return false;
 }
 
 
