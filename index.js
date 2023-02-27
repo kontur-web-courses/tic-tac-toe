@@ -3,6 +3,9 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
+let field = [
+    [EMPTY] * 3,
+] * 3
 
 startGame();
 addResetListener();
