@@ -14,7 +14,9 @@ function startGame () {
 }
 
 function createField(dimension) {
-    return Array(dimension).fill([EMPTY, EMPTY, EMPTY])
+    return [[EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY,EMPTY]]
 }
 
 function renderGrid (dimension) {
