@@ -176,9 +176,12 @@ function resetClickHandler () {
     }
     for (let i = 0; i < currentDimension; i++){
         for (let j = 0; j < currentDimension; j++){
+            board[i][j] = EMPTY
             renderSymbolInCell(EMPTY, i, j)
         }
     }
+    currentSymbol = CROSS;
+    moveCounter = 0;
     console.log('reset!');
 }
 
