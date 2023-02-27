@@ -11,6 +11,7 @@ let field = [];
 let OCCUPIED_CELLS = 0;
 let BOARD_SIZE = 3;
 let PLAYER = CROSS;
+let WINNER = null;
 
 
 startGame();
@@ -51,16 +52,84 @@ function renderGrid(dimension) {
     }
 }
 
+function checkWinner() {
+    const WIN_LENGTH = 3;
+
+    // Проверка по горизонтали
+    for (let i = 0; i < BOARD_SIZE; i++) {
+        let count = 0;
+        for (let j = 0; j < BOARD_SIZE; j++) {
+            if (field[i][j] === PLAYER) {
+                count++;
+            } else {
+                count = 0;
+            }
+            if (count === WIN_LENGTH) {
+                return PLAYER;
+            }
+        }
+    }
+
+    // Проверка по вертикали
+    for (let i = 0; i < BOARD_SIZE; i++) {
+        let count = 0;
+        for (let j = 0; j < BOARD_SIZE; j++) {
+            if (field[j][i] === PLAYER) {
+                count++;
+            } else {
+                count = 0;
+            }
+            if (count === WIN_LENGTH) {
+                return PLAYER;
+            }
+        }
+    }
+
+    // Проверка по диагонали
+    let count = 0;
+    for (let i = 0; i < BOARD_SIZE; i++) {
+        if (field[i][i] === PLAYER) {
+            count++;
+        } else {
+            count = 0;
+        }
+        if (count === WIN_LENGTH) {
+            return PLAYER;
+        }
+    }
+
+    // Проверка по диагонали
+    count = 0;
+    for (let i = 0; i < BOARD_SIZE; i++) {
+        if (field[i][BOARD_SIZE - 1 - i] === PLAYER) {
+            count++;
+        } else {
+            count = 0;
+        }
+        if (count === WIN_LENGTH) {
+            return PLAYER;
+        }
+    }
+
+    return null;
+}
+
 function cellClickHandler(row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
+
+    if (field[row][col] !== EMPTY) {
+        return;
+    }
 
     field[row][col] = PLAYER;
     PLAYER = PLAYER === CROSS ? ZERO : CROSS;
     OCCUPIED_CELLS++;
 
+    WINNER = checkWinner();
+
     let cells = BOARD_SIZE * BOARD_SIZE;
-    if (OCCUPIED_CELLS >= Math.floor(cells / 2)) {
+    if (WINNER === null && OCCUPIED_CELLS >= Math.floor(cells / 2)) {
         expandBoard();
         renderGrid();
     }
@@ -70,7 +139,7 @@ function cellClickHandler(row, col) {
 function renderBoard() {
     for (let i = 0; i < BOARD_SIZE; i++) {
         for (let j = 0; j < BOARD_SIZE; j++) {
-            renderSymbolInCell(field[i][j], i, j);
+            renderSymbolInCell(field[i][j], i, j, WINNER === field[i][j] ? 'red' : '#333');
         }
     }
 }
