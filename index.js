@@ -52,9 +52,10 @@ function cellClickHandler (row, col) {
     else{
         renderSymbolInCell(CROSS, row, col);
     }
-    if(checkWinner() !== EMPTY && checkWinner() !== undefined){
-        alert(`Победил  ${checkWinner()}`);
-        winner = checkWinner();
+    let a = checkWinner();
+    if(a !== EMPTY && a !== undefined){
+        alert(`Победил  ${a}`);
+        winner = a;
         return;
     }
     if(turn === 9){
@@ -73,6 +74,8 @@ function cellClickHandler (row, col) {
 function checkWinner(){
     for(let j = 0; j < 3; j++){
         let t = true;
+        if(arr[j][0] === ' ')
+            continue;
         for(let i = 0; i < 2; i++){
             t = t && arr[j][i] === arr[j][i+1]; 
         }
@@ -85,6 +88,8 @@ function checkWinner(){
     }
 
     for(let j = 0; j < 3; j++){
+        if(arr[0][j] === ' ')
+            continue;
         let t = true;
         for(let i = 0; i < 2; i++){
             t = t && arr[i][j] === arr[i+1][j]; 
@@ -114,7 +119,7 @@ function checkWinner(){
     }
     if(t){
         for(let i = 0; i < 3; i++){
-            renderSymbolInCell(arr[i][2-j], i, 2-j, color = '#f00');
+            renderSymbolInCell(arr[i][2-i], i, 2-i, color = '#f00');
         }
         return arr[0][2];
     }
