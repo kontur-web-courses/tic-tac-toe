@@ -2,6 +2,13 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
+let currentPlayer = CROSS;
+let gameTable = [
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+];
+
 const container = document.getElementById('fieldWrapper');
 
 startGame();
@@ -26,14 +33,47 @@ function renderGrid (dimension) {
     }
 }
 
+function checkWin() {
+
+}
+
+
+function resetGame() {
+    currentPlayer = CROSS;
+    gameTable = [
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY],
+    ];
+    renderGrid(3);
+}
+
+function checkDraw() {
+    return false;
+}
+
 function cellClickHandler (row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
+    if (gameTable[row][col] === EMPTY) {
+        renderSymbolInCell(currentPlayer, row, col);
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+        gameTable[row][col] = currentPlayer;
+
+        if (checkWin()) {
+            setTimeout(() => {
+                console.log(`Player ${currentPlayer} won!`);
+                resetGame();
+            }, 0);
+        } else if (checkDraw()) {
+            setTimeout(() => {
+                console.log('Draw!');
+                resetGame();
+            }, 0);
+        } else {
+            currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
+        }
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -55,6 +95,7 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    resetGame();
 }
 
 
