@@ -37,11 +37,11 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
 
-    if (board[row][col] !== EMPTY) {
+    if (board[row][col] === EMPTY) {
         board[row][col] = getCurrentSymbol()
         moveCounter++;
     }
-
+    console.log(board);
     renderSymbolInCell(board[row][col], row, col)
     console.log(`Clicked on cell: ${row}, ${col}`);
 
