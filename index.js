@@ -3,12 +3,14 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
+let size = 3;
 
 startGame();
 addResetListener();
+addResizeArray();
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(size);
 }
 
 function renderGrid (dimension) {
@@ -30,7 +32,7 @@ function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
-
+    renderSymbolInCell(ZERO, row, col);
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
@@ -53,8 +55,18 @@ function addResetListener () {
     resetButton.addEventListener('click', resetClickHandler);
 }
 
+function addResizeArray () {
+    const resizeButton = document.getElementById('resize');
+    resizeButton.addEventListener('click', resizeClickHandler);
+}
+
 function resetClickHandler () {
     console.log('reset!');
+}
+
+function resizeClickHandler () {
+    size = prompt("Введите размер поля:", [3]);
+    startGame(size);
 }
 
 
