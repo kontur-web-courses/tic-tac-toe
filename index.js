@@ -27,10 +27,10 @@ function expandBoard() {
     let newBoard = [];
     for (let k = 0; k < BOARD_SIZE; k++) {
         newBoard.push(new Array(BOARD_SIZE).fill(EMPTY));
-        for (let i = 0; i < BOARD_SIZE - 2; i++) {
-            for (let j = 0; j < BOARD_SIZE - 2; j++) {
-                newBoard[i + 1][j + 1] = field[i][j];
-            }
+    }
+    for (let i = 0; i < BOARD_SIZE - 2; i++) {
+        for (let j = 0; j < BOARD_SIZE - 2; j++) {
+            newBoard[i + 1][j + 1] = field[i][j];
         }
     }
 
