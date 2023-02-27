@@ -1,9 +1,8 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-let field = [[EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY]];
+let field = [];
+let dimensionsCount = 5
 let isCross = true;
 
 const container = document.getElementById('fieldWrapper');
@@ -12,7 +11,13 @@ startGame();
 addResetListener();
 
 function startGame() {
-    renderGrid(3);
+    renderGrid(dimensionsCount);
+    for (let row = 0; row < dimensionsCount; row++) {
+        field[row] = [];
+        for (let col = 0; col < dimensionsCount; col++) {
+            field[row][col] = EMPTY;
+        }
+    }
 }
 
 function renderGrid(dimension) {
@@ -33,6 +38,7 @@ function renderGrid(dimension) {
 function cellClickHandler(row, col) {
     if (field[row][col] === EMPTY) {
         const symbol = isCross ? CROSS : ZERO;
+
         renderSymbolInCell(symbol, row, col);
         field[row][col] = symbol;
         isCross = !isCross;
@@ -63,8 +69,8 @@ function resetClickHandler() {
         [EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY]];
 
-    for (let row = 0; row < 3; row++) {
-        for (let col = 0; col < 3; col++) {
+    for (let row = 0; row < dimensionsCount; row++) {
+        for (let col = 0; col < dimensionsCount; col++) {
             renderSymbolInCell(EMPTY, row, col);
         }
     }
