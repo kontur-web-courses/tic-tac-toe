@@ -37,8 +37,13 @@ function cellClickHandler(row, col) {
         renderSymbolInCell(t, row, col);
         turn++;
     }
+    const winner = checkWinner();
+    console.log(winner)
+    if (winner[0]) {
+        setTimeout(() => alert(`Win ${t}`));
+    }
     if (turn === 10) {
-        setTimeout(() => alert('Ничья! :D'))
+        setTimeout(() => alert('Ничья! :D'));
     }
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
@@ -47,20 +52,20 @@ function cellClickHandler(row, col) {
 
 function checkWinner() {
     for (let i = 0; i < 3; i++) {
-        if (field[i][0] === field[i][1] === field[i][2]) {
-            return [true,[i,0],[i,1],[i,2]];
+        if ([field[i][0], field[i][1], field[i][2]].every(v => v !==EMPTY && v===field[i][2])) {
+            return [true, [i, 0], [i, 1], [i, 2]];
         }
-        if (field[0][i] === field[1][i] === field[2][i]) {
-            return [true,[0,i],[0,i],[0,i]];
+        if ([field[0][i], field[1][i], field[2][i]].every(v => v !==EMPTY && v===field[0][i])) {
+            return [true, [0, i], [1, i], [2, i]];
         }
     }
-    if (field[0][0] === field[1][1] === field[2][2]) {
-        return [true,[0,0],[1,1],[2,2]];
+    if ([field[0][0], field[1][1], field[2][2]].every(v => v !==EMPTY && v===field[0][0])) {
+        return [true, [0, 0], [1, 1], [2, 2]];
     }
-    if (field[0][2] === field[1][1] === field[2][0]) {
-        return [true,[0,2],[1,1],[2,0]];
+    if ([field[0][2], field[1][1], field[2][0]].every(v => v !==EMPTY && v===field[0][2])) {
+        return [true, [0, 2], [1, 1], [2, 0]];
     }
-    return [false,0,0,0];
+    return [false, 0, 0, 0];
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
