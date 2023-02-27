@@ -1,6 +1,8 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let turn = CROSS;
+let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
 
 const container = document.getElementById('fieldWrapper');
 
@@ -26,14 +28,18 @@ function renderGrid (dimension) {
     }
 }
 
+function getOppositeTurn(){
+    if (turn === CROSS)
+        return ZERO;
+    return CROSS;
+}
+
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    field[row][col] = turn;
+    renderSymbolInCell(turn, row, col);
+    turn = getOppositeTurn();
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
