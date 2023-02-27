@@ -14,7 +14,7 @@ const TYPE_WINNER = {
 const container = document.getElementById('fieldWrapper');
 
 let mapDimention = 3
-
+let gameState = PLAY;
 let field = [];
 let zeroTurn = true;
 
@@ -43,28 +43,17 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
 
-    const gameState = getState();
     console.log(`State: ${gameState}`)
-    if (gameState === TIE) {
-        alert('Победила дружба');
-        return;
-    }
-    if (gameState === ZERO_WIN) {
-        alert('Победили нолики');
-        return;
-    }
-    if (gameState === CROSS_WIN) {
-        alert('Победили крестики');
-        return;
-    }
 
-    if (field[row][col] !== EMPTY) {
+    if (field[row][col] !== EMPTY || gameState !== PLAY) {
         return;
     }
     const figureToPlace = zeroTurn ? ZERO : CROSS;
     field[row][col] = figureToPlace;
     renderSymbolInCell(figureToPlace, row, col);
+
     zeroTurn = !zeroTurn;
+    alertIfFinished();
 }
 
 function getState() {
@@ -115,7 +104,21 @@ function getState() {
     return PLAY;
 }
 
+function alertIfFinished(){
+    gameState = getState();
 
+    if (gameState === TIE) {
+        alert('Победила дружба');
+        return;
+    }
+    if (gameState === ZERO_WIN) {
+        alert('Победили нолики');
+        return;
+    }
+    if (gameState === CROSS_WIN) {
+        alert('Победили крестики');
+    }
+}
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
