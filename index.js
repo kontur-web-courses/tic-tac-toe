@@ -67,7 +67,7 @@ function checkWinner(){
     for(let a of arr){
         let t = true;
         for(let i = 0; i < 2; i++){
-            t = t && a[i] == a[i+1]; 
+            t = t && a[i] === a[i+1]; 
         }
         if(t){
             return a[0];
@@ -77,7 +77,7 @@ function checkWinner(){
     for(let j = 0; j < 3; j++){
         let t = true;
         for(let i = 0; i < 2; i++){
-            t = t && arr[i][j] == arr[i+1][j]; 
+            t = t && arr[i][j] === arr[i+1][j]; 
         }
         if(t){
             return arr[0][j];
@@ -86,7 +86,7 @@ function checkWinner(){
 
     let t = true;
     for(let i = 0; i < 2; i++){
-        t = t && arr[i][i] == arr[i+1][i+1];
+        t = t && arr[i][i] === arr[i+1][i+1];
     }
     if(t){
         return arr[0][0];
@@ -94,7 +94,7 @@ function checkWinner(){
 
     t = true;
     for(let i = 0; i < 2; i++){
-        t = t && arr[i][2 - i] == arr[i+1][1 - i];
+        t = t && arr[i][2 - i] === arr[i+1][1 - i];
     }
     if(t){
         return arr[0][2];
