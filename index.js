@@ -5,9 +5,11 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
+const aiCheckbox = document.getElementById('ai');
+const inputSize = document.getElementById('boardSize');
 
 function readBoardSize() {
-    return +document.getElementById('boardSize').value;
+    return +inputSize.value;
 }
 
 let field = [];
@@ -25,7 +27,6 @@ addResetListener();
 function startGame() {
     renderGrid(BOARD_SIZE);
 }
-
 
 function expandBoard() {
     BOARD_SIZE += 2;
@@ -57,20 +58,39 @@ function renderGrid(dimension) {
     }
 }
 
-function checkWinner() {
+function findBestMove() {
+    let freeCells = [];
+    for (let i = 0; i < BOARD_SIZE; i++) {
+        for (let j = 0; j < BOARD_SIZE; j++) {
+            if (field[i][j] === EMPTY) {
+                freeCells.push([i, j]);
+                field[i][j] = ZERO;
+                if (isWinner(ZERO)) {
+                    field[i][j] = EMPTY;
+                    return [i, j]
+                }
+                field[i][j] = EMPTY;
+            }
+        }
+    }
+
+    return freeCells[Math.floor(Math.random() * freeCells.length)];
+}
+
+function isWinner(curPlayer) {
     const WIN_LENGTH = 3;
 
     // Проверка по горизонтали
     for (let i = 0; i < BOARD_SIZE; i++) {
         let count = 0;
         for (let j = 0; j < BOARD_SIZE; j++) {
-            if (field[i][j] === PLAYER) {
+            if (field[i][j] === curPlayer) {
                 count++;
             } else {
                 count = 0;
             }
             if (count === WIN_LENGTH) {
-                return PLAYER;
+                return true;
             }
         }
     }
@@ -79,51 +99,41 @@ function checkWinner() {
     for (let i = 0; i < BOARD_SIZE; i++) {
         let count = 0;
         for (let j = 0; j < BOARD_SIZE; j++) {
-            if (field[j][i] === PLAYER) {
+            if (field[j][i] === curPlayer) {
                 count++;
             } else {
                 count = 0;
             }
             if (count === WIN_LENGTH) {
-                return PLAYER;
+                return true;
             }
-        }
-    }
-
-    // Проверка по диагонали
-    let count = 0;
-    for (let i = 0; i < BOARD_SIZE; i++) {
-        if (field[i][i] === PLAYER) {
-            count++;
-        } else {
-            count = 0;
-        }
-        if (count === WIN_LENGTH) {
-            return PLAYER;
         }
     }
 
     // Проверка по диагонали
     for (let i = 1; i < BOARD_SIZE - 1; i++) {
         for (let j = 1; j < BOARD_SIZE - 1; j++) {
-            if (field[i][j] === PLAYER) {
-                if (field[i - 1][j - 1] === PLAYER && field[i + 1][j + 1] === PLAYER) {
-                    return PLAYER;
+            if (field[i][j] === curPlayer) {
+                if (field[i - 1][j - 1] === curPlayer && field[i + 1][j + 1] === curPlayer) {
+                    return true;
                 }
-                if (field[i - 1][j + 1] === PLAYER && field[i + 1][j - 1] === PLAYER) {
-                    return PLAYER;
+                if (field[i - 1][j + 1] === curPlayer && field[i + 1][j - 1] === curPlayer) {
+                    return true;
                 }
             }
         }
     }
 
-    return null;
+    return false;
 }
 
 function cellClickHandler(row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
+    if (WINNER !== null) {
+        return;
+    }
     if (field[row][col] !== EMPTY) {
         return;
     }
@@ -131,18 +141,30 @@ function cellClickHandler(row, col) {
     field[row][col] = PLAYER;
     OCCUPIED_CELLS++;
 
-    WINNER = checkWinner();
+    if (isWinner(PLAYER)) {
+        WINNER = PLAYER;
+    }
     PLAYER = PLAYER === CROSS ? ZERO : CROSS;
+    console.log(`Player ${PLAYER} turn`);
 
     let cells = BOARD_SIZE * BOARD_SIZE;
-    if (WINNER === null && OCCUPIED_CELLS >= Math.floor(cells / 2)) {
+    if (WINNER === null && OCCUPIED_CELLS >= Math.floor(cells / 2) && BOARD_SIZE < 10) {
         expandBoard();
         renderGrid(BOARD_SIZE);
     }
     renderBoard();
 
+    if (OCCUPIED_CELLS === cells) {
+        alert('Ничья');
+        WINNER = 'Ничья';
+        return;
+    }
+
     if (WINNER !== null) {
         alert(`Победил ${WINNER}`);
+    } else if (PLAYER === ZERO && aiCheckbox.checked) {
+        let [i, j] = findBestMove();
+        clickOnCell(i, j);
     }
 }
 
