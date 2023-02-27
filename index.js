@@ -36,7 +36,6 @@ function cellClickHandler (row, col) {
         field[row][col] = t;
         renderSymbolInCell(t, row, col);
     }
-
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
