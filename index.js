@@ -202,6 +202,7 @@ function resetClickHandler() {
 }
 
 function resetGame(newSize) {
+    WINNER = null;
     field = [];
     BOARD_SIZE = newSize;
     for (let i = 0; i <= BOARD_SIZE; i++) {
