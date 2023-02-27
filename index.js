@@ -100,7 +100,7 @@ function getMostFrequentElement(row) {
     if (counter === 3) {
       return mostFrequentElement;
     }
-    return null;
+    return EMPTY;
 }
 
 function checkRows() {
