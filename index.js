@@ -49,13 +49,11 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if(board[row][col] !== EMPTY)
+    if(board[row][col] !== EMPTY || isGameOver)
       return;
-    alert(board);
     board[row][col] = currentPlayer;
     renderSymbolInCell(currentPlayer, row, col);
     currentPlayer = getNextPlayer(currentPlayer);
-    alert(board);
 
 
     /* Пользоваться методом для размещения символа в клетке так:
