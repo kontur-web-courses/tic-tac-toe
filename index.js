@@ -41,7 +41,7 @@ function cellClickHandler(row, col) {
         board[row][col] = getCurrentSymbol()
         moveCounter++;
     }
-    console.log(board);
+    //console.log(board);
     renderSymbolInCell(board[row][col], row, col)
     console.log(`Clicked on cell: ${row}, ${col}`);
 
@@ -50,11 +50,11 @@ function cellClickHandler(row, col) {
         renderSymbolInCell(ZERO, row, col);
      */
     let result = isVictory()
-    if (result){
-        console.log(result)
-        for (const r in result){
-            renderSymbolInCell(board[r[0]][r[1]],r[0], r[1], 'red');
-        }
+    for (let i = 0; i < 3; i++){
+        const r = result[i]
+        console.log(r)
+        console.log(board[r[0]][r[1]],r[0], r[1])
+        renderSymbolInCell(board[r[0]][r[1]],r[0], r[1], 'red');
     }
     if (moveCounter === currentDimension * currentDimension && !isVictory()) {
         alert("Победила дружба");
@@ -66,7 +66,11 @@ function isVictory() {
     let b = CheckVertical(board);
     let c = CheckDiagWin(board);
 
-    return a || b || c;
+    if (a !== [])
+        return a
+    if (b !== [])
+        return b
+    return c
 }
 
 function transpose(matrix) {
