@@ -12,7 +12,7 @@ startGame();
 addResetListener();
 
 function startGame() {
-    dimension = prompt('Введите количество клеток') ?? dimension;
+    dimension = parseInt(prompt('Введите количество клеток') ?? dimension);
     step = 0;
     renderGrid(dimension);
 }
