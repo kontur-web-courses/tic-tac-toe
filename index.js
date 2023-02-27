@@ -58,6 +58,25 @@ function cellClickHandler(row, col) {
         is_win = true;
         return;
     }
+
+    if (is_zero) {
+        botTurn();
+    }
+}
+
+function botTurn() {
+    while (1) {
+        let row = getRandomInt(2);
+        let column = getRandomInt(2);
+        if (field[row][column] === 0) {
+            cellClickHandler(row, column);
+            return;
+        }
+    }
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
 }
 
 function hasWinner(col, row, current_turn) {
