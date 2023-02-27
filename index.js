@@ -14,8 +14,8 @@ function startGame () {
 }
 
 function isThereFreeMoves(){
-    for (let i = 0, i < gridSize, i++){
-        for (let j = 0, j < gridSize, j++){
+    for (let i = 0; i < gridSize; i++){
+        for (let j = 0; j < gridSize; j++){
             if (grid[i][j] === EMPTY) return true
         }
     }
@@ -23,9 +23,9 @@ function isThereFreeMoves(){
 }
 
 function initGrid(){
-    for (let i = 0, i < gridSize, i++){
+    for (let i = 0; i < gridSize; i++){
         grid.push([])
-        for (let j = 0, j < gridSize, j++){
+        for (let j = 0; j < gridSize; j++){
             grid[i].push(EMPTY)
         }
     }
@@ -44,9 +44,9 @@ function isThereWinner(){
 }
 
 function isThereColumnWinner(){
-    for (let i = 0, i < gridSize, i++){
+    for (let i = 0; i < gridSize; i++){
         let flag = true
-        for (let j = 1, j < gridSize, j++){
+        for (let j = 1; j < gridSize; j++){
             if (grid[i][j] !== grid[i][j - 1]) {
                 flag = false;
                 break;
@@ -57,9 +57,9 @@ function isThereColumnWinner(){
 }
 
 function isThereRowWinner(){
-    for (let j = 0, j < gridSize, j++){
+    for (let j = 0; j < gridSize; j++){
         let flag = true
-        for (let i = 1, i < gridSize, i++){
+        for (let i = 1; i < gridSize; i++){
             if (grid[i][j] !== grid[i - 1][j]) {
                 flag = false;
                 break;
@@ -71,7 +71,7 @@ function isThereRowWinner(){
 
 function isThereDiagonalWinner(){
     flag = true
-    for (let j = 1, j < gridSize, j++){
+    for (let j = 1; j < gridSize; j++){
         if(grid[j - 1][j - 1] !== grid[j][j]) {
             flag = false;
             break;
@@ -79,7 +79,7 @@ function isThereDiagonalWinner(){
     }
     if (flag) return true;
     flag = true;
-    for (let j = 1, j < gridSize, j++){
+    for (let j = 1; j < gridSize; j++){
         if(grid[j - 1][gridSize - j + 1] !== grid[j][gridSize - j]) {
             flag = false;
             break;
@@ -107,8 +107,8 @@ function renderGrid (dimension) {
 
 isZero = false
 function cellClickHandler (row, col) {
-    console.log(Clicked on cell: ${row}, ${col});
-    if isThereASymbol(row, col) return;
+    console.log('Clicked on cell: ${row}, ${col}');
+    if (isThereASymbol(row, col)) return;
     if (!isZero)
     {
         grid[row][col] = 'X';
@@ -175,3 +175,5 @@ function testDraw () {
 function clickOnCell (row, col) {
     findCell(row, col).click();
 }
+
+testWin()
