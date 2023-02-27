@@ -10,6 +10,8 @@ let usedCells = 0;
 let side = CROSS;
 let ended = false;
 
+let isAiEnabled = true;
+
 function createField(size) {
     const field = new Array(size)
     for (let i = 0; i < size; i++) {
@@ -38,7 +40,35 @@ function startGame() {
 }
 
 function changeSide() {
-    side = side === CROSS ? ZERO : CROSS;
+    if (isAiEnabled) {
+        let freeIndexes = [];
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                if (field[i][j] === EMPTY) {
+                    freeIndexes.push([i, j]);
+                }
+            }
+        }
+
+        if (freeIndexes.length > 0) {
+            const ind = Math.floor(Math.random() * freeIndexes.length);
+            const row = freeIndexes[ind][0];
+            const column = freeIndexes[ind][1];
+            console.log(row);
+            console.log(column);
+            field[row][column] = ZERO;
+            renderSymbolInCell(ZERO, row, column);
+            if (!ended) {
+                checkWinners(ZERO)
+            }
+            console.log(`Bot clicked on cell: ${row}, ${column}`);
+            field[row][column] = ZERO;
+            usedCells++;
+        }
+
+    } else {
+        side = side === CROSS ? ZERO : CROSS;
+    }
 }
 
 function renderGrid(dimension) {
@@ -69,16 +99,16 @@ function cellClickHandler(row, col) {
 
     console.log(`Clicked on cell: ${row}, ${col}`);
     field[row][col] = side;
-    checkWinners();
+    checkWinners(side);
     changeSide();
+    usedCells++;
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
 
-    usedCells++;
 }
 
-function checkWinners() {
+function checkWinners(side) {
     for (let i = 0; i < size; i++) {
         if (checkColumn(i) || checkRow(i) || checkLeftDiagonal() || checkRightDiagonal()) {
             alert(`winner is ${side}`);
@@ -100,10 +130,10 @@ function checkColumn(column) {
     }
 
     let indexes = new Array(size);
-    for (let j = 0; j < size; j++){
-        indexes[i] = new Array(2);
-        indexes[i][0] = j;
-        indexes[i][1] = column;
+    for (let j = 0; j < size; j++) {
+        indexes[j] = new Array(2);
+        indexes[j][0] = j;
+        indexes[j][1] = column;
     }
 
     paintWinner(indexes);
@@ -122,7 +152,7 @@ function checkRow(row) {
     }
 
     let indexes = new Array(size);
-    for (let j = 0; j < size; j++){
+    for (let j = 0; j < size; j++) {
         indexes[j] = new Array(2);
         indexes[j][0] = row;
         indexes[j][1] = j;
@@ -144,7 +174,7 @@ function checkLeftDiagonal() {
     }
 
     let indexes = new Array(size);
-    for (let j = 0; j < size; j++){
+    for (let j = 0; j < size; j++) {
         indexes[j] = new Array(2);
         indexes[j][0] = j;
         indexes[j][1] = j;
@@ -166,7 +196,7 @@ function checkRightDiagonal() {
     }
 
     let indexes = new Array(size);
-    for (let j = 0; j < size; j++){
+    for (let j = 0; j < size; j++) {
         indexes[j] = new Array(2);
         indexes[j][0] = j;
         indexes[j][1] = size - 1 - j;
@@ -193,9 +223,9 @@ function addResetListener() {
     resetButton.addEventListener('click', resetClickHandler);
 }
 
-function paintWinner(indexes){
+function paintWinner(indexes) {
     let tds = document.getElementsByTagName("td");
-    for (let index of indexes){
+    for (let index of indexes) {
         tds[index[0] * 3 + index[1]].style.color = "#ff0000";
     }
 }
