@@ -46,29 +46,38 @@ function renderGrid(dimension) {
 }
 
 function checkHorizontal(row) {
-    let isWin = true;
+    let isWin = field[row][0] !== EMPTY;
     for (let i = 1; i < field.length; i++) {
-        isWin = isWin && field[row][i - 1] === field[row][i] && field[row][i-1] !== EMPTY;
+        isWin = isWin && field[row][i - 1] === field[row][i];
     }
     return isWin;
 }
 
 function checkVertical(col) {
-    let isWin = true;
+    let isWin = field[0][col] !== EMPTY;
     for (let i = 1; i < field.length; i++) {
-        isWin = isWin && field[i - 1][col] === field[i][col] && field[i-1][col] !== EMPTY;
+        isWin = isWin && field[i - 1][col] === field[i][col];
     }
     return isWin;
 }
 
 function checkDiagonal() {
     let len = field.length;
+
     let diagonalIsWin1 = field[0][0] !== EMPTY;
-    let diagonalIsWin2 = field[0][len-1] !== EMPTY;
     for (let i = 1; i < len; i++) {
         diagonalIsWin1 = diagonalIsWin1 && field[i - 1][i - 1] === field[i][i];
-        diagonalIsWin2 = diagonalIsWin2 && field[i - 1][len - i] === field[len - i][i - 1];
     }
+
+    let diagonalIsWin2 = field[0][len - 1] !== EMPTY;
+    let r = 0;
+    let c = len - 1;
+    for (let i = 1; i < len; i++) {
+        diagonalIsWin2 = diagonalIsWin2 && field[r][c] === field[r + 1][c - 1];
+        r++;
+        c--;
+    }
+
     return diagonalIsWin1 || diagonalIsWin2;
 }
 
@@ -80,22 +89,22 @@ function cellClickHandler(row, col) {
     let isWin = false;
     if (field[row][col] === EMPTY) {
         const symbol = isCross ? CROSS : ZERO;
-
+        isCross = !isCross;
         renderSymbolInCell(symbol, row, col);
         field[row][col] = symbol;
         isWin = checkWin(row, col);
         countSteps++;
     }
+
     if (isWin) {
-        let name = isCross ? "Первый игрок" : "Второй игрок";
+        let name = !isCross ? "Первый игрок" : "Второй игрок";
         alert(`Победил ${name}!`)
     }
-    if(countSteps === 9)
-    {
+    if (countSteps === dimensionsCount * dimensionsCount) {
         alert("Победила дружба");
     }
 
-    isCross = !isCross;
+
     console.log(`Clicked on cell: ${row}, ${col}`);
 }
 
