@@ -1,3 +1,5 @@
+// здесь был Денчик
+
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
