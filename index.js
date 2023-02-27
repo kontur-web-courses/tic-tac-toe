@@ -1,7 +1,7 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-const DIMENSION = 3;
+let DIMENSION = 3;
 
 const container = document.getElementById('fieldWrapper');
 let grid = [];
@@ -11,6 +11,7 @@ startGame();
 addResetListener();
 
 function startGame() {
+    DIMENSION = +prompt("Введите размер поля")
     renderGrid(DIMENSION);
     createGrid(DIMENSION)
 }
@@ -30,13 +31,13 @@ function renderGrid(dimension) {
     }
 }
 
-function checkWinCondition(){
-    let arr = [];
+function checkWinCondition() {
+    for (let i = 0; i < DIMENSION; i++) {
 
-    for(let i = 0; i < DIMENSION; i++){
+        let arr = [];
         let countZero = 0;
         let countCross = 0;
-        for(let j = 0; j < DIMENSION; j++) {
+        for (let j = 0; j < DIMENSION; j++) {
             arr.push([i, j]);
             if (grid[i][j] === ZERO)
                 countZero++;
@@ -47,12 +48,11 @@ function checkWinCondition(){
         if (DIMENSION === countZero || DIMENSION === countCross)
             return arr
     }
-    arr = [];
-
-    for(let i = 0; i < DIMENSION; i++){
+    for (let i = 0; i < DIMENSION; i++) {
+        arr = [];
         let countZero = 0;
         let countCross = 0;
-        for(let j = 0; j < DIMENSION; j++) {
+        for (let j = 0; j < DIMENSION; j++) {
             arr.push([j, i]);
             if (grid[j][i] === ZERO)
                 countZero++;
@@ -67,7 +67,7 @@ function checkWinCondition(){
     let countZero = 0;
     let countCross = 0;
 
-    for(let i = 0; i < DIMENSION; i++) {
+    for (let i = 0; i < DIMENSION; i++) {
         arr.push([i, i]);
         if (grid[i][i] === ZERO)
             countZero++;
@@ -82,7 +82,7 @@ function checkWinCondition(){
     countZero = 0;
     countCross = 0;
     arr = [];
-    for(let i = 0; i < DIMENSION; i++) {
+    for (let i = 0; i < DIMENSION; i++) {
         arr.push([DIMENSION - i - 1, i]);
         if (grid[DIMENSION - i - 1][i] === ZERO)
             countZero++;
@@ -113,22 +113,24 @@ function checkEndGame() {
         let win = grid[line[0][0]][line[0][1]]
         switch (win) {
             case CROSS:
-                alert(CROSS);
+                alert("CROSS");
                 ended = true;
+                renderWinner(line)
                 break;
             case ZERO:
-                alert(ZERO);
+                alert("ZERO");
                 ended = true;
+                renderWinner(line)
                 break;
         }
+    } else {
+        if (checkDraw(DIMENSION))
+            alert("Победила дружба!")
     }
-    if (checkDraw(DIMENSION))
-        alert("Победила дружба!")
-
 }
 
 function renderWinner(line) {
-    for (let coord of line){
+    for (let coord of line) {
         const symbol = grid[coord[0]][coord[1]]
         renderSymbolInCell(symbol, coord[0], coord[1], "#c00")
     }
@@ -137,8 +139,10 @@ function renderWinner(line) {
 function cellClickHandler(row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
 
-
-    if (grid[row][col] === EMPTY && !ended) {
+    if (ended) {
+        return;
+    }
+    if (grid[row][col] === EMPTY) {
         if (parity) {
             grid[row][col] = CROSS;
             renderSymbolInCell(CROSS, row, col)
@@ -181,8 +185,10 @@ function addResetListener() {
 
 function resetClickHandler() {
     console.log('reset!');
-    createGrid(3);
-    renderGrid(3);
+    ended = false;
+    parity = false;
+    createGrid(DIMENSION);
+    renderGrid(DIMENSION);
 }
 
 
