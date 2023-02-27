@@ -78,6 +78,7 @@ function checkWinner () {
 
     if (winner) {
         alert(`Победили ${winner}`);
+        isGameOver = true;
     }
 }
 
