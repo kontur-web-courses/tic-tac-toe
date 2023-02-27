@@ -6,18 +6,22 @@ const TIE = 'tie';
 const CROSS_WIN = 'cross win';
 const ZERO_WIN = 'zero win';
 const PLAY = 'play';
+const TYPE_WINNER = {
+    'X' : CROSS_WIN,
+    'O' : ZERO_WIN
+}
 
 const container = document.getElementById('fieldWrapper');
 let field = [
     [EMPTY] * 3,
 ] * 3;
-let map_dimention = 3
+let mapDimention = 3
 
 startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(map_dimention);
+    renderGrid(mapDimention);
 }
 
 function renderGrid (dimension) {
@@ -46,46 +50,54 @@ function cellClickHandler (row, col) {
 }
 
 function isEndGame() {
+
+    let emptyCount = 0;
     for (let cellType in [ZERO, CROSS]) {
-        for (let row = 0; row < map_dimention; row++) {
+        for (let row = 0; row < mapDimention; row++) {
+            emptyCount++;
             let count_match = 0;
-            for (let column = 0; column < map_dimention; column++) {
+            for (let column = 0; column < mapDimention; column++) {
                 if (field[row][column] === cell_type) {
                     count_match++;
                 }
             }
-            if (count_match === map_dimention) {
-                return true;
+            if (count_match === mapDimention) {
+                return TYPE_WINNER[cellType];
             }
         }
-        for (let column = 0; column < map_dimention; column++) {
+        for (let column = 0; column < mapDimention; column++) {
             let count_match = 0;
-            for (let row = 0; row < map_dimention; row++) {
+            for (let row = 0; row < mapDimention; row++) {
                 if (field[row][column] === cellType) {
                     count_match++;
                 }
             }
-            if (count_match === map_dimention) {
-                return true;
+            if (count_match === mapDimention) {
+                return TYPE_WINNER[cellType];
             }
         }
 
         let countMatchDiagonal1 = 0;
         let countMatchDiagonal2 = 0;
-        for (let i = 0; i < map_dimention; i++) {
+        for (let i = 0; i < mapDimention; i++) {
             if (field[i][i] === cellType)
                 countMatchDiagonal1++;
-            if (field[i][map_dimention - i - 1] === cellType)
+            if (field[i][mapDimention - i - 1] === cellType)
                 countMatchDiagonal2++;
         }
 
-        if (countMatchDiagonal1 === map_dimention || countMatchDiagonal2 === map_dimention)
-            return true;
+        if (countMatchDiagonal1 === mapDimention || countMatchDiagonal2 === mapDimention)
+            return TYPE_WINNER[cellType];
     }
+
+    if (emptyCount === 0)
+        return TIE;
 
 
     return PLAY;
 }
+
+
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
