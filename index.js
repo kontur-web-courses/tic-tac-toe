@@ -4,6 +4,14 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+motion = 0;
+let arr = [
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY]
+];
+
+
 startGame();
 addResetListener();
 
@@ -27,7 +35,19 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    if (arr[row][col] === EMPTY) {
+
+        if (motion % 2 === 0) {
+            renderSymbolInCell(ZERO, row, col);
+            arr[row][col] = ZERO;
+            motion++;
+        } else {
+            renderSymbolInCell(CROSS, row, col);
+            arr[row][col] = CROSS;
+            motion++;
+        }
+    }
+
     console.log(`Clicked on cell: ${row}, ${col}`);
 
 
@@ -55,6 +75,15 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    motion = 0;
+    arr = [
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY]
+    ];
+    startGame(3);
+
+
 }
 
 
