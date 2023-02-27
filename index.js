@@ -8,11 +8,13 @@ let gameTable = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
 ];
+let ai = false;
 
 const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
+addAIListener();
 
 function startGame () {
     renderGrid(3);
@@ -121,7 +123,7 @@ function cellClickHandler (row, col) {
             }, 0);
         } else {
             currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
-            if (currentPlayer === ZERO) {
+            if (currentPlayer === ZERO && ai) {
                 aiTurn();
             }
         }
@@ -143,6 +145,27 @@ function findCell (row, col) {
 function addResetListener () {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
+}
+
+function aiOffClickHandler() {
+    const aiButton = document.getElementById('ai');
+    aiButton.removeEventListener('click', aiOffClickHandler);
+    aiButton.addEventListener('click', aiClickHandler);
+    aiButton.textContent = 'AI ON';
+    ai = false;
+}
+
+function aiClickHandler() {
+    const aiButton = document.getElementById('ai');
+    aiButton.removeEventListener('click', aiClickHandler);
+    aiButton.addEventListener('click', aiOffClickHandler);
+    aiButton.textContent = 'AI OFF';
+    ai = true;
+}
+
+function addAIListener () {
+    const aiButton = document.getElementById('ai');
+    aiButton.addEventListener('click', aiClickHandler);
 }
 
 function resetClickHandler () {
