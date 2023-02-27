@@ -8,10 +8,6 @@ let field = [];
 
 let OCCUPIED_CELLS = 0;
 let BOARD_SIZE = 3;
-for (let i = 0; i <= BOARD_SIZE; i++) {
-    field.push(new Array(BOARD_SIZE).fill(EMPTY));
-}
-
 let PLAYER = CROSS;
 
 
@@ -96,8 +92,20 @@ function addResetListener() {
 
 function resetClickHandler() {
     console.log('reset!');
+
+    resetGame();
 }
 
+function resetGame() {
+    field = [];
+    BOARD_SIZE = 3;
+    for (let i = 0; i <= BOARD_SIZE; i++) {
+        field.push(new Array(BOARD_SIZE).fill(EMPTY));
+    }
+
+    PLAYER = CROSS;
+    OCCUPIED_CELLS = 0;
+}
 
 /* Test Function */
 
