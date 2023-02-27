@@ -129,6 +129,9 @@ function checkColumns() {
         }
         const winner = getMostFrequentElement(column);
         if (winner !== EMPTY) {
+            for (let j = 0; j < boardSize; j++) {
+              colorCell(j, i, '#FF0000');
+            }
             return winner;
         }
     }
