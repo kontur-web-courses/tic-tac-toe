@@ -42,23 +42,31 @@ function IsEnd(arr){
     }
     return true;
 }
-
 function CheckWinner(field){
+    let winner;
+    let winnerCells;
     for (let i = 0; i < 3; i++) {
         if ((field[0][i] === field[1][i] && field[1][i] === field[2][i]) && field[0][i] !== EMPTY){
-            return field[0][i];
+            winner = field[0][i];
+            winnerCells = [[0, i], [1, i], [2, i]];
         }
         if ((field[i][0] === field[i][1] && field[i][1] === field[i][2]) && field[i][0] !== EMPTY){
-            return field[0][1];
+            winner = field[i][0];
+            winnerCells = [[i, 0], [i, 1], [i, 2]];
         }
     }
     if ((field[0][2] === field[1][1] && field[1][1] === field[2][0]) && field[0][2] !== EMPTY){
-        return field[0][2];
+        winner = field[0][2];
+        winnerCells = [[0,2], [1, 1], [2, 0]]
     }
     if ((field[0][0] === field[1][1] && field[1][1] === field[2][2]) && field[0][0] !== EMPTY){
-        return field[0][0];
+        winner = field[0][0];
+        winnerCells = [[0, 0], [1, 1], [2, 2]]
     }
-    return false;
+    if (winner) {
+        decorateCells(winner, winnerCells);
+        return winner;
+    }
 }
 function cellClickHandler (row, col) {
     // Пиши код тут
@@ -77,9 +85,16 @@ function cellClickHandler (row, col) {
         alert(winner);
     }
     if (IsEnd(field)){
+        gameEnded = true;
         alert('Победила дружба');
     }
 
+}
+
+function decorateCells (winner, cells, color = 'red') {
+    for (const cell of cells) {
+        renderSymbolInCell(winner, cell[0], cell[1], color);
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
