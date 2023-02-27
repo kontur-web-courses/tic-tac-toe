@@ -34,12 +34,30 @@ function getOppositeTurn(){
     return CROSS;
 }
 
+function hasOtherMoves(){
+    for (let i = 0; i < 3; i++){
+        for (let j = 0; j < 3; j++)
+        {
+            if (field[i][j] === EMPTY)
+                return true;
+        }
+    }
+    return false;
+}
+
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
+    if (field[row][col] !== EMPTY)
+        return;
+
     field[row][col] = turn;
+
     renderSymbolInCell(turn, row, col);
     turn = getOppositeTurn();
+
+    if (!hasOtherMoves())
+        alert("Победила дружба")
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
