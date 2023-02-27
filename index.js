@@ -3,8 +3,7 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-
-motion = 0;
+let motion = 0;
 let arr = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
@@ -36,24 +35,31 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     if (arr[row][col] === EMPTY) {
-
         if (motion % 2 === 0) {
             renderSymbolInCell(ZERO, row, col);
             arr[row][col] = ZERO;
             motion++;
+            isWinner(ZERO)
         } else {
             renderSymbolInCell(CROSS, row, col);
             arr[row][col] = CROSS;
             motion++;
+            isWinner(CROSS)
         }
     }
-
     console.log(`Clicked on cell: ${row}, ${col}`);
+}
 
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+function isWinner(symbol){
+    if ((arr[0][0] === symbol && arr[0][1] === symbol && arr[0][2] === symbol) ||
+    (arr[1][0] === symbol && arr[1][1] === symbol && arr[1][2] === symbol) ||
+        (arr[2][0] === symbol && arr[2][1] === symbol && arr[2][2] === symbol) ||
+        (arr[0][0] === symbol && arr[1][0] === symbol && arr[2][0] === symbol)||
+        (arr[1][1] === symbol && arr[1][0] === symbol && arr[1][2] === symbol) ||
+            (arr[2][0] === symbol && arr[2][1] === symbol && arr[2][2] === symbol) ||
+        (arr[0][0] === symbol && arr[1][1] === symbol && arr[2][2] === symbol) ||
+        (arr[2][0] === symbol && arr[1][1] === symbol && arr[0][2] === symbol))
+        alert("Победил " + symbol)
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -82,8 +88,6 @@ function resetClickHandler () {
         [EMPTY, EMPTY, EMPTY]
     ];
     startGame(3);
-
-
 }
 
 
