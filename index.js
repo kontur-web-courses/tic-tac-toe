@@ -1,17 +1,49 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let NUMBER = 0;
+let FIELD = [];
+let SIZE = 3;
 
 const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
 
-function startGame () {
-    renderGrid(3);
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
 }
 
-function renderGrid (dimension) {
+function makeSimpleAiTurn() {
+    while (true) {
+        row = getRandomInt(SIZE);
+        col = getRandomInt(SIZE);
+        if (FIELD[row][col] == EMPTY){
+            FIELD[row][col] = ZERO;
+            renderSymbolInCell(ZERO, row, col);
+            break;
+        }
+    }
+    console.log('make')
+}
+
+function fillField(){
+    for (let i = 0; i < SIZE; i++){
+        FIELD[i] = [];
+        for (let j = 0; j < SIZE; j++){
+            FIELD[i][j] = EMPTY;
+        }
+    }
+}
+
+function startGame () {
+    SIZE = parseInt(prompt('Size?'));
+    let AI = prompt('Play with AI? (yes/no)') === 'yes' ? true : false;
+    renderGrid(SIZE, AI);
+    fillField(SIZE);
+}
+
+function renderGrid (dimension, AI) {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
@@ -19,21 +51,117 @@ function renderGrid (dimension) {
         for (let j = 0; j < dimension; j++) {
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
-            cell.addEventListener('click', () => cellClickHandler(i, j));
+            cell.addEventListener('click', () => cellClickHandler(i, j, AI));
             row.appendChild(cell);
         }
         container.appendChild(row);
     }
 }
 
-function cellClickHandler (row, col) {
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
+function checkIfSymbolWins(symbol){
+    let won = true;
+    for (let i = 0; i < SIZE; i++) {
+        won = true;
+        for (let j = 0; j < SIZE; j++) {
+            if (FIELD[i][j] !== symbol) {
+                won = false;
+            }
+        }
+        if (won) {
+            for (let j = 0; j < SIZE; j++) {
+                renderSymbolInCell(symbol, i, j, 'red');
+            }
+            return true;
+        }
+    }
 
+    for (let i = 0; i < SIZE; i++) {
+        won = true;
+        for (let j = 0; j < SIZE; j++) {
+            if (FIELD[j][i] !== symbol) {
+                won = false;
+            }
+        }
+        if (won) {
+            for (let j = 0; j < SIZE; j++) {
+                renderSymbolInCell(symbol, j, i, 'red');
+            }
+            return true;
+        }
+    }
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    won = true;
+    for (let i = 0; i < SIZE; i++) {
+
+        if (FIELD[i][i] !== symbol)
+            won = false;
+    }
+    if (won){
+        for (let i = 0; i < SIZE; i++) {
+            renderSymbolInCell(symbol, i, i, 'red');
+        }
+        return true;
+    }
+    
+
+    won = true;
+    for (let i = 0; i < SIZE; i++) {
+
+        if (FIELD[i][SIZE - i - 1] !== symbol)
+            won = false;
+    }
+    if (won){
+        for (let i = 0; i < SIZE; i++) {
+            renderSymbolInCell(symbol, i, SIZE - i - 1, 'red');
+        }
+        return true;
+    }
+    return false;
+}
+
+function checkIfFriendsWins(){
+    return NUMBER === SIZE * SIZE;
+}
+
+function cellClickHandler (row, col, AI=false) {
+    let currentSymbol = EMPTY;
+    if (NUMBER % 2 === 0){
+        currentSymbol = CROSS;
+    }
+    else{   
+        currentSymbol = ZERO;
+    }
+    if (FIELD[row][col] === EMPTY){
+        renderSymbolInCell(currentSymbol, row, col);
+        FIELD[row][col] = currentSymbol;
+
+        if (checkIfSymbolWins(CROSS)){
+            alert('Cross Wins');
+            return;
+        }
+        if (checkIfSymbolWins(ZERO)){
+            alert('Zero Wins');
+            return;
+        }
+
+        NUMBER ++;
+        if (checkIfFriendsWins()){
+            alert('Победила дружба');
+            return;
+        }
+    }
+    if (AI === true){
+        makeSimpleAiTurn();
+        if (checkIfSymbolWins(ZERO)){
+            alert('Zero Wins');
+            return;
+        }
+        NUMBER++;
+        if (checkIfFriendsWins()){
+            alert('Победила дружба');
+            return;
+        }
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -54,6 +182,9 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    startGame();
+    NUMBER = 0;
+    fillField();
     console.log('reset!');
 }
 
@@ -87,3 +218,4 @@ function testDraw () {
 function clickOnCell (row, col) {
     findCell(row, col).click();
 }
+
