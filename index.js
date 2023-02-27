@@ -5,17 +5,17 @@ const EMPTY = ' ';
 const container = document.getElementById('fieldWrapper');
 const desk = [[] , [], []];
 let turnNumber = 0;
-let size = 0;
+let size = 3;
 
 startGame();
 addResetListener();
+addResizeArray();
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(size);
 }
 
 function renderGrid (dimension) {
-    size = dimension
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
@@ -29,8 +29,6 @@ function renderGrid (dimension) {
         container.appendChild(row);
     }
 }
-
-
 
 function cellClickHandler (row, col) {
 
@@ -156,8 +154,19 @@ function addResetListener () {
     resetButton.addEventListener('click', resetClickHandler);
 }
 
+function addResizeArray () {
+    const resizeButton = document.getElementById('resize');
+    resizeButton.addEventListener('click', resizeClickHandler);
+}
+
 function resetClickHandler () {
     console.log('reset!');
+    startGame(size);
+}
+
+function resizeClickHandler () {
+    size = prompt("Введите размер поля:", [3]);
+    startGame(size);
 }
 
 
