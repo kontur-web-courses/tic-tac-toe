@@ -60,15 +60,15 @@ function cellClickHandler(row, col) {
         isWin = true;
     }
 
-/*    if (isZero) {
+    if (isZero) {
         botTurn();
-    }*/
+    }
 }
 
 function botTurn() {
     while (1) {
-        let row = getRandomInt(2);
-        let column = getRandomInt(2);
+        let row = getRandomInt(3);
+        let column = getRandomInt(3);
         if (field[row][column] === 0) {
             cellClickHandler(row, column);
             return;
@@ -77,7 +77,7 @@ function botTurn() {
 }
 
 function getRandomInt(max) {
-    return Math.floor(Math.random());
+    return Math.floor(Math.random() * max);
 }
 
 function hasWinner(col, row, current_turn) {
