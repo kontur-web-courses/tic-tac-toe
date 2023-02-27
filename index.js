@@ -1,21 +1,24 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+const POSSIBLEDIMENSIONS = [3, 5, 10];
 let field = [];
-let dimensionsCount = 5
+let dimensionIndex = 0;
+let dimensionsCount = 3;
 let isCross = true;
 
 const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
+addChangeDimListener();
 
 function startGame() {
     renderGrid(dimensionsCount);
     clearField();
 }
 
-function clearField(){
+function clearField() {
     for (let row = 0; row < dimensionsCount; row++) {
         field[row] = [];
         for (let col = 0; col < dimensionsCount; col++) {
@@ -79,6 +82,18 @@ function resetClickHandler() {
     }
 
     console.log('reset!');
+}
+
+function addChangeDimListener() {
+    const dimButton = document.getElementById('changeDim');
+    dimButton.addEventListener('click', changeDimHandler);
+}
+
+function changeDimHandler() {
+    dimensionIndex += 1;
+    dimensionIndex %= POSSIBLEDIMENSIONS.length;
+    dimensionsCount = POSSIBLEDIMENSIONS[dimensionIndex];
+    startGame();
 }
 
 
