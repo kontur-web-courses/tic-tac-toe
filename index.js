@@ -4,6 +4,7 @@ const EMPTY = ' ';
 
 let boardSize = 3;
 let board = Array(boardSize).fill(Array(boardSize).fill(EMPTY));
+let currentPlayer = CROSS;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -32,11 +33,17 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
+    renderSymbolInCell(currentPlayer, row, col);
+    currentPlayer = getNextPlayer(currentPlayer);
 
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
+}
+
+function getNextPlayer(player) {
+  return player === CROSS ? ZERO : CROSS;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
