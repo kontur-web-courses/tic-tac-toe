@@ -12,6 +12,8 @@ startGame();
 addResetListener();
 
 function startGame() {
+    dimension = prompt('Введите количество клеток') ?? dimension;
+    step = 0;
     renderGrid(dimension);
 }
 
@@ -31,26 +33,29 @@ function renderGrid(dimension) {
 }
 
 function cellClickHandler(row, col) {
-    renderSymbolInCell(ZERO, row, col);
     console.log(`Clicked on cell: ${row}, ${col}`);
     let cell = findCell(row, col);
 
     if (cell.textContent === EMPTY) {
         if (step % 2 === 0) {
             renderSymbolInCell(CROSS, row, col);
+            crosses.push([row, col])
         } else {
             renderSymbolInCell(ZERO, row, col);
+            zeros.push([row, col])
         }
         step++;
     }
 
-    if (step === 9) {
-        alert('Победила дружба');
+    let winner = defineWinner();
+
+    if (winner !== null) {
+        alert(winner);
     }
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    if (step === dimension * dimension) {
+        alert('Поедила дружба');
+    }
 }
 
 function defineWinner() {
@@ -110,8 +115,7 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
-    renderGrid(dimension);
-    step = 0;
+    startGame();
     console.log('reset!');
 }
 
