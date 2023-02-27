@@ -1,6 +1,12 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let field;
+let firstPlayerTurn = true;
+let winColor = '#FF69B4';
+let isWin = false;
+let n;
+let count = 0;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -8,7 +14,20 @@ startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    n = prompt("Размер", 3);
+    field = []
+    count = 0;
+    isWin = false;
+    firstPlayerTurn = true;
+
+    for (let i = 0; i < n; i++) {
+        let a = [];
+        for (let j = 0; j < n; j++)
+            a.push(EMPTY);
+        field.push(a);
+    }
+
+    renderGrid(n);
 }
 
 function renderGrid (dimension) {
@@ -30,10 +49,151 @@ function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
+    if (isWin)
+        return;
 
-    /* Пользоваться методом для размещения символа в клетке так:
+    if (field[row][col] !== EMPTY) {
+        return;
+    }
+    count ++;
+    if (firstPlayerTurn) {
+        firstPlayerTurn = false;
+        field[row][col] = ZERO;
         renderSymbolInCell(ZERO, row, col);
-     */
+    } else {
+        firstPlayerTurn = true;
+        field[row][col] = CROSS;
+        renderSymbolInCell(CROSS, row, col);
+    }
+    if (!checkWinner()) {
+        let isNichia = true;
+        for (let i of field) {
+            for (let j of i) {
+                if (j === EMPTY) {
+                    isNichia = false;
+                    break;
+                }
+            }
+            if (!isNichia)
+                break;
+
+        }
+        if (isNichia)
+            setTimeout(() => alert('Победила дружба'));
+    } else {
+        isWin = true;
+    }
+    if (!checkWinner())
+    {
+        if (count > n*n / 2)
+        {
+            console.log("trt")
+            n++;
+            for (let i = 0; i < n - 1; i++) {
+                field[i].push(EMPTY);
+
+            }
+            let a = []
+            for (let j = 0; j < n; j++)
+                a.push(EMPTY);
+            field.push(a);
+
+            renderGrid(n);
+
+            for (let i = 0; i< n;i ++)
+            {
+                for (let j = 0; j< n;j ++)
+                {
+                    renderSymbolInCell(field[i][j], i, j)
+                }
+            }
+        }
+    }
+
+
+}
+
+function checkWinner() {
+    const allEqual = arr => arr.every( v => v === arr[0] )
+    let i = -1;
+    for(let cell of field)
+    {
+        i++;
+        if (allEqual(cell)) {
+            if (cell[0] === CROSS)
+            {
+                for (let k = 0; k < n; k++)
+                    renderSymbolInCell(field[i][0], i, k, winColor);
+                setTimeout(() => alert('Победил игрок 2'));
+                return true;
+            }
+            else if (cell[0] === ZERO) {
+                for (let k = 0; k < n; k++)
+                    renderSymbolInCell(field[i][k], i, k, winColor);
+                setTimeout(() => alert('Победил игрок 1'));
+                return true;
+            }
+        }
+    }
+    for (let i = 0; i<n; i++)
+    {
+        let a = []
+        for (let j = 0; j < n; j++)
+        {
+            a.push(field[j][i]);
+        }
+        if (allEqual(a))
+            if (field[0][i] === CROSS) {
+                for (let k = 0; k < n; k++)
+                    renderSymbolInCell(field[0][i], k, i, winColor);
+                setTimeout(() => alert('Победил игрок 2'));
+                return true;
+            }
+            else if (field[0][i] === ZERO) {
+                for (let k = 0; k < n; k++)
+                    renderSymbolInCell(field[0][i], k, i, winColor);
+                setTimeout(() => alert('Победил игрок 1'));
+                return true;
+            }
+    }
+
+    let a = [];
+    for (let i = 0; i < n; i++) {
+        a.push(field[i][i]);
+    }
+    if (allEqual(a))
+        if (a[0] === CROSS) {
+            for (let k = 0; k < n; k++)
+                renderSymbolInCell(a[0], k, k, winColor);
+            setTimeout(() => alert('Победил игрок 2'));
+            return true;
+        }
+        else if (a[0] === ZERO) {
+            for (let k = 0; k < n; k++)
+                renderSymbolInCell(a[0], k, k, winColor);
+            setTimeout(() => alert('Победил игрок 1'));
+            return true;
+        }
+
+    a = [];
+    for (let i = 0; i < n; i++) {
+        a.push(field[n-i-1][i]);
+    }
+    if (allEqual(a))
+        if (a[0] === CROSS) {
+            for (let k = 0; k < n; k++)
+                renderSymbolInCell(a[0], n-k-1, k, winColor);
+            setTimeout(() => alert('Победил игрок 2'));
+            return true;
+        }
+        else if (a[0] === ZERO) {
+            for (let k = 0; k < n; k++)
+                renderSymbolInCell(a[0], n-k-1, k, winColor);
+            setTimeout(() => alert('Победил игрок 1'));
+            return true;
+        }
+
+    return false;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -55,6 +215,8 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+
+    startGame();
 }
 
 
