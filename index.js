@@ -2,7 +2,8 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 let step = 0;
-let field = new Array(10).fill(EMPTY)
+let crosses = {}
+let zeros = {}
 
 const container = document.getElementById('fieldWrapper');
 
@@ -52,7 +53,11 @@ function cellClickHandler(row, col) {
 }
 
 function defineWinner() {
+    for (let i = 0; i < 3; i++) {
+        for (let j = i; j < 9; j++) {
 
+        }
+    }
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
