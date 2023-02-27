@@ -6,19 +6,24 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+function readBoardSize() {
+    return +document.getElementById('boardSize').value;
+}
+
 let field = [];
 
 let OCCUPIED_CELLS = 0;
-let BOARD_SIZE = 3;
+let BOARD_SIZE = readBoardSize();
 let PLAYER = CROSS;
 let WINNER = null;
 
-resetGame();
+resetGame(BOARD_SIZE);
 startGame();
+addSizeChangeListener();
 addResetListener();
 
 function startGame() {
-    renderGrid(3);
+    renderGrid(BOARD_SIZE);
 }
 
 
@@ -99,15 +104,16 @@ function checkWinner() {
     }
 
     // Проверка по диагонали
-    count = 0;
-    for (let i = 0; i < BOARD_SIZE; i++) {
-        if (field[i][BOARD_SIZE - 1 - i] === PLAYER) {
-            count++;
-        } else {
-            count = 0;
-        }
-        if (count === WIN_LENGTH) {
-            return PLAYER;
+    for (let i = 1; i < BOARD_SIZE - 1; i++) {
+        for (let j = 1; j < BOARD_SIZE - 1; j++) {
+            if (field[i][j] === PLAYER) {
+                if (field[i - 1][j - 1] === PLAYER && field[i + 1][j + 1] === PLAYER) {
+                    return PLAYER;
+                }
+                if (field[i - 1][j + 1] === PLAYER && field[i + 1][j - 1] === PLAYER) {
+                    return PLAYER;
+                }
+            }
         }
     }
 
@@ -167,14 +173,14 @@ function addResetListener() {
 
 function resetClickHandler() {
     console.log('reset!');
-    resetGame();
+    resetGame(readBoardSize());
     startGame();
-    addResetListener(); 
+    addResetListener();
 }
 
-function resetGame() {
+function resetGame(newSize) {
     field = [];
-    BOARD_SIZE = 3;
+    BOARD_SIZE = newSize;
     for (let i = 0; i <= BOARD_SIZE; i++) {
         field.push(new Array(BOARD_SIZE).fill(EMPTY));
     }
@@ -212,4 +218,22 @@ function testDraw() {
 
 function clickOnCell(row, col) {
     findCell(row, col).click();
+}
+
+function addSizeChangeListener() {
+    const sizeInput = document.getElementById('boardSize');
+    sizeInput.addEventListener('input', sizeChangeHandler);
+}
+
+function sizeChangeHandler() {
+    const size = readBoardSize();
+    if (size < 3 || size > 10) {
+        alert('Размер поля должен быть в диапазоне от 3 до 10');
+        return;
+    }
+
+    resetGame(size);
+    startGame();
+
+    console.log(`Changed size to ${BOARD_SIZE}`);
 }
