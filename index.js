@@ -5,6 +5,9 @@ let grid = []
 const gridSize = 3
 const container = document.getElementById('fieldWrapper');
 
+isZero = false
+isBlocked = false
+
 startGame();
 addResetListener();
 
@@ -23,6 +26,7 @@ function isThereFreeMoves(){
 }
 
 function initGrid(){
+    grid = []
     for (let i = 0; i < gridSize; i++){
         grid.push([])
         for (let j = 0; j < gridSize; j++){
@@ -32,7 +36,10 @@ function initGrid(){
 }
 
 function resetGrid(){
-    initGrid(grid.length)
+    initGrid(gridSize)
+    renderGrid(gridSize)
+    isZero = false
+    isBlocked = false
 }
 
 function isThereASymbol(row, col){
@@ -44,27 +51,39 @@ function isThereWinner(){
 }
 
 function isThereColumnWinner(){
+    let flag = true
     for (let i = 0; i < gridSize; i++){
-        let flag = true
+        flag = true
         for (let j = 1; j < gridSize; j++){
+            if (!isThereASymbol(i, j)) {
+                flag = false
+                break;
+            }
             if (grid[i][j] !== grid[i][j - 1]) {
                 flag = false;
                 break;
             }
         }
+        if (flag) return true
     }
     return flag
 }
 
 function isThereRowWinner(){
+    let flag = true
     for (let j = 0; j < gridSize; j++){
-        let flag = true
+        flag = true
         for (let i = 1; i < gridSize; i++){
+            if (!isThereASymbol(i, j)) {
+                flag = false
+                break;
+            }
             if (grid[i][j] !== grid[i - 1][j]) {
                 flag = false;
                 break;
             }
         }
+        if (flag) return true
     }
     return flag
 }
@@ -72,6 +91,10 @@ function isThereRowWinner(){
 function isThereDiagonalWinner(){
     flag = true
     for (let j = 1; j < gridSize; j++){
+        if (!isThereASymbol(j, j)) {
+            flag = false
+            break;
+        }
         if(grid[j - 1][j - 1] !== grid[j][j]) {
             flag = false;
             break;
@@ -80,6 +103,10 @@ function isThereDiagonalWinner(){
     if (flag) return true;
     flag = true;
     for (let j = 1; j < gridSize; j++){
+        if (!isThereASymbol(j, gridSize - j)) {
+            flag = false
+            break;
+        }
         if(grid[j - 1][gridSize - j + 1] !== grid[j][gridSize - j]) {
             flag = false;
             break;
@@ -105,22 +132,27 @@ function renderGrid (dimension) {
     }
 }
 
-isZero = false
 function cellClickHandler (row, col) {
-    console.log('Clicked on cell: ${row}, ${col}');
+    if (isBlocked) return;
+    console.log('Clicked on cell:' + row + ', ' + col);
     if (isThereASymbol(row, col)) return;
     if (!isZero)
     {
-        grid[row][col] = 'X';
+        grid[row][col] = CROSS;
+        renderSymbolInCell(CROSS, row, col)
         isZero = true;
     }
     else
     {
-        grid[row][col] = '0';
+        grid[row][col] = ZERO;
+        renderSymbolInCell(ZERO, row, col)
         isZero = false;
     }
-    if (isThereWinner) alert(isZero ? 'Крестик' : 'Нолик');
-    if (!isThereFreeMoves) alert('Победила дружба');
+    if (isThereWinner()) {
+        alert(isZero ? 'Крестик' : 'Нолик')
+        isBlocked = true
+    };
+    if (!isThereFreeMoves()) alert('Победила дружба');
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -175,5 +207,3 @@ function testDraw () {
 function clickOnCell (row, col) {
     findCell(row, col).click();
 }
-
-testWin()
