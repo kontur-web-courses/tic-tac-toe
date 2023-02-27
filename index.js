@@ -4,11 +4,24 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+let boardSize;
+let arr;
 startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    boardSize = parseInt(prompt('Размер', 3))
+    renderGrid(boardSize);
+    arr = new Array(boardSize);            // создаем пустой массив длины `M`
+    for (let i = 0; i < boardSize; i++) {
+        arr[i] = new Array(boardSize);        // делаем каждый элемент массивом
+        for(let j = 0; j < boardSize; j++){
+            arr[i][j] = EMPTY;
+        }
+    }
+    for(let a of arr){
+        console.log(a);
+    }
 }
 
 function renderGrid (dimension) {
@@ -25,12 +38,6 @@ function renderGrid (dimension) {
         container.appendChild(row);
     }
 }
-
-let arr = [
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY]
-]
 
 winner = "";
 
@@ -58,10 +65,10 @@ function cellClickHandler (row, col) {
         winner = a;
         return;
     }
-    if(turn === 9){
+    if(turn === boardSize*boardSize){
         return;
     }
-    if(turn===8){
+    if(turn===boardSize*boardSize-1){
         alert("Победила дружба");
     }
     turn++;
@@ -72,30 +79,30 @@ function cellClickHandler (row, col) {
 }
 
 function checkWinner(){
-    for(let j = 0; j < 3; j++){
+    for(let j = 0; j < boardSize; j++){
         let t = true;
         if(arr[j][0] === ' ')
             continue;
-        for(let i = 0; i < 2; i++){
+        for(let i = 0; i < boardSize-1; i++){
             t = t && arr[j][i] === arr[j][i+1]; 
         }
         if(t){
-            for(let i = 0; i < 3; i++){
+            for(let i = 0; i < boardSize; i++){
                 renderSymbolInCell(arr[j][i], j, i, color = '#f00');
             }
             return arr[j][0];
         }
     }
 
-    for(let j = 0; j < 3; j++){
+    for(let j = 0; j < boardSize; j++){
         if(arr[0][j] === ' ')
             continue;
         let t = true;
-        for(let i = 0; i < 2; i++){
+        for(let i = 0; i < boardSize - 1; i++){
             t = t && arr[i][j] === arr[i+1][j]; 
         }
         if(t){
-            for(let i = 0; i < 3; i++){
+            for(let i = 0; i < boardSize; i++){
                 renderSymbolInCell(arr[i][j], i, j, color = '#f00');
             }
             return arr[0][j];
@@ -103,23 +110,23 @@ function checkWinner(){
     }
 
     let t = true;
-    for(let i = 0; i < 2; i++){
+    for(let i = 0; i < boardSize-1; i++){
         t = t && arr[i][i] === arr[i+1][i+1];
     }
     if(t){
-        for(let i = 0; i < 3; i++){
+        for(let i = 0; i < boardSize; i++){
             renderSymbolInCell(arr[i][i], i, i, color = '#f00');
         }
         return arr[0][0];
     }
 
     t = true;
-    for(let i = 0; i < 2; i++){
-        t = t && arr[i][2 - i] === arr[i+1][1 - i];
+    for(let i = 0; i < boardSize-1; i++){
+        t = t && arr[i][boardSize-1 - i] === arr[i+1][boardSize-2 - i];
     }
     if(t){
-        for(let i = 0; i < 3; i++){
-            renderSymbolInCell(arr[i][2-i], i, 2-i, color = '#f00');
+        for(let i = 0; i < boardSize; i++){
+            renderSymbolInCell(arr[i][boardSize-1-i], i, boardSize-1-i, color = '#f00');
         }
         return arr[0][2];
     }
@@ -144,7 +151,10 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
-    console.log('reset!');
+        console.log('reset!');
+    winner = "";
+    turn = 0
+    startGame ();
 }
 
 
