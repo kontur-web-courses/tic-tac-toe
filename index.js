@@ -33,6 +33,24 @@ function renderGrid (dimension) {
     }
 }
 
+function paintRow(i, color = '#ff0000') {
+    for (let j = 0; j < 3; j++) {
+        renderSymbolInCell(currentPlayer, i, j, color);
+    }
+}
+
+function paintCol(i, color = '#ff0000') {
+    for (let j = 0; j < 3; j++) {
+        renderSymbolInCell(currentPlayer, j, i, color);
+    }
+}
+
+function paintDiag(i, color = '#ff0000') {
+    for (let j = 0; j < 3; j++) {
+        renderSymbolInCell(currentPlayer, j, i === 0 ? j : 2 - j, color);
+    }
+}
+
 function checkWin() {
     const rows = gameTable;
     const cols = [[], [], []];
@@ -52,24 +70,18 @@ function checkWin() {
 
     for (let i = 0; i < 3; i++) {
         if (rows[i].every(cell => cell === currentPlayer)) {
-            for (let j = 0; j < 3; j++) {
-                renderSymbolInCell(currentPlayer, i, j, '#ff0000');
-            }
+            paintRow(i);
             return true;
         }
         if (cols[i].every(cell => cell === currentPlayer)) {
-            for (let j = 0; j < 3; j++) {
-                renderSymbolInCell(currentPlayer, j, i, '#ff0000');
-            }
+            paintCol(i);
             return true;
         }
 
     }
     for (let i = 0; i < 2; i++) {
         if (diags[i].every(cell => cell === currentPlayer)) {
-            for (let j = 0; j < 3; j++) {
-                renderSymbolInCell(currentPlayer, j, i === 0 ? j : 2 - j, '#ff0000');
-            }
+            paintDiag(i);
             return true;
         }
     }
