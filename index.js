@@ -131,9 +131,13 @@ function cellClickHandler(row, col) {
     let cells = BOARD_SIZE * BOARD_SIZE;
     if (WINNER === null && OCCUPIED_CELLS >= Math.floor(cells / 2)) {
         expandBoard();
-        renderGrid();
+        renderGrid(BOARD_SIZE);
     }
     renderBoard();
+
+    if (WINNER !== null) {
+        alert(`Победил ${WINNER}`);
+    }
 }
 
 function renderBoard() {
