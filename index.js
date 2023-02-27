@@ -9,6 +9,7 @@ let arr = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY]
 ];
+let flag = true;
 
 
 startGame();
@@ -34,23 +35,26 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    if (arr[row][col] === EMPTY) {
-        if (motion % 2 === 0) {
-            renderSymbolInCell(ZERO, row, col);
-            arr[row][col] = ZERO;
-            motion++;
-            isWinner(ZERO)
-        } else {
-            renderSymbolInCell(CROSS, row, col);
-            arr[row][col] = CROSS;
-            motion++;
-            isWinner(CROSS)
+    if(flag) {
+        if (arr[row][col] === EMPTY) {
+            if (motion % 2 === 0) {
+                renderSymbolInCell(ZERO, row, col);
+                arr[row][col] = ZERO;
+                motion++;
+                isWinner(ZERO)
+            } else {
+                renderSymbolInCell(CROSS, row, col);
+                arr[row][col] = CROSS;
+                motion++;
+                isWinner(CROSS)
+            }
         }
+        if (motion === 9) {
+            alert("Победила дружба");
+            flag = false;
+        }
+        console.log(`Clicked on cell: ${row}, ${col}`);
     }
-    if (motion === 8){
-        alert("Победила дружба");
-    }
-    console.log(`Clicked on cell: ${row}, ${col}`);
 }
 
 function isWinner(symbol){
@@ -61,8 +65,11 @@ function isWinner(symbol){
         (arr[1][1] === symbol && arr[1][0] === symbol && arr[1][2] === symbol) ||
             (arr[0][1] === symbol && arr[1][1] === symbol && arr[2][1] === symbol) ||
         (arr[0][0] === symbol && arr[1][1] === symbol && arr[2][2] === symbol) ||
-        (arr[2][0] === symbol && arr[1][1] === symbol && arr[0][2] === symbol))
+        (arr[2][0] === symbol && arr[1][1] === symbol && arr[0][2] === symbol)){
         alert("Победил " + symbol);
+        flag = false;
+    }
+
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -90,6 +97,7 @@ function resetClickHandler () {
         [EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY]
     ];
+    flag = true;
     startGame(3);
 }
 
