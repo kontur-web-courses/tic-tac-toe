@@ -2,6 +2,7 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 const NO = 'No';
+const DIMENSION = 3;
 
 const container = document.getElementById('fieldWrapper');
 let grid = [];
@@ -10,8 +11,8 @@ startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(4);
-    createGrid(4)
+    renderGrid(DIMENSION);
+    createGrid(DIMENSION)
 }
 
 function renderGrid (dimension) {
@@ -30,55 +31,69 @@ function renderGrid (dimension) {
 }
 
 function checkWinCondition(){
-    for(let i = 0; i < grid.size(); i++){
+    let arr = [];
+
+    for(let i = 0; i < DIMENSION; i++){
         let countZero = 0;
         let countCross = 0;
-        for(let j of grid[i]) {
-            if (j === ZERO)
+        for(let j = 0; j < DIMENSION; j++) {
+            arr.push([i, j]);
+            if (grid[i][j] === ZERO)
                 countZero++;
-            if (j === CROSS)
+            if (grid[i][j] === CROSS)
                 countCross++;
         }
-
-        if (array.size() === countZero)
-            return ZERO
-        if (array.size() === countCross)
-            return CROSS
+        console.log(countZero);
+        if (DIMENSION === countZero || DIMENSION === countCross)
+            return arr
     }
+    arr = [];
 
-
-    for(let i = 0; i < grid.size(); i++){
+    for(let i = 0; i < DIMENSION; i++){
         let countZero = 0;
         let countCross = 0;
-        for(let j = 0; j < grid.size(); j++) {
+        for(let j = 0; j < DIMENSION; j++) {
+            arr.push([j, i]);
             if (grid[j][i] === ZERO)
                 countZero++;
             if (grid[j][i] === CROSS)
                 countCross++;
         }
-
-        if (array.size() === countZero)
-            return ZERO
-        if (array.size() === countCross)
-            return CROSS
+        console.log(countZero);
+        if (DIMENSION === countZero || DIMENSION === countCross)
+            return arr
     }
-
+    arr = [];
     let countZero = 0;
     let countCross = 0;
 
-    for(let i = 0; i < grid.size(); i++) {
+    for(let i = 0; i < DIMENSION; i++) {
+        arr.push([i, i]);
         if (grid[i][i] === ZERO)
             countZero++;
         if (grid[i][i] === CROSS)
             countCross++;
     }
 
-    if (array.size() === countZero)
-        return ZERO
-    if (array.size() === countCross)
-        return CROSS
+    if (DIMENSION === countZero || DIMENSION === countCross)
+        return arr
 
-    return NO;
+
+    countZero = 0;
+    countCross = 0;
+    arr = [];
+    for(let i = 0; i < DIMENSION; i++) {
+        arr.push([DIMENSION - i - 1, i]);
+        if (grid[DIMENSION - i - 1][i] === ZERO)
+            countZero++;
+        if (grid[DIMENSION - i - 1][i] === CROSS)
+            countCross++;
+    }
+
+    if (DIMENSION === countZero || DIMENSION === countCross)
+        return arr
+
+    return false;
 }
 
 function createGrid(dimension) {
@@ -105,6 +120,7 @@ function cellClickHandler (row, col) {
         }
     }
     parity = !parity;
+    console.log(checkWinCondition());
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
