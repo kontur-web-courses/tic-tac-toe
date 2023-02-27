@@ -8,12 +8,18 @@ let turn = 1;
 let finished = false;
 
 let field = [];
+let length = 2;
+
 startGame();
 addResetListener();
 
 function startGame() {
-    field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
-    renderGrid(3);
+    field = [];
+    for (let i = 0; i < length; i++) {
+        let arr = Array(length).fill(EMPTY)
+        field.push(arr);
+    }
+    renderGrid(length);
 }
 
 function renderGrid(dimension) {
@@ -38,7 +44,7 @@ function cellClickHandler(row, col) {
         renderSymbolInCell(t, row, col);
         turn++;
     }
-    if (turn === 10) {
+    if (turn === length * length + 1) {
         setTimeout(() => alert('Победила дружба!'))
     }
     console.log(`Clicked on cell: ${row}, ${col}`);
@@ -57,15 +63,15 @@ function cellClickHandler(row, col) {
 function checkWinner(arr) {
     let firstDiagonal = [0, 0];
     let secondDiagonal = [0, 0];
-    for (let i = 0; i < 3; i++) {
-        if (arr[i].filter(x => x === ZERO).length === 3) {
-            for (let r = 0; r < 3; r++) {
+    for (let i = 0; i < length; i++) {
+        if (arr[i].filter(x => x === ZERO).length === length) {
+            for (let r = 0; r < length; r++) {
                 renderSymbolInCell(ZERO, i, r, '#ff0000')
             }
             return 'ZERO player wins!'
         }
-        if (arr[i].filter(x => x === CROSS).length === 3) {
-            for (let r = 0; r < 3; r++) {
+        if (arr[i].filter(x => x === CROSS).length === length) {
+            for (let r = 0; r < length; r++) {
                 renderSymbolInCell(CROSS, i, r, '#ff0000')
             }
             return 'CROSS player wins!'
@@ -73,12 +79,12 @@ function checkWinner(arr) {
 
         let crossCounter = 0;
         let zeroCounter = 0;
-        for (let j = 0; j < 3; j++) {
+        for (let j = 0; j < length; j++) {
 
             if (arr[j][i] === ZERO) {
                 zeroCounter++;
-                if (zeroCounter === 3) {
-                    for (let r = 0; r < 3; r++) {
+                if (zeroCounter === length) {
+                    for (let r = 0; r < length; r++) {
                         renderSymbolInCell(ZERO, r, i, '#ff0000')
                     }
                     return 'ZERO player wins!'
@@ -86,8 +92,8 @@ function checkWinner(arr) {
             }
             if (arr[j][i] === CROSS) {
                 crossCounter++;
-                if (crossCounter === 3) {
-                    for (let r = 0; r < 3; r++) {
+                if (crossCounter === length) {
+                    for (let r = 0; r < length; r++) {
                         renderSymbolInCell(CROSS, r, i, '#ff0000')
                     }
 
@@ -98,31 +104,31 @@ function checkWinner(arr) {
         if (arr[i][i] !== EMPTY) {
             arr[i][i] === ZERO ? firstDiagonal[0]++ : firstDiagonal[1]++;
         }
-        if (arr[i][2 - i] !== EMPTY) {
-            arr[i][2 - i] === ZERO ? secondDiagonal[0]++ : secondDiagonal[1]++;
+        if (arr[i][length - 1 - i] !== EMPTY) {
+            arr[i][length - 1 - i] === ZERO ? secondDiagonal[0]++ : secondDiagonal[1]++;
         }
     }
-    if (firstDiagonal[0] === 3) {
-        for (let r = 0; r < 3; r++) {
+    if (firstDiagonal[0] === length) {
+        for (let r = 0; r < length; r++) {
             renderSymbolInCell(ZERO, r, r, '#ff0000')
         }
         return 'ZERO player wins!'
     }
-    if (firstDiagonal[1] === 3) {
-        for (let r = 0; r < 3; r++) {
+    if (firstDiagonal[1] === length) {
+        for (let r = 0; r < length; r++) {
             renderSymbolInCell(CROSS, r, r, '#ff0000')
         }
         return 'CROSS player wins!'
     }
-    if (secondDiagonal[0] === 3) {
-        for (let r = 0; r < 3; r++) {
-            renderSymbolInCell(ZERO, r, 2 - r, '#ff0000')
+    if (secondDiagonal[0] === length) {
+        for (let r = 0; r < length; r++) {
+            renderSymbolInCell(ZERO, r, length - 1 - r, '#ff0000')
         }
         return 'ZERO player wins!'
     }
-    if (secondDiagonal[1] === 3) {
-        for (let r = 0; r < 3; r++) {
-            renderSymbolInCell(CROSS, r, 2 - r, '#ff0000')
+    if (secondDiagonal[1] === length) {
+        for (let r = 0; r < length; r++) {
+            renderSymbolInCell(CROSS, r, length - 1 - r, '#ff0000')
         }
         return 'CROSS player wins!'
     }
