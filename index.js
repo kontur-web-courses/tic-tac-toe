@@ -2,6 +2,7 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 let field;
+let turn;
 const container = document.getElementById('fieldWrapper');
 
 startGame();
@@ -30,7 +31,11 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
+    let t = turn % 2 === 0 ? ZERO : CROSS;
+    if (field[row][col] === EMPTY) {
+        field[row][col] = t;
+        renderSymbolInCell(t, row, col);
+    }
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
