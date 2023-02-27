@@ -53,9 +53,9 @@ function cellClickHandler (row, col) {
       return;
     board[row][col] = currentPlayer;
     renderSymbolInCell(currentPlayer, row, col);
+    currentPlayer = getNextPlayer(currentPlayer);
     checkWinner();
     registerNumberOfClicks();
-    currentPlayer = getNextPlayer(currentPlayer);
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
@@ -96,7 +96,11 @@ function getMostFrequentElement(row) {
             mostFrequentElement = row[i];
         }
     }
-    return mostFrequentElement;
+
+    if (counter === 3) {
+      return mostFrequentElement;
+    }
+    return EMPTY;
 }
 
 function checkRows() {
