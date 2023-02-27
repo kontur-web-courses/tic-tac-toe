@@ -30,18 +30,20 @@ function renderGrid(dimension) {
         container.appendChild(row);
     }
 }
-
 function cellClickHandler(row, col) {
-    // Пиши код тут
+    //c ИИ, без ИИ см ниже
     if (end) {
         return;
     }
     console.log(`Clicked on cell: ${row}, ${col}`);
-    const t = turn % 2 === 0 ? ZERO : CROSS;
+    const t = CROSS;
     if (field[row][col] === EMPTY) {
         field[row][col] = t;
         renderSymbolInCell(t, row, col);
         turn++;
+    }
+    else{
+        return;
     }
     const winner = checkWinner();
     console.log(winner);
@@ -51,14 +53,70 @@ function cellClickHandler(row, col) {
         renderSymbolInCell(t, winner[2][0], winner[2][1], "red");
         renderSymbolInCell(t, winner[3][0], winner[3][1], "red");
         setTimeout(() => alert(`Win ${t}`));
+        return;
     }
-    if (turn === 10) {
+    else if (turn === 10) {
+        setTimeout(() => alert("Ничья! :D"));
+        return;
+    }
+    while(true){
+        let row1=getRandomInt(3);
+        let col1 = getRandomInt(3);
+        if (field[row1][col1] === EMPTY) {
+            field[row1][col1] = ZERO;
+            renderSymbolInCell(ZERO, row, col);
+            turn++;
+            break;
+        }
+    }
+    const winner1 = checkWinner();
+    console.log(winner);
+    if (winner1[0]) {
+        end = true;
+        renderSymbolInCell(t, winner1[1][0], winner1[1][1], "red");
+        renderSymbolInCell(t, winner1[2][0], winner1[2][1], "red");
+        renderSymbolInCell(t, winner1[3][0], winner1[3][1], "red");
+        setTimeout(() => alert(`Win ${t}`));
+    }
+    else if (turn === 10) {
         setTimeout(() => alert("Ничья! :D"));
     }
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+
 }
+function getRandomInt(max){
+    return Math.floor(Math.random()*max)
+}
+// function cellClickHandler(row, col) {
+//     // Пиши код тут без ИИ
+//     if (end) {
+//         return;
+//     }
+//     console.log(`Clicked on cell: ${row}, ${col}`);
+//     const t = turn % 2 === 0 ? ZERO : CROSS;
+//     if (field[row][col] === EMPTY) {
+//         field[row][col] = t;
+//         renderSymbolInCell(t, row, col);
+//         turn++;
+//     }
+//     else{
+//         return;
+//     }
+//     const winner = checkWinner();
+//     console.log(winner);
+//     if (winner[0]) {
+//         end = true;
+//         renderSymbolInCell(t, winner[1][0], winner[1][1], "red");
+//         renderSymbolInCell(t, winner[2][0], winner[2][1], "red");
+//         renderSymbolInCell(t, winner[3][0], winner[3][1], "red");
+//         setTimeout(() => alert(`Win ${t}`));
+//     }
+//     else if (turn === 10) {
+//         setTimeout(() => alert("Ничья! :D"));
+//     }
+//     /* Пользоваться методом для размещения символа в клетке так:
+//         renderSymbolInCell(ZERO, row, col);
+//      */
+// }
 
 function checkWinner() {
     for (let i = 0; i < 3; i++) {
