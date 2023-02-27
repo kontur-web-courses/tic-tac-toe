@@ -7,6 +7,7 @@ let dimensionIndex = 0;
 let dimensionsCount = 3;
 let isCross = true;
 let countSteps = 0;
+let strike = [];
 
 const container = document.getElementById('fieldWrapper');
 
@@ -15,6 +16,7 @@ addResetListener();
 addChangeDimListener();
 
 function startGame() {
+    strike = [];
     countSteps = 0;
     renderGrid(dimensionsCount);
     isCross = true;
@@ -47,17 +49,23 @@ function renderGrid(dimension) {
 
 function checkHorizontal(row) {
     let isWin = field[row][0] !== EMPTY;
-    for (let i = 1; i < field.length; i++) {
-        isWin = isWin && field[row][i - 1] === field[row][i];
+    for (let col = 0; col < field.length; col++) {
+        strike.push({'row': row, 'col': col})
+        if (col === 0) continue;
+        isWin = isWin && field[row][col - 1] === field[row][col];
     }
+    if (!isWin) strike = [];
     return isWin;
 }
 
 function checkVertical(col) {
     let isWin = field[0][col] !== EMPTY;
-    for (let i = 1; i < field.length; i++) {
-        isWin = isWin && field[i - 1][col] === field[i][col];
+    for (let row = 0; row < field.length; row++) {
+        strike.push({'row': row, 'col': col})
+        if (row === 0) continue;
+        isWin = isWin && field[row - 1][col] === field[row][col];
     }
+    if (!isWin) strike = [];
     return isWin;
 }
 
@@ -65,20 +73,29 @@ function checkDiagonal() {
     let len = field.length;
 
     let diagonalIsWin1 = field[0][0] !== EMPTY;
-    for (let i = 1; i < len; i++) {
+    for (let i = 0; i < len; i++) {
+        strike.push({'row': i, 'col': i})
+        if (i === 0) continue;
         diagonalIsWin1 = diagonalIsWin1 && field[i - 1][i - 1] === field[i][i];
     }
+    if (!diagonalIsWin1) strike = [];
+    else return true;
 
     let diagonalIsWin2 = field[0][len - 1] !== EMPTY;
     let r = 0;
     let c = len - 1;
-    for (let i = 1; i < len; i++) {
-        diagonalIsWin2 = diagonalIsWin2 && field[r][c] === field[r + 1][c - 1];
+    for (let i = 0; i < len; i++) {
+        strike.push({'row': r, 'col': c})
+        if (i !== 0) {
+            diagonalIsWin2 = diagonalIsWin2 && field[r][c] === field[r - 1][c + 1];
+        }
         r++;
         c--;
     }
+    if (!diagonalIsWin2) strike = [];
+    else return true;
 
-    return diagonalIsWin1 || diagonalIsWin2;
+    return false;
 }
 
 function checkWin(row, col) {
@@ -87,8 +104,8 @@ function checkWin(row, col) {
 
 function cellClickHandler(row, col) {
     let isWin = false;
+    const symbol = isCross ? CROSS : ZERO;
     if (field[row][col] === EMPTY) {
-        const symbol = isCross ? CROSS : ZERO;
         isCross = !isCross;
         renderSymbolInCell(symbol, row, col);
         field[row][col] = symbol;
@@ -98,10 +115,14 @@ function cellClickHandler(row, col) {
 
     if (isWin) {
         let name = !isCross ? "Первый игрок" : "Второй игрок";
-        alert(`Победил ${name}!`)
+        for (let pair of strike){
+            renderSymbolInCell(symbol, pair.row, pair.col, "#F00");
+        }
+
+        setTimeout(() => alert(`Победил ${name}!`), 100);
     }
     if (countSteps === dimensionsCount * dimensionsCount) {
-        alert("Победила дружба");
+        setTimeout(() => alert("Победила дружба"), 100);
     }
 
 
