@@ -4,6 +4,7 @@ const EMPTY = ' ';
 const SIZE = 3;
 let  PLAYER = 'first'  // or 'second'
 let FIELD;
+let STATUS = 'IN_PROGRESS'  // or 'FINISHED'
 const container = document.getElementById('fieldWrapper');
 
 let movesCount = 100;
@@ -40,13 +41,14 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (FIELD[row][col] !== EMPTY) {
+    if (FIELD[row][col] !== EMPTY || STATUS === 'FINISHED') {
         return;
     }
     if (PLAYER === 'first') {
         renderSymbolInCell(CROSS, row, col);
         if (checkIfSymbolWins(CROSS)) {
             alert(`Player ${PLAYER} wins`)
+            STATUS = 'FINISHED'
             return
         }
         PLAYER = 'second';
@@ -54,6 +56,7 @@ function cellClickHandler (row, col) {
         renderSymbolInCell(ZERO, row, col);
         if (checkIfSymbolWins(ZERO)) {
             alert(`Player ${PLAYER} wins`)
+            STATUS = 'FINISHED'
             return
         }
         PLAYER = 'first'
@@ -61,6 +64,7 @@ function cellClickHandler (row, col) {
     currentMove += 1
     if (currentMove === movesCount) {
         alert('TIE')
+        STATUS = 'FINISHED'
         return
     }
 }
@@ -84,6 +88,11 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    startGame()
+    STATUS = 'IN_PROGRESS'
+    movesCount = 100;
+    currentMove = 0;
+
 }
 
 
