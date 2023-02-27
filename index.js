@@ -7,7 +7,7 @@ let FIELD;
 let STATUS = 'IN_PROGRESS'  // or 'FINISHED'
 const container = document.getElementById('fieldWrapper');
 
-let movesCount = 100;
+let movesCount = 9;
 let currentMove = 0;
 
 startGame();
@@ -15,13 +15,13 @@ addResetListener();
 
 function startGame () {
     renderGrid(3);
-    FIELD = createField(3)
+    FIELD = createField(3);
 }
 
 function createField(dimension) {
     return [[EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY,EMPTY]]
+    [EMPTY, EMPTY,EMPTY]];
 }
 
 function renderGrid (dimension) {
@@ -48,8 +48,8 @@ function cellClickHandler (row, col) {
         renderSymbolInCell(CROSS, row, col);
         if (checkIfSymbolWins(CROSS)) {
             alert(`Player ${PLAYER} wins`)
-            STATUS = 'FINISHED'
-            return
+            STATUS = 'FINISHED';
+            return;
         }
         PLAYER = 'second';
     } else {
@@ -57,15 +57,15 @@ function cellClickHandler (row, col) {
         if (checkIfSymbolWins(ZERO)) {
             alert(`Player ${PLAYER} wins`)
             STATUS = 'FINISHED'
-            return
+            return;
         }
         PLAYER = 'first'
     }
     currentMove += 1
     if (currentMove === movesCount) {
-        alert('TIE')
-        STATUS = 'FINISHED'
-        return
+        alert('Победила дружба');
+        STATUS = 'FINISHED';
+        return;
     }
 }
 
@@ -88,8 +88,8 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
-    startGame()
-    STATUS = 'IN_PROGRESS'
+    startGame();
+    STATUS = 'IN_PROGRESS';
     movesCount = 100;
     currentMove = 0;
 
