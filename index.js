@@ -11,7 +11,7 @@ startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(boardSize);
 }
 
 function renderGrid (dimension) {
