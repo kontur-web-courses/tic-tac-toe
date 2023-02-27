@@ -2,7 +2,7 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
-let arr = [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]];
+let arr = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
 let TURN = 0;
 const container = document.getElementById('fieldWrapper');
 
@@ -11,7 +11,7 @@ addResetListener();
 
 function startGame () {
     renderGrid(3);
-    arr = [[-1, -1, -1], [-1, -1, -1], [-1, -1, -1]]
+    arr = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
     TURN = 0;
 }
 
@@ -34,7 +34,7 @@ function cellClickHandler (row, col) {
     // Пиши код тут
 
     if (TURN % 2 === 0) {
-        if (arr[row][col] === -1) {
+        if (arr[row][col] === EMPTY) {
             TURN += 1;
             renderSymbolInCell(ZERO, row, col);
 
@@ -54,7 +54,7 @@ function cellClickHandler (row, col) {
             }
         }
     } else {
-        if (arr[row][col] === -1) {
+        if (arr[row][col] === EMPTY) {
             TURN += 1;
             renderSymbolInCell(CROSS, row, col);
 
