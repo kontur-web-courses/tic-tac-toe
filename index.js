@@ -12,6 +12,8 @@ addResetListener();
 function startGame() {
     field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
     renderGrid(3);
+    end = false;
+    turn = 1;
 }
 
 function renderGrid(dimension) {
@@ -44,9 +46,10 @@ function cellClickHandler(row, col) {
     const winner = checkWinner();
     console.log(winner);
     if (winner[0]) {
-        renderSymbolInCell(t, winner[1][0], winner[1][1],"red");
-        renderSymbolInCell(t, winner[2][0], winner[2][1],"red");
-        renderSymbolInCell(t, winner[3][0], winner[3][1],"red");
+        end = true;
+        renderSymbolInCell(t, winner[1][0], winner[1][1], "red");
+        renderSymbolInCell(t, winner[2][0], winner[2][1], "red");
+        renderSymbolInCell(t, winner[3][0], winner[3][1], "red");
         setTimeout(() => alert(`Win ${t}`));
     }
     if (turn === 10) {
@@ -93,6 +96,7 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
+    startGame();
     console.log("reset!");
 }
 
