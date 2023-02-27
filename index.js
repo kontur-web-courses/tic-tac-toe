@@ -17,6 +17,9 @@ function startGame() {
     let input = prompt('Введите количество клеток');
     dimension = parseInt(input === '' ? defaultDimension : input);
     step = 0;
+    isWin = false;
+    crosses = [];
+    zeros = [];
     renderGrid(dimension);
 }
 
@@ -54,7 +57,6 @@ function cellClickHandler(row, col) {
     }
 
     let winner = defineWinner();
-    console.log(winner)
 
     if (winner !== null) {
         alert(`WINNER - ${winner[0]}`);
