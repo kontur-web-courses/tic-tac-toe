@@ -11,6 +11,7 @@ function startGame () {
     renderGrid(3);
 }
 
+let grid = []
 function renderGrid (dimension) {
     container.innerHTML = '';
 
@@ -26,11 +27,19 @@ function renderGrid (dimension) {
     }
 }
 
+isZero = false
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
-
+    if (!isZero)
+    {
+        grid[row][col] = 'X'
+    }
+    else
+    {
+        grid[row][col] = '0'
+    }
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
