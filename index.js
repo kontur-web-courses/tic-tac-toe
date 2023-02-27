@@ -12,11 +12,11 @@ let moveCounter = 0;
 startGame();
 addResetListener();
 
-function startGame () {
+function startGame() {
     renderGrid(3);
 }
 
-function renderGrid (dimension) {
+function renderGrid(dimension) {
     container.innerHTML = '';
     currentDimension = dimension;
 
@@ -34,7 +34,7 @@ function renderGrid (dimension) {
     }
 }
 
-function cellClickHandler (row, col) {
+function cellClickHandler(row, col) {
     // Пиши код тут
 
     if (board[row][col] === EMPTY) {
@@ -44,19 +44,21 @@ function cellClickHandler (row, col) {
     console.log(board);
     renderSymbolInCell(board[row][col], row, col)
     console.log(`Clicked on cell: ${row}, ${col}`);
-    isVictory();
 
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
-    if(moveCounter === currentDimension * currentDimension){
+    if (moveCounter === currentDimension * currentDimension && !isVictory()) {
         alert("Победила дружба");
     }
 }
+
 function isVictory() {
-    checkVictoryHorizontal(board);
-    checkVictoryHorizontal(transpose(board))
+    let a = checkVictoryHorizontal(board);
+    let b = checkVictoryHorizontal(transpose(board));
+    let c = CheckDiagWin(board);
+    return a || b || c;
 }
 
 function transpose(matrix) {
@@ -64,24 +66,60 @@ function transpose(matrix) {
 }
 
 function checkVictoryHorizontal(board) {
-    for (let i = 0; i < currentDimension; i++){
+    for (let i = 0; i < currentDimension; i++) {
         let counter = 1;
         let prevSymbol = board[i][0];
-        for (let j = 1; j < currentDimension; j++){
+        let winCells = [[i, 0]]
+        for (let j = 1; j < currentDimension; j++) {
             if (board[i][j] === prevSymbol && board[i][j] !== EMPTY) {
                 counter++;
+                winCells.push([i,j])
             } else {
                 prevSymbol = board[i][j];
+                winCells = [[i ,j]]
             }
         }
-        if (counter >= 3){
+        if (counter >= 3) {
             alert(`Победитель ${prevSymbol}`);
-            return true;
+            return winCells;
         }
     }
     return false;
 }
 
+function CheckDiagWinMini(board) {
+    let combos = [[0, 4, 8], [2, 4, 6]];
+    let board1array = board.flat(1);
+    for (const combo of combos) {
+        if (board1array[combo[0]] === board1array[combo[1]]
+            && board1array[combo[1]] === board1array[combo[2]]
+            && board1array[combo[0]] !== EMPTY) {
+            alert(`${board1array[combo[0]]}`)
+            return combo;
+        }
+    }
+    return false;
+}
+
+function CheckDiagWin(board) {
+    for (let i = 0; i < currentDimension - 2; i++) {
+        for (let j = 0; j < currentDimension - 2; j++) {
+            let arr = [[board[i][j], board[i][j + 1], board[i][j + 2]],
+                [board[i + 1][j], board[i + 1][j + 1], board[i + 1][j + 2]],
+                [board[i + 2][j], board[i + 2][j + 1], board[i + 2][j + 2]]];
+            let result = CheckDiagWinMini(arr);
+            if (!result) {
+                let final_res = []
+                let tmp_arr = arr.flat(1)
+                for (let i of result){
+                    final_res.push(tmp_arr[i])
+                }
+                return final_res
+            }
+        }
+    }
+    return false;
+}
 
 function getCurrentSymbol() {
     if (currentSymbol === CROSS) {
@@ -92,30 +130,31 @@ function getCurrentSymbol() {
     return currentSymbol
 }
 
-function renderSymbolInCell (symbol, row, col, color = '#333') {
+function renderSymbolInCell(symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
 }
 
-function findCell (row, col) {
+function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
 }
 
-function addResetListener () {
+function addResetListener() {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
 }
 
-function resetClickHandler () {
+function resetClickHandler() {
     console.log('reset!');
 }
 
 /* Test Function */
+
 /* Победа первого игрока */
-function testWin () {
+function testWin() {
     clickOnCell(0, 2);
     clickOnCell(0, 0);
     clickOnCell(2, 0);
@@ -126,7 +165,7 @@ function testWin () {
 }
 
 /* Ничья */
-function testDraw () {
+function testDraw() {
     clickOnCell(2, 0);
     clickOnCell(1, 0);
     clickOnCell(1, 1);
@@ -139,6 +178,6 @@ function testDraw () {
     clickOnCell(2, 2);
 }
 
-function clickOnCell (row, col) {
+function clickOnCell(row, col) {
     findCell(row, col).click();
 }
