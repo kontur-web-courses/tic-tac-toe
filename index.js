@@ -31,7 +31,7 @@ function renderGrid(dimension) {
 
 function cellClickHandler(row, col) {
     // Пиши код тут
-    if (!end) {
+    if (end) {
         return;
     }
     console.log(`Clicked on cell: ${row}, ${col}`);
