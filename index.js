@@ -37,11 +37,17 @@ let turn = 0;
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if(checkWinner() != EMPTY){
-        alert(`Победил  ${checkWinner()}`);
+    if(arr[row][col] !== EMPTY){
         return;
     }
-    if(arr[row][col] != EMPTY){
+    if(turn%2){
+        renderSymbolInCell(ZERO, row, col);
+    }
+    else{
+        renderSymbolInCell(CROSS, row, col);
+    }
+    if(checkWinner() !== EMPTY && checkWinner() !== undefined){
+        alert(`Победил  ${checkWinner()}`);
         return;
     }
     if(turn === 9){
@@ -49,12 +55,6 @@ function cellClickHandler (row, col) {
     }
     if(turn===8){
         alert("Победила дружба");
-    }
-    if(turn%2){
-        renderSymbolInCell(ZERO, row, col);
-    }
-    else{
-        renderSymbolInCell(CROSS, row, col);
     }
     turn++;
 
