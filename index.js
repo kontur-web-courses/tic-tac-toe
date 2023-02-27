@@ -11,6 +11,7 @@ addResetListener();
 
 function startGame () {
     renderGrid(3);
+    TURN = 0;
 }
 
 function renderGrid (dimension) {
@@ -44,12 +45,12 @@ function cellClickHandler (row, col) {
             if (arr[0][col] === arr[1][col] && arr[1][col] === arr[2][col]){
                 setTimeout(() => alert("Победили нолики"));
             }
-            if (arr[0][0] === arr[1][1] && arr[1][1] === arr[2][2] && arr[0][0] === arr[2][2] && arr[0][0] !== -1){
+            if (arr[0][0] === arr[1][1] && arr[1][1] === arr[2][2] && TURN >= 3){
                 setTimeout(() => alert("Победили нолики"));
             }
-            // if ( && arr[1][1] === arr[0][2] && arr[0][0] !== -1){
-            //     setTimeout(() => alert("Победили нолики"));
-            // }
+            if (arr[2][0] === arr[1][1] && arr[1][1] === arr[0][2] && TURN >= 3){
+                setTimeout(() => alert("Победили нолики"));
+            }
         }
     } else {
         if (arr[row][col] === -1) {
@@ -64,10 +65,10 @@ function cellClickHandler (row, col) {
             if (arr[0][col] === arr[1][col] && arr[1][col] === arr[2][col] ){
                 setTimeout(() => alert("Победили крестики"));
             }
-            if (arr[2][0] === arr[1][1] && arr[1][1] === arr[0][2] && arr[0][0] !== -1){
+            if (arr[2][0] === arr[1][1] && arr[1][1] === arr[0][2] && TURN >= 3){
                 setTimeout(() => alert("Победили крестики"));
             }
-            if (arr[0][0] === arr[1][1] && arr[1][1] === arr[2][2] && arr[0][0] !== -1){
+            if (arr[0][0] === arr[1][1] && arr[1][1] === arr[2][2] && TURN >= 3){
                 setTimeout(() => alert("Победили крестики"));
             }
         }
