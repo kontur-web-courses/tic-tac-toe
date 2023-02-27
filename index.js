@@ -58,7 +58,7 @@ function cellClickHandler (row, col) {
 
 function getState() {
     let emptyCount = 0;
-    for (let cellType in [ZERO, CROSS]) {
+    for (let cellType of [ZERO, CROSS]) {
         for (let row = 0; row < mapDimention; row++) {
             let count_match = 0;
             for (let column = 0; column < mapDimention; column++) {
