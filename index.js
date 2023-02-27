@@ -1,6 +1,8 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let current_player;
+let field;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -8,6 +10,8 @@ startGame();
 addResetListener();
 
 function startGame () {
+    current_player = CROSS
+    field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
     renderGrid(3);
 }
 
@@ -54,12 +58,9 @@ function CheckWinner(field){
     }
     return false;
 }
-
-let current_player = CROSS
-let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
 function cellClickHandler (row, col) {
     // Пиши код тут
-    if (field[row][col] === EMPTY){
+    if (field[row][col] === EMPTY) {
         field[row][col] = current_player;
         renderSymbolInCell(current_player, row, col);
         current_player = current_player === CROSS ? ZERO : CROSS;
@@ -72,11 +73,6 @@ function cellClickHandler (row, col) {
         alert('Победила дружба');
     }
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -98,6 +94,7 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    startGame();
 }
 
 
