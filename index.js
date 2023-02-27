@@ -2,7 +2,17 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
+const PLAYER1 = 1;
+const PLAYER2 = 2;
+
 const container = document.getElementById('fieldWrapper');
+
+let player = PLAYER1;
+let field = [
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY]];
+let stepCounter = 0;
 
 startGame();
 addResetListener();
@@ -27,7 +37,18 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    // Пиши код ту
+    let symbolInCell = findCell(row, col).textContent;
+    if (symbolInCell === EMPTY) {
+        let newSymbol = (player === PLAYER1) ? ZERO : CROSS;
+        player = (player === PLAYER1) ? PLAYER2 : PLAYER1;
+        stepCounter++;
+        renderSymbolInCell(newSymbol, row, col);
+    }
+    if (stepCounter === 9) {
+        alert("Победила дружба");
+    }
+
     console.log(`Clicked on cell: ${row}, ${col}`);
 
 
