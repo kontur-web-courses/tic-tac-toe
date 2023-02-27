@@ -5,7 +5,7 @@ let field;
 let firstPlayerTurn = true;
 let winColor = '#FF69B4';
 let isWin = false;
-let n;
+let n; 
 let count = 0;
 
 const container = document.getElementById('fieldWrapper');
