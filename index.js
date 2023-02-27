@@ -5,6 +5,7 @@ const EMPTY = ' ';
 let arr = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
 let TURN = 0;
 const container = document.getElementById('fieldWrapper');
+let gameEnded = false;
 
 startGame();
 addResetListener();
@@ -13,6 +14,7 @@ function startGame () {
     renderGrid(3);
     arr = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
     TURN = 0;
+    gameEnded = false;
 }
 
 function renderGrid (dimension) {
@@ -34,7 +36,7 @@ function cellClickHandler (row, col) {
     // Пиши код тут
 
     if (TURN % 2 === 0) {
-        if (arr[row][col] === EMPTY) {
+        if (arr[row][col] === EMPTY && !gameEnded)  {
             TURN += 1;
             renderSymbolInCell(ZERO, row, col);
 
@@ -42,19 +44,23 @@ function cellClickHandler (row, col) {
             arr[row][col] = ZERO;
             if (arr[row][0] === arr[row][1] && arr[row][1] === arr[row][2]){
                 setTimeout(() => alert("Победили нолики"));
+                gameEnded = true;
             }
             if (arr[0][col] === arr[1][col] && arr[1][col] === arr[2][col]){
                 setTimeout(() => alert("Победили нолики"));
+                gameEnded = true;
             }
             if (arr[0][0] === arr[1][1] && arr[1][1] === arr[2][2] && TURN >= 3){
                 setTimeout(() => alert("Победили нолики"));
+                gameEnded = true;
             }
             if (arr[2][0] === arr[1][1] && arr[1][1] === arr[0][2] && TURN >= 3){
                 setTimeout(() => alert("Победили нолики"));
+                gameEnded = true;
             }
         }
     } else {
-        if (arr[row][col] === EMPTY) {
+        if (arr[row][col] === EMPTY && !gameEnded) {
             TURN += 1;
             renderSymbolInCell(CROSS, row, col);
 
@@ -62,15 +68,19 @@ function cellClickHandler (row, col) {
             arr[row][col] = CROSS;
             if (arr[row][0] === arr[row][1] && arr[row][1] === arr[row][2]){
                 setTimeout(() => alert("Победили крестики"));
+                gameEnded = true;
             }
             if (arr[0][col] === arr[1][col] && arr[1][col] === arr[2][col] ){
                 setTimeout(() => alert("Победили крестики"));
+                gameEnded = true;
             }
             if (arr[2][0] === arr[1][1] && arr[1][1] === arr[0][2] && TURN >= 3){
                 setTimeout(() => alert("Победили крестики"));
+                gameEnded = true;
             }
             if (arr[0][0] === arr[1][1] && arr[1][1] === arr[2][2] && TURN >= 3){
                 setTimeout(() => alert("Победили крестики"));
+                gameEnded = true;
             }
         }
 
@@ -80,6 +90,7 @@ function cellClickHandler (row, col) {
      */
     if (TURN === 9){
         setTimeout(() => alert("Победила дружба!"));
+        gameEnded = true;
     }
 }
 
