@@ -11,9 +11,9 @@ startGame();
 addResetListener();
 
 function startGame() {
-    DIMENSION = +prompt("Введите размер поля")
+    DIMENSION = +prompt("Введите размер поля");
+    createGrid(DIMENSION);
     renderGrid(DIMENSION);
-    createGrid(DIMENSION)
 }
 
 function renderGrid(dimension) {
@@ -185,10 +185,9 @@ function addResetListener() {
 
 function resetClickHandler() {
     console.log('reset!');
-    ended = false;
     parity = false;
-    createGrid(DIMENSION);
-    renderGrid(DIMENSION);
+    ended = false;
+    startGame();
 }
 
 
