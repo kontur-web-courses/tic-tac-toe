@@ -1,7 +1,7 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-let is_zero = false;
+let isZero = false;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -28,34 +28,34 @@ function renderGrid(dimension) {
 }
 
 const field = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-let is_win = false;
+let isWin = false;
 
 function cellClickHandler(row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (is_win) {
+    if (isWin) {
         return;
     }
     if (isFill(row, col)) {
         return;
     }
-    if (is_zero) {
+    if (isZero) {
         renderSymbolInCell(ZERO, row, col);
-        is_zero = false;
+        isZero = false;
     } else {
         renderSymbolInCell(CROSS, row, col);
-        is_zero = true;
+        isZero = true;
     }
-    field[row][col] = is_zero ? 2 : 1;
-    let current_turn = is_zero ? 2 : 1;
+    field[row][col] = isZero ? 2 : 1;
+    let current_turn = isZero ? 2 : 1;
     if (hasWinner(col, row, current_turn)) {
-        alert(is_zero ? CROSS : ZERO);
-        is_win = true;
+        alert(isZero ? CROSS : ZERO);
+        isWin = true;
         return;
     }
-    if (isFieldFilled()) {
+    if (checkFieldFilled()) {
         alert("Победила дружба");
-        is_win = true;
+        isWin = true;
         return;
     }
 }
@@ -104,7 +104,7 @@ function colorWinnerLeftDiag(symbol) {
     }
 }
 
-function isFieldFilled() {
+function checkFieldFilled() {
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             if (field[i][j] === 0)
@@ -142,7 +142,7 @@ function resetClickHandler() {
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             field[i][j] = 0;
-            is_win = false;
+            isWin = false;
             renderSymbolInCell(EMPTY, i, j);
         }
     }
