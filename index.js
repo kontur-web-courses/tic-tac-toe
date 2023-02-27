@@ -15,6 +15,7 @@ addChangeDimListener();
 
 function startGame() {
     renderGrid(dimensionsCount);
+    isCross = true;
     clearField();
 }
 
@@ -71,15 +72,7 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
-    isCross = true;
-
-    clearField();
-
-    for (let row = 0; row < dimensionsCount; row++) {
-        for (let col = 0; col < dimensionsCount; col++) {
-            renderSymbolInCell(EMPTY, row, col);
-        }
-    }
+    startGame();
 
     console.log('reset!');
 }
