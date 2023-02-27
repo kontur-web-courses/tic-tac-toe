@@ -2,9 +2,10 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
-let boardSize = 3;
-let board = Array(boardSize).fill(Array(boardSize).fill(EMPTY));
-let currentPlayer = CROSS;
+let boardSize;
+let board;
+let currentPlayer;
+let isGameOver;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -12,7 +13,22 @@ startGame();
 addResetListener();
 
 function startGame () {
+    boardSize = 3;
+    board = createBoard(boardSize);
+    currentPlayer = CROSS;
+    isGameOver = false;
     renderGrid(boardSize);
+}
+
+function createBoard(size) {
+  result = Array(size);
+  for (let i = 0; i < size; i++) {
+    result[i] = Array(size);
+    for (let j = 0; j < size; j++) {
+      result[i][j] = EMPTY;
+    }
+  }
+  return result;
 }
 
 function renderGrid (dimension) {
@@ -35,9 +51,11 @@ function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
     if(board[row][col] !== EMPTY)
       return;
+    alert(board);
     board[row][col] = currentPlayer;
     renderSymbolInCell(currentPlayer, row, col);
     currentPlayer = getNextPlayer(currentPlayer);
+    alert(board);
 
 
     /* Пользоваться методом для размещения символа в клетке так:
@@ -68,6 +86,7 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    startGame();
 }
 
 
