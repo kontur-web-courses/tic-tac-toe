@@ -61,14 +61,47 @@ function cellClickHandler(row, col) {
 }
 
 function hasWinner(col, row, current_turn) {
-    return field[0][col] === current_turn && field[1][col] === current_turn && field[2][col] === current_turn
-        || field[row][0] === current_turn && field[row][1] === current_turn && field[row][2] === current_turn
-        || field[0][0] === current_turn && field[1][1] === current_turn && field[2][2] === current_turn
-        || field[0][2] === current_turn && field[1][1] === current_turn && field[2][0] === current_turn;
+    if (field[0][col] === current_turn && field[1][col] === current_turn && field[2][col] === current_turn) {
+        colorWinnerColumn(col, current_turn === 1 ? ZERO : CROSS);
+        return true;
+    }
+    if (field[row][0] === current_turn && field[row][1] === current_turn && field[row][2] === current_turn) {
+        colorWinnerRow(row, current_turn === 1 ? ZERO : CROSS);
+        return true;
+    }
+    if (field[0][0] === current_turn && field[1][1] === current_turn && field[2][2] === current_turn) {
+        colorWinnerRightDiag(current_turn === 1 ? ZERO : CROSS);
+        return true;
+    }
+    if (field[0][2] === current_turn && field[1][1] === current_turn && field[2][0] === current_turn) {
+        colorWinnerLeftDiag(current_turn === 1 ? ZERO : CROSS);
+        return true;
+    }
+    return false;
 }
 
 function colorWinnerRow(row, symbol) {
+    for (let j = 0; j < 3; j++) {
+        renderSymbolInCell(symbol, row, j, "#FF0000")
+    }
+}
 
+function colorWinnerColumn(col, symbol) {
+    for (let j = 0; j < 3; j++) {
+        renderSymbolInCell(symbol, j, col, "#FF0000")
+    }
+}
+
+function colorWinnerRightDiag(symbol) {
+    for (let j = 0; j < 3; j++) {
+        renderSymbolInCell(symbol, j, j, "#FF0000")
+    }
+}
+
+function colorWinnerLeftDiag(symbol) {
+    for (let j = 0; j < 3; j++) {
+        renderSymbolInCell(symbol, j, 2 - j, "#FF0000")
+    }
 }
 
 function isFieldFilled() {
