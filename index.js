@@ -54,6 +54,7 @@ function cellClickHandler(row, col) {
     }
 
     let winner = defineWinner();
+    console.log(winner)
 
     if (winner[0] !== null) {
         alert(`WINNER - ${winner}`);
@@ -77,17 +78,17 @@ function defineWinner() {
     for (let i = 0; i < dimension; i++) {
         let row = checkRowColumn(crosses, i);
         if (row)
-            return ['CROSS', row];
+            return [CROSS, row];
         let column = checkRowColumn(zeros, i);
         if (column)
-            return ['ZERO', column];
+            return [ZERO, column];
     }
     let diagonal = checkDiagonals(crosses);
     if (diagonal)
-        return [diagonal, 'CROSS'];
+        return [CROSS, diagonal];
     let reverseDiagonal = checkDiagonals(zeros);
     if (reverseDiagonal)
-        return ['ZERO', reverseDiagonal];
+        return [ZERO, reverseDiagonal];
     return null;
 }
 
