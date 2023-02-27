@@ -1,6 +1,7 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let end = false;
 let turn = CROSS;
 let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
 
@@ -50,6 +51,18 @@ function hasOtherMoves(){
     return findFreeCells().length > 0;
 }
 
+function paintHorizontal(row){
+    for (let i = 0; i < field[row].length; i++){
+        renderSymbolInCell(field[row][i], row, i, 'red');
+    }
+}
+
+function paintVertical(col){
+    for (let i = 0; i < 3; i++){
+        renderSymbolInCell(field[i][col], i, col, 'red');
+    }
+}
+
 function makeMove(row, col){
     if (field[row][col] !== EMPTY)
         return false;
@@ -63,12 +76,31 @@ function makeMove(row, col){
         alert("Победила дружба");
         return false;
     }
+
+    let kek = checkWinner();
+    if (kek !== undefined) {
+        let dim = kek[0];
+        let ind = kek[1];
+
+        if (dim === 'hor') {
+            alert(field[ind][0]);
+            paintHorizontal(ind);
+        }
+        if (dim === 'ver') {
+            alert(field[0][ind]);
+            paintVertical(ind);
+        }
+        end = true;
+        return false;
+    }
     return true
 }
 
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
+    if (end)
+        return;
     let exodus = makeMove(row, col);
     if (exodus){
         let freeCells = findFreeCells();
@@ -99,6 +131,7 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    end = false;
     for (let i = 0; i < 3; i++){
         for (let j = 0; j < 3; j++)
         {
@@ -107,6 +140,32 @@ function resetClickHandler () {
         }
     }
     return false;
+}
+
+function isAllEqual(allEqual, arr) {
+    for (let i = 0; i < arr.length; i++)
+        if (allEqual(arr[i]) && arr[i][0] !== EMPTY)
+            return i
+}
+
+function checkWinner() {
+    const allEqual = arr => arr.every(v => v === arr[0])
+    let ind;
+
+    ind = isAllEqual(allEqual, field)
+    if (ind !== undefined)
+        return ['hor', ind];
+
+    let verticals = [];
+    for (let j = 0; j < field.length; j++) {
+        verticals.push([])
+        for (let i = 0; i < field[j].length; i++) {
+            verticals[j].push(field[i][j])
+        }
+    }
+    ind = isAllEqual(allEqual, verticals)
+    if (ind !== undefined)
+        return ['ver', ind];
 }
 
 
