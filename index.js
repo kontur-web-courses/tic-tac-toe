@@ -151,7 +151,7 @@ function checkIfSymbolWins(symbol){
         }
         if (won) {
             for (let j = 0; j < SIZE; j++) {
-                renderSymbolInCell(symbol, i, j, 'red')
+                renderSymbolInCell(symbol, j, i, 'red')
             }
             return true;
         }
