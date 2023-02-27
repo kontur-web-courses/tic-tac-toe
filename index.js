@@ -2,7 +2,18 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
+const PLAYER1 = '0';
+const PLAYER2 = 'X';
+
 const container = document.getElementById('fieldWrapper');
+
+let player = PLAYER1;
+let field = [
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY]];
+let stepCounter = 0;
+let winner = null;
 
 startGame();
 addResetListener();
@@ -27,13 +38,78 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
+    // Пиши код ту
+    let symbolInCell = field[row][col];
+    if (symbolInCell === EMPTY && winner !== null) {
+        let newSymbol = (player === PLAYER1) ? ZERO : CROSS;
+        field[row][col] = player;
+        player = (player === PLAYER1) ? PLAYER2 : PLAYER1;
+        stepCounter++;
+        renderSymbolInCell(newSymbol, row, col);
+    }
+    winner = checkWinner();
+    if (winner === PLAYER1) {
 
+        alert(`player 1 (${PLAYER1}) won`);
+    }
+    if (winner === PLAYER2) {
+        alert(`player 2 (${PLAYER2}) won`);
+    }
+    if (stepCounter === 9) {
+        alert("Победила дружба");
+    }
+
+    console.log(`Clicked on cell: ${row}, ${col}`);
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
+}
+
+function checkWinner() {
+    let countFirstDiagPlayer1 = 0;
+    let countFirstDiagPlayer2 = 0;
+    let countSecondDiagPlayer1 = 0;
+    let countSecondDiagPlayer2 = 0;
+    for (let i = 0; i < 3; i++) {
+        let countStrPlayer1 = 0;
+        let countColPlayer1 = 0;
+        let countStrPlayer2 = 0;
+        let countColPlayer2 = 0;
+
+        for (let j = 0; j < 3; j++) {
+            if (field[i][j] === PLAYER1) {
+                countStrPlayer1++;
+            } else if (field[i][j] === PLAYER2) {
+                countStrPlayer2++;
+            }
+            if (field [j][i] === PLAYER1) {
+                countColPlayer1++;
+            } else if (field[j][i] === PLAYER2) {
+                countColPlayer2++;
+            }
+        }
+        if (field[i][i] === PLAYER1) {
+            countFirstDiagPlayer1++;
+        } else if (field[i][i] === PLAYER2) {
+            countFirstDiagPlayer2++;
+        }
+        if (field[2 - i][i] === PLAYER1) {
+            countSecondDiagPlayer1++;
+        } else if (field[2 - i][i] === PLAYER2) {
+            countSecondDiagPlayer2++;
+        }
+
+        if (countStrPlayer1 === 3 || countColPlayer1 === 3
+            || countFirstDiagPlayer1 === 3 || countSecondDiagPlayer1 === 3) {
+            return PLAYER1;
+        }
+        if (countStrPlayer2 === 3 || countColPlayer2 === 3
+            || countFirstDiagPlayer2 === 3 || countSecondDiagPlayer2 === 3) {
+            return PLAYER2;
+        }
+        return null;
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
