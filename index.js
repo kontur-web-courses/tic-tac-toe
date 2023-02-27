@@ -3,6 +3,7 @@ const ZERO = 'O';
 const EMPTY = ' ';
 let current_player;
 let field;
+let gameEnded;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -12,6 +13,7 @@ addResetListener();
 function startGame () {
     current_player = CROSS
     field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
+    gameEnded = false;
     renderGrid(3);
 }
 
@@ -60,19 +62,24 @@ function CheckWinner(field){
 }
 function cellClickHandler (row, col) {
     // Пиши код тут
+    if (gameEnded){
+        return;
+    }
     if (field[row][col] === EMPTY) {
         field[row][col] = current_player;
         renderSymbolInCell(current_player, row, col);
         current_player = current_player === CROSS ? ZERO : CROSS;
     }
+    console.log(`Clicked on cell: ${row}, ${col}`);
     let winner = CheckWinner(field)
     if (winner){
+        gameEnded = true;
         alert(winner);
     }
     if (IsEnd(field)){
         alert('Победила дружба');
     }
-    console.log(`Clicked on cell: ${row}, ${col}`);
+
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
