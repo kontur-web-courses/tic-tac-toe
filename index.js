@@ -47,6 +47,9 @@ function cellClickHandler (row, col) {
             isWinner(CROSS)
         }
     }
+    if (motion === 8){
+        alert("Победила дружба");
+    }
     console.log(`Clicked on cell: ${row}, ${col}`);
 }
 
