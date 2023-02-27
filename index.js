@@ -58,6 +58,27 @@ function checkWinner() {
     }
 }
 
+function computerStupidTurn(){
+    const freeIndexes = field.reduce((result, cell, i) => {
+        if (cell[0] === EMPTY){
+            return [...result, {X: i, Y: 0}]
+        }
+        if (cell[1] === EMPTY){
+            return [...result, {X: i, Y: 1}]
+        }
+        if (cell[2] === EMPTY){
+            return [...result, {X: i, Y: 2}]
+        }
+
+        return result;
+    }, [])
+    const chosenIndex = Math.round(- 0.5 + Math.random() * (freeIndexes.length))
+    console.log(chosenIndex)
+    console.log(freeIndexes)
+    let chosenCell = freeIndexes[chosenIndex];
+    cellClickHandler(chosenCell.X, chosenCell.Y)
+}
+
 function cellClickHandler(row, col) {
     if (field[row][col] !== EMPTY || gameEnded) {
         return
@@ -77,6 +98,12 @@ function cellClickHandler(row, col) {
             alert('Победила дружба');
             gameEnded = true;
         }, 0)
+    }
+
+    if (turnSymbol === CROSS) {
+        setTimeout(() => {
+            computerStupidTurn()
+        }, 100)
     }
 }
 
