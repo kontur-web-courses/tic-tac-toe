@@ -15,11 +15,11 @@ let flag = true;
 startGame();
 addResetListener();
 
-function startGame () {
+function startGame() {
     renderGrid(3);
 }
 
-function renderGrid (dimension) {
+function renderGrid(dimension) {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
@@ -34,8 +34,8 @@ function renderGrid (dimension) {
     }
 }
 
-function cellClickHandler (row, col) {
-    if(flag) {
+function cellClickHandler(row, col) {
+    if (flag) {
         if (arr[row][col] === EMPTY) {
             if (motion % 2 === 0) {
                 renderSymbolInCell(ZERO, row, col);
@@ -57,39 +57,87 @@ function cellClickHandler (row, col) {
     }
 }
 
-function isWinner(symbol){
-    if ((arr[0][0] === symbol && arr[0][1] === symbol && arr[0][2] === symbol) ||
-    (arr[1][0] === symbol && arr[1][1] === symbol && arr[1][2] === symbol) ||
-        (arr[2][0] === symbol && arr[2][1] === symbol && arr[2][2] === symbol) ||
-        (arr[0][0] === symbol && arr[1][0] === symbol && arr[2][0] === symbol)||
-        (arr[1][1] === symbol && arr[1][0] === symbol && arr[1][2] === symbol) ||
-            (arr[0][1] === symbol && arr[1][1] === symbol && arr[2][1] === symbol) ||
-        (arr[0][0] === symbol && arr[1][1] === symbol && arr[2][2] === symbol) ||
-        (arr[2][0] === symbol && arr[1][1] === symbol && arr[0][2] === symbol)){
-        alert("Победил " + symbol);
-        flag = false;
-    }
+function isWinner(symbol) {
+    if (arr[0][0] === symbol && arr[0][1] === symbol && arr[0][2] === symbol){
+            flag = false;
+            renderSymbolInCell(symbol, 0, 0, '#FF0000');
+            renderSymbolInCell(symbol, 0, 1, '#FF0000');
+            renderSymbolInCell(symbol, 0, 2, '#FF0000');
+            alert("Победил " + symbol);
+        }
 
+        if (arr[1][0] === symbol && arr[1][1] === symbol && arr[1][2] === symbol) {
+            flag = false;
+            renderSymbolInCell(symbol, 1, 0, '#FF0000');
+            renderSymbolInCell(symbol, 1, 1, '#FF0000');
+            renderSymbolInCell(symbol, 1, 2, '#FF0000');
+            alert("Победил " + symbol);
+        }
+        if (arr[2][0] === symbol && arr[2][1] === symbol && arr[2][2] === symbol) {
+
+            flag = false;
+            renderSymbolInCell(symbol, 2, 0, '#FF0000');
+            renderSymbolInCell(symbol, 2, 1, '#FF0000');
+            renderSymbolInCell(symbol, 2, 2, '#FF0000');
+            alert("Победил " + symbol);
+        }
+        if (arr[0][0] === symbol && arr[1][0] === symbol && arr[2][0] === symbol) {
+            flag = false;
+            renderSymbolInCell(symbol, 0, 0, '#FF0000');
+            renderSymbolInCell(symbol, 1, 0, '#FF0000');
+            renderSymbolInCell(symbol, 2, 0, '#FF0000');
+            alert("Победил " + symbol);
+        }
+        if (arr[1][1] === symbol && arr[1][0] === symbol && arr[1][2] === symbol) {
+            flag = false;
+            renderSymbolInCell(symbol, 1, 1, '#FF0000');
+            renderSymbolInCell(symbol, 1, 0, '#FF0000');
+            renderSymbolInCell(symbol, 1, 2, '#FF0000');
+            alert("Победил " + symbol);
+        }
+        if (arr[0][1] === symbol && arr[1][1] === symbol && arr[2][1] === symbol) {
+
+            flag = false;
+            renderSymbolInCell(symbol, 0, 1, '#FF0000');
+            renderSymbolInCell(symbol, 1, 1, '#FF0000');
+            renderSymbolInCell(symbol, 2, 1, '#FF0000');
+            alert("Победил " + symbol);
+        }
+        if (arr[0][0] === symbol && arr[1][1] === symbol && arr[2][2] === symbol) {
+            flag = false;
+            renderSymbolInCell(symbol, 0, 0, '#FF0000');
+            renderSymbolInCell(symbol, 1, 1, '#FF0000');
+            renderSymbolInCell(symbol, 2, 2, '#FF0000');
+            alert("Победил " + symbol);
+        }
+        if (arr[2][0] === symbol && arr[1][1] === symbol && arr[0][2] === symbol) {
+
+            flag = false;
+            renderSymbolInCell(symbol, 0, 0, '#FF0000');
+            renderSymbolInCell(symbol, 0, 1, '#FF0000');
+            renderSymbolInCell(symbol, 0, 2, '#FF0000');
+            alert("Победил " + symbol);
+        }
 }
 
-function renderSymbolInCell (symbol, row, col, color = '#333') {
+function renderSymbolInCell(symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
 }
 
-function findCell (row, col) {
+function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
 }
 
-function addResetListener () {
+function addResetListener() {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
 }
 
-function resetClickHandler () {
+function resetClickHandler() {
     console.log('reset!');
     motion = 0;
     arr = [
@@ -103,8 +151,9 @@ function resetClickHandler () {
 
 
 /* Test Function */
+
 /* Победа первого игрока */
-function testWin () {
+function testWin() {
     clickOnCell(0, 2);
     clickOnCell(0, 0);
     clickOnCell(2, 0);
@@ -115,7 +164,7 @@ function testWin () {
 }
 
 /* Ничья */
-function testDraw () {
+function testDraw() {
     clickOnCell(2, 0);
     clickOnCell(1, 0);
     clickOnCell(1, 1);
@@ -128,6 +177,6 @@ function testDraw () {
     clickOnCell(2, 2);
 }
 
-function clickOnCell (row, col) {
+function clickOnCell(row, col) {
     findCell(row, col).click();
 }
