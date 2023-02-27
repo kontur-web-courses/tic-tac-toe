@@ -4,12 +4,14 @@ const EMPTY = ' ';
 const NO = 'No';
 
 const container = document.getElementById('fieldWrapper');
+let grid = [];
 
 startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(4);
+    createGrid(4)
 }
 
 function renderGrid (dimension) {
@@ -79,14 +81,30 @@ function checkWinCondition(){
     return NO;
 }
 
+function createGrid(dimension) {
+    for (let i = 0; i < dimension; i++) {
+        grid[i] = []
+        for (let j = 0; j < dimension; j++) {
+            grid[i][j] = EMPTY
+        }
+    }
+}
+
+let parity = false;
 function cellClickHandler (row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    if(grid[row][col] === EMPTY){
+        if(parity){
+            grid[row][col] = CROSS;
+            renderSymbolInCell(CROSS, row, col, "#c02020")
+        } else {
+            grid[row][col] = ZERO;
+            renderSymbolInCell(ZERO, row, col, "#208020")
+        }
+    }
+    parity = !parity;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
