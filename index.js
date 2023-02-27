@@ -49,6 +49,13 @@ function cellClickHandler(row, col) {
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
+    let result = isVictory()
+    if (result){
+        console.log(result)
+        for (const r in result){
+            renderSymbolInCell(board[r[0]][r[1]],r[0], r[1], 'red');
+        }
+    }
     if (moveCounter === currentDimension * currentDimension && !isVictory()) {
         alert("Победила дружба");
     }
@@ -56,13 +63,23 @@ function cellClickHandler(row, col) {
 
 function isVictory() {
     let a = checkVictoryHorizontal(board);
-    let b = checkVictoryHorizontal(transpose(board));
+    let b = CheckVertical(board);
     let c = CheckDiagWin(board);
+
     return a || b || c;
 }
 
 function transpose(matrix) {
     return matrix[0].map((col, i) => matrix.map(row => row[i]));
+}
+
+function CheckVertical(board){
+    let results = checkVictoryHorizontal(transpose(board));
+    let final_results = []
+    for (const ans of results){
+        final_results.push([ans[1], ans[0]]);
+    }
+    return final_results;
 }
 
 function checkVictoryHorizontal(board) {
@@ -84,7 +101,7 @@ function checkVictoryHorizontal(board) {
             return winCells;
         }
     }
-    return false;
+    return [];
 }
 
 function CheckDiagWinMini(board) {
@@ -98,7 +115,7 @@ function CheckDiagWinMini(board) {
             return combo;
         }
     }
-    return false;
+    return [];
 }
 
 function CheckDiagWin(board) {
@@ -118,7 +135,7 @@ function CheckDiagWin(board) {
             }
         }
     }
-    return false;
+    return [];
 }
 
 function getCurrentSymbol() {
@@ -147,7 +164,17 @@ function addResetListener() {
     resetButton.addEventListener('click', resetClickHandler);
 }
 
-function resetClickHandler() {
+function resetClickHandler () {
+    for (let arr of board){
+        for(let cell of arr){
+            cell = EMPTY
+        }
+    }
+    for (let i = 0; i < currentDimension; i++){
+        for (let j = 0; j < currentDimension; j++){
+            renderSymbolInCell(EMPTY, i, j)
+        }
+    }
     console.log('reset!');
 }
 
