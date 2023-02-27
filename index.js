@@ -25,9 +25,14 @@ function renderGrid (dimension) {
         container.appendChild(row);
     }
 }
-
+let current_player = CROSS
+let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
 function cellClickHandler (row, col) {
     // Пиши код тут
+    if (field[row][col] === EMPTY){
+        field[row][col] = current_player
+        current_player = current_player === CROSS ? ZERO : CROSS;
+    }
     console.log(`Clicked on cell: ${row}, ${col}`);
 
 
