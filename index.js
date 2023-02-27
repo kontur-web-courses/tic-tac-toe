@@ -3,6 +3,14 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
+let firstPlayer = true;
+let gameField = [
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY]
+];
+let countEmptyCells = 9;
+let gameOver = false;
 
 startGame();
 addResetListener();
@@ -27,13 +35,71 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    if (gameOver){
+        return;
+    }
+
+    if (countEmptyCells === 1){
+        alert("Победила дружба!");
+    }
+
+    if (gameField[row][col] === EMPTY) {
+        if (firstPlayer) {
+            renderSymbolInCell(ZERO, row, col);
+            gameField[row][col] = ZERO;
+        } else {
+            renderSymbolInCell(CROSS, row, col);
+            gameField[row][col] = CROSS;
+        }
+        firstPlayer = !firstPlayer;
+        countEmptyCells--;
+    }
+
+    let winner = checkWinner();
+    if (winner !== EMPTY){
+        alert(`Победил вот он: ${winner}!`)
+        gameOver = true;
+    }
+
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
+}
+
+function checkWinner(){
+    for (let i = 0; i < 3; i++){
+        if ((gameField[i][0] === gameField[i][1] && gameField[i][1] === gameField[i][2]) &&
+            (EMPTY !== gameField[i][1] && gameField[i][1] !== EMPTY)){
+            renderSymbolInCell(gameField[i][1], i, 0, "red")
+            renderSymbolInCell(gameField[i][1], i, 1, "red")
+            renderSymbolInCell(gameField[i][1], i, 2, "red")
+            return gameField[i][1];
+        }
+        if ((gameField[0][i] === gameField[1][i] && gameField[1][i] === gameField[2][i]) &&
+            (EMPTY !== gameField[1][i] && gameField[1][i] !== EMPTY)){
+            renderSymbolInCell(gameField[0][i], 0, i, "red")
+            renderSymbolInCell(gameField[1][i], 1, i, "red")
+            renderSymbolInCell(gameField[2][i], 2, i, "red")
+            return gameField[1][i];
+        }
+    }
+    if ((gameField[2][0] === gameField[1][1] && gameField[1][1] === gameField[0][2]) &&
+        (EMPTY !== gameField[1][1])){
+        renderSymbolInCell(gameField[1][1], 1, 1, "red")
+        renderSymbolInCell(gameField[2][0], 2, 0, "red")
+        renderSymbolInCell(gameField[0][2], 0, 2, "red")
+        return gameField[1][1];
+    }
+
+    if (gameField[0][0] === gameField[1][1] && gameField[1][1] === gameField[2][2] &&
+        (EMPTY !== gameField[1][1])){
+        renderSymbolInCell(gameField[1][1], 1, 1, "red")
+        renderSymbolInCell(gameField[0][0], 0, 0, "red")
+        renderSymbolInCell(gameField[2][2], 2, 2, "red")
+        return gameField[1][1];
+    }
+    return EMPTY;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -54,7 +120,15 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
-    console.log('reset!');
+    gameOver = false;
+    firstPlayer = true;
+    countEmptyCells = 9;
+    for (let i = 0; i < 3; i++){
+        for (let j = 0; j < 3; j++){
+            gameField[i][j] = EMPTY;
+        }
+    }
+    renderGrid(3);
 }
 
 
