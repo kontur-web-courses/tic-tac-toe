@@ -31,13 +31,21 @@ const field = [[],[],[]]
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if(is_zero) {
-        renderSymbolInCell(ZERO, row, col);
-        is_zero = false;
-    } else {
-        renderSymbolInCell(CROSS, row, col);
-        is_zero = true;
+    if (!isFill(row, col)){
+        if(is_zero) {
+            renderSymbolInCell(ZERO, row, col);
+            is_zero = false;
+        } else {
+            renderSymbolInCell(CROSS, row, col);
+            is_zero = true;
+        }
     }
+}
+
+function isFill (row, col) {
+    const targetCell = findCell(row, col);
+
+    return targetCell.textContent !== EMPTY
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
