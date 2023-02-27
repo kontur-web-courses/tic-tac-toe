@@ -56,14 +56,11 @@ function cellClickHandler(row, col) {
     let winner = defineWinner();
     console.log(winner)
 
-    if (winner[0] !== null) {
-        alert(`WINNER - ${winner}`);
+    if (winner !== null) {
+        alert(`WINNER - ${winner[0]}`);
 
-        for (let i = 0; i < winner.length; i++) {
-            if (i === 0) {
-                continue;
-            }
-            renderSymbolInCell(winner[0], winner[i][0], winner[i][1], 'FF0000');
+        for (let i = 0; i < winner[1].length; i++) {
+            renderSymbolInCell(winner[0], winner[1][i][0], winner[1][i][1], '#FF0000');
         }
 
         isWin = true;
