@@ -26,18 +26,84 @@ function renderGrid (dimension) {
     }
 }
 
+let arr = [
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY]
+]
+
+let turn = 0;
+
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
+    if(checkWinner() != EMPTY){
+        alert(`Победил  ${checkWinner()}`);
+        return;
+    }
+    if(arr[row][col] != EMPTY){
+        return;
+    }
+    if(turn === 9){
+        return;
+    }
+    if(turn===8){
+        alert("Победила дружба");
+    }
+    if(turn%2){
+        renderSymbolInCell(ZERO, row, col);
+    }
+    else{
+        renderSymbolInCell(CROSS, row, col);
+    }
+    turn++;
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
 }
 
+function checkWinner(){
+    for(let a of arr){
+        let t = true;
+        for(let i = 0; i < 2; i++){
+            t = t && a[i] == a[i+1]; 
+        }
+        if(t){
+            return a[0];
+        }
+    }
+
+    for(let j = 0; j < 3; j++){
+        let t = true;
+        for(let i = 0; i < 2; i++){
+            t = t && arr[i][j] == arr[i+1][j]; 
+        }
+        if(t){
+            return arr[0][j];
+        }
+    }
+
+    let t = true;
+    for(let i = 0; i < 2; i++){
+        t = t && arr[i][i] == arr[i+1][i+1];
+    }
+    if(t){
+        return arr[0][0];
+    }
+
+    t = true;
+    for(let i = 0; i < 2; i++){
+        t = t && arr[i][2 - i] == arr[i+1][1 - i];
+    }
+    if(t){
+        return arr[0][2];
+    }
+}
+
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
+    arr[row][col] = symbol;
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
