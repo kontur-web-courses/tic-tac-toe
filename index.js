@@ -32,11 +32,17 @@ let arr = [
     [EMPTY, EMPTY, EMPTY]
 ]
 
+winner = "";
+
 let turn = 0;
 
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
+    if(winner !== "")
+    {
+        return;
+    }
     if(arr[row][col] !== EMPTY){
         return;
     }
@@ -48,6 +54,7 @@ function cellClickHandler (row, col) {
     }
     if(checkWinner() !== EMPTY && checkWinner() !== undefined){
         alert(`Победил  ${checkWinner()}`);
+        winner = checkWinner();
         return;
     }
     if(turn === 9){
@@ -64,13 +71,16 @@ function cellClickHandler (row, col) {
 }
 
 function checkWinner(){
-    for(let a of arr){
+    for(let j = 0; j < 3; j++){
         let t = true;
         for(let i = 0; i < 2; i++){
-            t = t && a[i] === a[i+1]; 
+            t = t && arr[j][i] === arr[j][i+1]; 
         }
         if(t){
-            return a[0];
+            for(let i = 0; i < 3; i++){
+                renderSymbolInCell(arr[j][i], j, i, color = '#f00');
+            }
+            return arr[j][0];
         }
     }
 
@@ -80,6 +90,9 @@ function checkWinner(){
             t = t && arr[i][j] === arr[i+1][j]; 
         }
         if(t){
+            for(let i = 0; i < 3; i++){
+                renderSymbolInCell(arr[i][j], i, j, color = '#f00');
+            }
             return arr[0][j];
         }
     }
@@ -89,6 +102,9 @@ function checkWinner(){
         t = t && arr[i][i] === arr[i+1][i+1];
     }
     if(t){
+        for(let i = 0; i < 3; i++){
+            renderSymbolInCell(arr[i][i], i, i, color = '#f00');
+        }
         return arr[0][0];
     }
 
@@ -97,6 +113,9 @@ function checkWinner(){
         t = t && arr[i][2 - i] === arr[i+1][1 - i];
     }
     if(t){
+        for(let i = 0; i < 3; i++){
+            renderSymbolInCell(arr[i][2-j], i, 2-j, color = '#f00');
+        }
         return arr[0][2];
     }
 }
