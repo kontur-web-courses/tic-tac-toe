@@ -56,20 +56,19 @@ function cellClickHandler(row, col) {
     if (isFieldFilled()) {
         alert("Победила дружба");
         is_win = true;
+        return;
     }
 }
 
 function hasWinner(col, row, current_turn) {
     return field[0][col] === current_turn && field[1][col] === current_turn && field[2][col] === current_turn
-        || field[row][0] === current_turn && field[row][1] === current_turn && field[row][2] === current_turn;
+        || field[row][0] === current_turn && field[row][1] === current_turn && field[row][2] === current_turn
+        || field[0][0] === current_turn && field[1][1] === current_turn && field[2][2] === current_turn
+        || field[0][2] === current_turn && field[1][1] === current_turn && field[2][0] === current_turn;
 }
 
 function colorWinnerRow(row, symbol) {
 
-}
-
-function onDiag(row, col) {
-    return row === col || row === 0 && (col === 0 || col === 2) || row === 3 && (col === 0 || col === 2);
 }
 
 function isFieldFilled() {
