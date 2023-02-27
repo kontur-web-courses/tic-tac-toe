@@ -123,10 +123,10 @@ function cellClickHandler(row, col) {
     }
 
     field[row][col] = PLAYER;
-    PLAYER = PLAYER === CROSS ? ZERO : CROSS;
     OCCUPIED_CELLS++;
 
     WINNER = checkWinner();
+    PLAYER = PLAYER === CROSS ? ZERO : CROSS;
 
     let cells = BOARD_SIZE * BOARD_SIZE;
     if (WINNER === null && OCCUPIED_CELLS >= Math.floor(cells / 2)) {
