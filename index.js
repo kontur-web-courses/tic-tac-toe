@@ -9,6 +9,11 @@ addResetListener();
 
 function startGame () {
     renderGrid(3);
+    const field = createField(3)
+}
+
+function createField(dimension) {
+    return Array(dimension).fill([])
 }
 
 function renderGrid (dimension) {
@@ -87,3 +92,5 @@ function testDraw () {
 function clickOnCell (row, col) {
     findCell(row, col).click();
 }
+
+startGame()
