@@ -4,6 +4,7 @@ const EMPTY = " ";
 let field;
 let turn = 1;
 let end = false;
+let botTurn = false;
 const container = document.getElementById("fieldWrapper");
 
 startGame();
@@ -30,70 +31,69 @@ function renderGrid(dimension) {
         container.appendChild(row);
     }
 }
+
 function cellClickHandler(row, col) {
     //c ИИ, без ИИ см ниже
+    if (botTurn) {
+        return;
+    }
     if (end) {
         return;
     }
-    console.log(`Clicked on cell: ${row}, ${col}`);
     const t = CROSS;
     if (field[row][col] === EMPTY) {
         field[row][col] = t;
         renderSymbolInCell(t, row, col);
         turn++;
-    }
-    else{
+    } else {
         return;
     }
     const winner = checkWinner();
-    console.log(winner);
     if (winner[0]) {
         end = true;
-        renderSymbolInCell(t, winner[1][0], winner[1][1], "red");
-        renderSymbolInCell(t, winner[2][0], winner[2][1], "red");
-        renderSymbolInCell(t, winner[3][0], winner[3][1], "red");
+        for (let i = 1; i < 4; i++) {
+            renderSymbolInCell(t, winner[i][0], winner[i][1], "red");
+        }
         setTimeout(() => alert(`Win ${t}`));
         return;
-    }
-    else if (turn === 10) {
+    } else if (turn === 10) {
         setTimeout(() => alert("Ничья! :D"));
         end = true;
         return;
     }
-    while(true){
-        let row1=getRandomInt(3);
-        let col1 = getRandomInt(3);
-        if (field[row1][col1] === EMPTY) {
-            field[row1][col1] = ZERO;
-            renderSymbolInCell(ZERO, row1, col1);
-            turn++;
-            console.log(`bot ${row1} ${col1}`)
-            break;
-        }
-    }
-    const winner1 = checkWinner();
-    console.log(winner1);
-    if (winner1[0]) {
-        end = true;
-        renderSymbolInCell(ZERO, winner1[1][0], winner1[1][1], "red");
-        renderSymbolInCell(ZERO, winner1[2][0], winner1[2][1], "red");
-        renderSymbolInCell(ZERO, winner1[3][0], winner1[3][1], "red");
-        setTimeout(() => alert(`Win ${ZERO}`));
-    }
-    else if (turn === 10) {
-        setTimeout(() => alert("Ничья! :D"));
-    }
+    botTurn = true;
+    setTimeout(() => {
 
+        while (true) {
+            let row1 = getRandomInt(3);
+            let col1 = getRandomInt(3);
+            if (field[row1][col1] === EMPTY) {
+                field[row1][col1] = ZERO;
+                renderSymbolInCell(ZERO, row1, col1);
+                turn++;
+                break;
+            }
+        }
+        const winner1 = checkWinner();
+        if (winner1[0]) {
+            end = true;
+            renderSymbolInCell(ZERO, winner1[1][0], winner1[1][1], "red");
+            renderSymbolInCell(ZERO, winner1[2][0], winner1[2][1], "red");
+            renderSymbolInCell(ZERO, winner1[3][0], winner1[3][1], "red");
+            setTimeout(() => alert(`Win ${ZERO}`), 50);
+        } else if (turn === 10) {
+            setTimeout(() => alert("Ничья! :D"), 50);
+        }
+        botTurn = false;
+    }, 500);
 }
-function getRandomInt(max){
-    return Math.floor(Math.random()*max)
-}
+
+
 // function cellClickHandler(row, col) {
 //     // Пиши код тут без ИИ
 //     if (end) {
 //         return;
 //     }
-//     console.log(`Clicked on cell: ${row}, ${col}`);
 //     const t = turn % 2 === 0 ? ZERO : CROSS;
 //     if (field[row][col] === EMPTY) {
 //         field[row][col] = t;
@@ -104,7 +104,6 @@ function getRandomInt(max){
 //         return;
 //     }
 //     const winner = checkWinner();
-//     console.log(winner);
 //     if (winner[0]) {
 //         end = true;
 //         renderSymbolInCell(t, winner[1][0], winner[1][1], "red");
@@ -157,9 +156,19 @@ function addResetListener() {
 
 function resetClickHandler() {
     startGame();
-    console.log("reset!");
 }
 
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+}
+
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+        currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+}
 
 /* Test Function */
 
