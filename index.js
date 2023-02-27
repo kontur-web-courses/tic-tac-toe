@@ -12,10 +12,11 @@ const TYPE_WINNER = {
 }
 
 const container = document.getElementById('fieldWrapper');
-let field = [
-    [EMPTY] * 3,
-] * 3;
+
 let mapDimention = 3
+
+let field = [];
+let zeroTurn = true;
 
 startGame();
 addResetListener();
@@ -26,7 +27,7 @@ function startGame () {
 
 function renderGrid (dimension) {
     container.innerHTML = '';
-
+    createField(dimension)
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
         for (let j = 0; j < dimension; j++) {
@@ -40,24 +41,39 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
+    const gameState = getState();
+    if (gameState === TIE) {
+        alert('Победила дружба');
+        return;
+    }
+    if (gameState === ZERO_WIN) {
+        alert('Победили нолики');
+        return;
+    }
+    if (gameState === CROSS_WIN) {
+        alert('Победили крестики');
+        return;
+    }
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    if (field[row][col] !== EMPTY) {
+        return;
+    }
+    const figureToPlace = zeroTurn ? ZERO : CROSS;
+    field[row][col] = figureToPlace;
+    renderSymbolInCell(figureToPlace, row, col);
+    zeroTurn = !zeroTurn;
 }
 
-function isEndGame() {
-
+function getState() {
     let emptyCount = 0;
     for (let cellType in [ZERO, CROSS]) {
         for (let row = 0; row < mapDimention; row++) {
             emptyCount++;
             let count_match = 0;
             for (let column = 0; column < mapDimention; column++) {
-                if (field[row][column] === cell_type) {
+                if (field[row][column] === cellType) {
                     count_match++;
                 }
             }
@@ -118,6 +134,12 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    for (let row = 0; row < mapDimention; row++) {
+        for (let col = 0; col < mapDimention; col++) {
+            renderSymbolInCell(EMPTY, row, col);
+            field[row][col] = EMPTY;
+        }
+    }
 }
 
 
@@ -149,4 +171,12 @@ function testDraw () {
 
 function clickOnCell (row, col) {
     findCell(row, col).click();
+}
+function createField(dim) {
+    for (let i = 0; i < dim; i++) {
+        field.push([]);
+        for (let j = 0; j < dim; j++) {
+            field[i].push(EMPTY);
+        }
+    }
 }
