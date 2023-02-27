@@ -44,6 +44,7 @@ function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
 
     const gameState = getState();
+    console.log(`State: ${gameState}`)
     if (gameState === TIE) {
         alert('Победила дружба');
         return;
@@ -70,7 +71,6 @@ function getState() {
     let emptyCount = 0;
     for (let cellType in [ZERO, CROSS]) {
         for (let row = 0; row < mapDimention; row++) {
-            emptyCount++;
             let count_match = 0;
             for (let column = 0; column < mapDimention; column++) {
                 if (field[row][column] === cellType) {
@@ -86,6 +86,8 @@ function getState() {
             for (let row = 0; row < mapDimention; row++) {
                 if (field[row][column] === cellType) {
                     count_match++;
+                } else if (field[row][column] === EMPTY) {
+                    emptyCount++;
                 }
             }
             if (count_match === mapDimention) {
@@ -109,7 +111,7 @@ function getState() {
     if (emptyCount === 0)
         return TIE;
 
-
+    console.log(emptyCount);
     return PLAY;
 }
 
