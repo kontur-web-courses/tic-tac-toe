@@ -60,17 +60,17 @@ function cellClickHandler(row, col) {
 
 function defineWinner() {
     for (let i = 0; i < dimension; i++) {
-        let row = checkRowColumn(crosses, i)
+        let row = checkRowColumn(crosses, i);
         if (row)
             return ['CROSS', row];
-        let column = checkRowColumn(zeros, i)
+        let column = checkRowColumn(zeros, i);
         if (column)
             return ['ZERO', column];
     }
-    let diagonal = checkDiagonals(crosses)
+    let diagonal = checkDiagonals(crosses);
     if (diagonal)
         return [diagonal, 'CROSS'];
-    let reverseDiagonal = checkDiagonals(zeros)
+    let reverseDiagonal = checkDiagonals(zeros);
     if (reverseDiagonal)
         return ['ZERO', reverseDiagonal];
     return null;
@@ -79,40 +79,40 @@ function defineWinner() {
 function checkRowColumn(team, dim) {
     let rowCounter = 0;
     let colCounter = 0;
-    let rowWinners = []
-    let colWinners = []
+    let rowWinners = [];
+    let colWinners = [];
     for (const element of team) {
         if (element[0] === dim) {
-            rowWinners.push(element)
+            rowWinners.push(element);
             rowCounter += 1;
         }
         if (element[1] === dim) {
-            colWinners.push(element)
+            colWinners.push(element);
             colCounter += 1;
         }
         if (rowCounter === dimension) {
-            return rowWinners
+            return rowWinners;
         }
         if (colCounter === dimension) {
-            return colWinners
+            return colWinners;
         }
     }
-    return null
+    return null;
 }
 
 function checkDiagonals(team) {
     let diagonalCounter = 0;
     let reverseDiagonalCounter = 0;
-    let diagonalWinner = []
-    let reverseDiagonalWinner = []
+    let diagonalWinner = [];
+    let reverseDiagonalWinner = [];
     for (let element of team) {
         if (element[0] === element[1]) {
-            diagonalCounter += 1
-            diagonalWinner.push(element)
+            diagonalCounter += 1;
+            diagonalWinner.push(element);
         }
         if (element[0] === dimension - element[1] - 1) {
-            reverseDiagonalCounter += 1
-            reverseDiagonalWinner.push(element)
+            reverseDiagonalCounter += 1;
+            reverseDiagonalWinner.push(element);
         }
     }
 
