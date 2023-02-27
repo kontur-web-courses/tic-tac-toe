@@ -6,6 +6,7 @@ let field = [];
 let dimensionIndex = 0;
 let dimensionsCount = 3;
 let isCross = true;
+let countSteps = 0;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -14,6 +15,7 @@ addResetListener();
 addChangeDimListener();
 
 function startGame() {
+    countSteps = 0;
     renderGrid(dimensionsCount);
     isCross = true;
     clearField();
@@ -43,14 +45,57 @@ function renderGrid(dimension) {
     }
 }
 
+function checkHorizontal(row) {
+    let isWin = true;
+    for (let i = 1; i < field.length; i++) {
+        isWin = isWin && field[row][i - 1] === field[row][i] && field[row][i-1] !== EMPTY;
+    }
+    return isWin;
+}
+
+function checkVertical(col) {
+    let isWin = true;
+    for (let i = 1; i < field.length; i++) {
+        isWin = isWin && field[i - 1][col] === field[i][col] && field[i-1][col] !== EMPTY;
+    }
+    return isWin;
+}
+
+function checkDiagonal() {
+    let len = field.length;
+    let diagonalIsWin1 = field[0][0] !== EMPTY;
+    let diagonalIsWin2 = field[0][len-1] !== EMPTY;
+    for (let i = 1; i < len; i++) {
+        diagonalIsWin1 = diagonalIsWin1 && field[i - 1][i - 1] === field[i][i];
+        diagonalIsWin2 = diagonalIsWin2 && field[i - 1][len - i] === field[len - i][i - 1];
+    }
+    return diagonalIsWin1 || diagonalIsWin2;
+}
+
+function checkWin(row, col) {
+    return checkHorizontal(row) || checkVertical(col) || checkDiagonal();
+}
+
 function cellClickHandler(row, col) {
+    let isWin = false;
     if (field[row][col] === EMPTY) {
         const symbol = isCross ? CROSS : ZERO;
 
         renderSymbolInCell(symbol, row, col);
         field[row][col] = symbol;
-        isCross = !isCross;
+        isWin = checkWin(row, col);
+        countSteps++;
     }
+    if (isWin) {
+        let name = isCross ? "Первый игрок" : "Второй игрок";
+        alert(`Победил ${name}!`)
+    }
+    if(countSteps === 9)
+    {
+        alert("Победила дружба");
+    }
+
+    isCross = !isCross;
     console.log(`Clicked on cell: ${row}, ${col}`);
 }
 
