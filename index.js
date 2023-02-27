@@ -48,15 +48,16 @@ function cellClickHandler(row, col) {
     if (field[row][0] === current_turn && field[row][1] === current_turn && field[row][2] === current_turn) {
         alert(is_zero ? CROSS : ZERO);
         is_win = true;
+        return;
     }
     if (field[0][col] === current_turn && field[1][col] === current_turn && field[2][col] === current_turn) {
         alert(is_zero ? CROSS : ZERO);
         is_win = true;
+        return;
     }
 }
 
-function onDiag(row, col)
-{
+function onDiag(row, col) {
     return row === col || row === 0 && (col === 0 || col === 2) || row === 3 && (col === 0 || col === 2);
 }
 
@@ -79,6 +80,13 @@ function addResetListener() {
 
 function resetClickHandler() {
     console.log('reset!');
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            field[i][j] = 0;
+            is_win = false;
+            renderSymbolInCell(EMPTY, i, j);
+        }
+    }
 }
 
 
