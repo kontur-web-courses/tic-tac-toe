@@ -8,7 +8,7 @@ const ZERO_WIN = 'zero win';
 const PLAY = 'play';
 const TYPE_WINNER = {
     'X' : CROSS_WIN,
-    'O' : ZERO_WIN
+    'O' : ZERO_WIN,
 }
 
 const container = document.getElementById('fieldWrapper');
@@ -43,7 +43,7 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
 
-    console.log(`State: ${gameState}`)
+    console.log(`State: ${gameState}`);
 
     if (field[row][col] !== EMPTY || gameState !== PLAY) {
         return;
@@ -145,6 +145,7 @@ function resetClickHandler () {
             field[row][col] = EMPTY;
         }
     }
+    gameState = PLAY;
 }
 
 
