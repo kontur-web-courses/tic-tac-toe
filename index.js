@@ -25,13 +25,28 @@ function renderGrid (dimension) {
         container.appendChild(row);
     }
 }
+function IsEnd(arr){
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (arr[i][j] === EMPTY){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 let current_player = CROSS
 let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
 function cellClickHandler (row, col) {
     // Пиши код тут
     if (field[row][col] === EMPTY){
-        field[row][col] = current_player
+        field[row][col] = current_player;
+        renderSymbolInCell(current_player, row, col);
         current_player = current_player === CROSS ? ZERO : CROSS;
+    }
+    if (IsEnd(field)){
+        alert('Победила дружба');
     }
     console.log(`Clicked on cell: ${row}, ${col}`);
 
