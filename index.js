@@ -5,6 +5,7 @@ const EMPTY = ' ';
 let boardSize = 3;
 let board = Array(boardSize).fill(Array(boardSize).fill(EMPTY));
 let currentPlayer = CROSS;
+let numberOfClicks = 0;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -34,8 +35,9 @@ function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
     renderSymbolInCell(currentPlayer, row, col);
+    checkWinner();
+    registerNumberOfClicks();
     currentPlayer = getNextPlayer(currentPlayer);
-
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
@@ -44,6 +46,90 @@ function cellClickHandler (row, col) {
 
 function getNextPlayer(player) {
   return player === CROSS ? ZERO : CROSS;
+}
+
+function registerNumberOfClicks () {
+    numberOfClicks++;
+    if (numberOfClicks === boardSize * boardSize) {
+        alert('Победила дружба!');
+    }
+}
+
+function checkWinner () {
+    const winner = getWinner();
+
+    if (winner) {
+        alert(`Победили ${winner}`);
+    }
+}
+
+function getMostFrequentElement(row) {
+    let elFrequencies = new Map();
+    let mostFrequentElement = row[0];
+    let counter = 0;
+    for (let i = 0; i < row.length; i++) {
+        if (elFrequencies.has(row[i])) {
+            elFrequencies.set(row[i], elFrequencies.get(row[i]) + 1);
+        } else {
+            elFrequencies.set(row[i], 1);
+        }
+        if (elFrequencies.get(row[i]) > counter) {
+            counter = elFrequencies.get(row[i]);
+            mostFrequentElement = row[i];
+        }
+    }
+    return mostFrequentElement;
+}
+
+function checkRows() {
+    for (let i = 0; i < boardSize; i++) {
+        const row = board[i];
+        const winner = getMostFrequentElement(row);
+        if (winner !== EMPTY) {
+            return winner;
+        }
+    }
+
+    return null
+}
+
+function checkColumns() {
+    for (let i = 0; i < boardSize; i++) {
+        const column = [];
+        for (let j = 0; j < boardSize; j++) {
+            column.push(board[j][i]);
+        }
+        const winner = getMostFrequentElement(column);
+        if (winner !== EMPTY) {
+            return winner;
+        }
+    }
+
+    return null
+}
+
+function checkDiagonals() {
+    const diagonal1 = [];
+    const diagonal2 = [];
+
+    for (let i = 0; i < boardSize; i++) {
+        diagonal1.push(board[i][i]);
+        diagonal2.push(board[i][boardSize - i - 1]);
+    }
+    const winner1 = getMostFrequentElement(diagonal1);
+    const winner2 = getMostFrequentElement(diagonal2);
+    if (winner1 !== EMPTY) {
+        return winner1;
+    }
+    if (winner2 !== EMPTY) {
+        return winner2;
+    }
+
+    return null;
+}
+
+function getWinner() {
+    return checkRows() || checkColumns() || checkDiagonals();
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
