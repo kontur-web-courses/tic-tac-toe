@@ -56,7 +56,7 @@ function isWinner(symbol){
         (arr[2][0] === symbol && arr[2][1] === symbol && arr[2][2] === symbol) ||
         (arr[0][0] === symbol && arr[1][0] === symbol && arr[2][0] === symbol)||
         (arr[1][1] === symbol && arr[1][0] === symbol && arr[1][2] === symbol) ||
-            (arr[2][0] === symbol && arr[2][1] === symbol && arr[2][2] === symbol) ||
+            (arr[0][1] === symbol && arr[1][1] === symbol && arr[2][1] === symbol) ||
         (arr[0][0] === symbol && arr[1][1] === symbol && arr[2][2] === symbol) ||
         (arr[2][0] === symbol && arr[1][1] === symbol && arr[0][2] === symbol))
         alert("Победил " + symbol)
