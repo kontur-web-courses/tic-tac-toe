@@ -8,11 +8,11 @@ const container = document.getElementById('fieldWrapper');
 startGame();
 addResetListener();
 
-function startGame () {
+function startGame() {
     renderGrid(3);
 }
 
-function renderGrid (dimension) {
+function renderGrid(dimension) {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
@@ -33,15 +33,10 @@ let is_win = false;
 function cellClickHandler(row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (!isFill(row, col)){
-        if(is_zero) {
-            renderSymbolInCell(ZERO, row, col);
-            is_zero = false;
-        } else {
-            renderSymbolInCell(CROSS, row, col);
-            is_zero = true;
-        }
     if (is_win) {
+        return;
+    }
+    if (isFill(row, col)) {
         return;
     }
     if (is_zero) {
@@ -69,7 +64,7 @@ function onDiag(row, col) {
     return row === col || row === 0 && (col === 0 || col === 2) || row === 3 && (col === 0 || col === 2);
 }
 
-function isFill (row, col) {
+function isFill(row, col) {
     const targetCell = findCell(row, col);
 
     return targetCell.textContent !== EMPTY
@@ -82,17 +77,17 @@ function renderSymbolInCell(symbol, row, col, color = '#333') {
     targetCell.style.color = color;
 }
 
-function findCell (row, col) {
+function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
 }
 
-function addResetListener () {
+function addResetListener() {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
 }
 
-function resetClickHandler () {
+function resetClickHandler() {
     console.log('reset!');
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
@@ -105,8 +100,9 @@ function resetClickHandler () {
 
 
 /* Test Function */
+
 /* Победа первого игрока */
-function testWin () {
+function testWin() {
     clickOnCell(0, 2);
     clickOnCell(0, 0);
     clickOnCell(2, 0);
@@ -117,7 +113,7 @@ function testWin () {
 }
 
 /* Ничья */
-function testDraw () {
+function testDraw() {
     clickOnCell(2, 0);
     clickOnCell(1, 0);
     clickOnCell(1, 1);
@@ -130,6 +126,6 @@ function testDraw () {
     clickOnCell(2, 2);
 }
 
-function clickOnCell (row, col) {
+function clickOnCell(row, col) {
     findCell(row, col).click();
 }
