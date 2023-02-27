@@ -4,7 +4,9 @@ const EMPTY = ' ';
 let step = 0;
 let crosses = [];
 let zeros = [];
+const defaultDimension = 3;
 let dimension = 3;
+let isWin = false;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -12,7 +14,8 @@ startGame();
 addResetListener();
 
 function startGame() {
-    dimension = parseInt(prompt('Введите количество клеток') ?? dimension);
+    let input = prompt('Введите количество клеток');
+    dimension = parseInt(input === '' ? defaultDimension : input);
     step = 0;
     renderGrid(dimension);
 }
@@ -22,12 +25,14 @@ function renderGrid(dimension) {
 
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
+
         for (let j = 0; j < dimension; j++) {
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
             cell.addEventListener('click', () => cellClickHandler(i, j));
             row.appendChild(cell);
         }
+
         container.appendChild(row);
     }
 }
@@ -36,21 +41,31 @@ function cellClickHandler(row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
     let cell = findCell(row, col);
 
-    if (cell.textContent === EMPTY) {
+    if (cell.textContent === EMPTY && !isWin) {
         if (step % 2 === 0) {
             renderSymbolInCell(CROSS, row, col);
-            crosses.push([row, col])
+            crosses.push([row, col]);
         } else {
             renderSymbolInCell(ZERO, row, col);
-            zeros.push([row, col])
+            zeros.push([row, col]);
         }
+
         step++;
     }
 
     let winner = defineWinner();
 
-    if (winner !== null) {
+    if (winner[0] !== null) {
         alert(`WINNER - ${winner}`);
+
+        for (let i = 0; i < winner.length; i++) {
+            if (i === 0) {
+                continue;
+            }
+            renderSymbolInCell(winner[0], winner[i][0], winner[i][1], 'FF0000');
+        }
+
+        isWin = true;
     }
 
     if (step === dimension * dimension) {
@@ -60,6 +75,10 @@ function cellClickHandler(row, col) {
 
 function defineWinner() {
     for (let i = 0; i < dimension; i++) {
+        if (checkRowColumn(crosses, i))
+            return CROSS;
+        if (checkRowColumn(zeros, i))
+            return ZERO;
         let row = checkRowColumn(crosses, i)
         if (row)
             return ['CROSS', row];
@@ -67,6 +86,12 @@ function defineWinner() {
         if (column)
             return ['ZERO', column];
     }
+
+    if (checkDiagonals(crosses))
+        return CROSS;
+    if (checkDiagonals(zeros))
+        return ZERO;
+
     let diagonal = checkDiagonals(crosses)
     if (diagonal)
         return [diagonal, 'CROSS'];
