@@ -41,14 +41,17 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
     if (crossTurn){
-        renderSymbolInCell(CROSS, row, col);
-        crossTurn = false;
+        if (changeField(row, col, CROSS)){
+            renderSymbolInCell(CROSS, row, col);
+            crossTurn = false;
+        }
     }
     else{
-        renderSymbolInCell(ZERO, row, col);
-        crossTurn = true;
+        if (changeField(row, col, ZERO)){
+            renderSymbolInCell(ZERO, row, col);
+            crossTurn = true;
+        }
     }
-
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -56,8 +59,6 @@ function renderSymbolInCell (symbol, row, col, color = '#333') {
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
-
-
 }
 
 function findCell (row, col) {
