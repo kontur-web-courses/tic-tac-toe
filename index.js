@@ -124,9 +124,9 @@ showDimensionInput();
 randomBotInput();
 
 function showDimensionInput() {
-    let input = prompt("Введите размер поля (от 3 и выше):");
+    let input = prompt("Введите размер поля (от 2 и выше):");
 
-    if (input && !isNaN(input) && parseInt(input) >= 3) {
+    if (input && !isNaN(input) && parseInt(input) >= 2) {
         boardDimension = parseInt(input);
         board = new Board(boardDimension);
         startGame();
