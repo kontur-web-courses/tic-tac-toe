@@ -10,7 +10,8 @@ const board = [
 
 const container = document.getElementById('fieldWrapper');
 
-var turn = 0;
+let turn = 0, currentPlayer = CROSS;
+let gameOver = false;
 
 startGame();
 addResetListener();
@@ -34,44 +35,71 @@ function renderGrid (dimension) {
     }
 }
 
-function checkWinner(board) {
-    // Проверка по строкам и столбцам
-    for (let i = 0; i < 3; i++) {
-        if (board[i][0] !== '' && board[i][0] === board[i][1] && board[i][1] === board[i][2]) {
-            return board[i][0];
-        }
-        if (board[0][i] !== '' && board[0][i] === board[1][i] && board[1][i] === board[2][i]) {
-            return board[0][i];
-        }
-    }
-
-    if (board[0][0] !== '' && board[0][0] === board[1][1] && board[1][1] === board[2][2]) {
-        return board[0][0];
-    }
-    if (board[0][2] !== '' && board[0][2] === board[1][1] && board[1][1] === board[2][0]) {
-        return board[0][2];
-    }
-}
-
 function checkTie(){
     return board.every(row => row.every(cell => cell !== EMPTY));
 }
 
 function cellClickHandler (row, col) {
-    console.log(`Clicked on cell: ${row}, ${col}`);
-    if (board[row][col] !== EMPTY){
-        return null;
-    } else if (turn % 2 === 0){
-        renderSymbolInCell(CROSS, row, col);
-        board[row][col] = CROSS;
-    } else {
-        renderSymbolInCell(ZERO, row, col);
-        board[row][col] = ZERO;
+    if (!gameOver) {
+        console.log(`Clicked on cell: ${row}, ${col}`);
+        if (board[row][col] !== EMPTY) {
+            return null;
+        } else if (turn % 2 === 0) {
+            renderSymbolInCell(currentPlayer, row, col);
+            board[row][col] = currentPlayer;
+        } else {
+            renderSymbolInCell(currentPlayer, row, col);
+            board[row][col] = currentPlayer;
+        }
+        turn++;
+
+        if (checkWinner(row, col)) {
+            alert(`Игрок ${currentPlayer} победил!`);
+            gameOver = true;
+            return;
+        }
+
+        if (checkTie()) {
+            console.log('Победила Дружба');
+        }
+
+        currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
     }
-    turn++;
-    if ( checkTie() ){
-        console.log('Победила Дружба');
+}
+
+function checkWinner(row, col) {
+    const symbol = board[row][col];
+
+    let rowWin = true;
+    let colWin = true;
+    for (let i = 0; i < 3; i++) {
+        if (board[row][i] !== symbol) {
+            rowWin = false;
+        }
+        if (board[i][col] !== symbol) {
+            colWin = false;
+        }
     }
+    if (rowWin || colWin) {
+        return true;
+    }
+
+    if (row === col || row + col === 2) {
+        let diag1Win = true;
+        let diag2Win = true;
+        for (let i = 0; i < 3; i++) {
+            if (board[i][i] !== symbol) {
+                diag1Win = false;
+            }
+            if (board[i][2 - i] !== symbol) {
+                diag2Win = false;
+            }
+        }
+        if (diag1Win || diag2Win) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
