@@ -4,6 +4,14 @@ const EMPTY = ' ';
 
 let currentTurn = CROSS;
 
+class Point {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.color = EMPTY;
+    }
+}
+
 const field = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
