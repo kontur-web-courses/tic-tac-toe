@@ -115,8 +115,8 @@ function isFinished(board){
 }
 
 function resetField(){
-    for (let i = 0; i < field.length; i++) {
-        for (let j = 0; j < field[i].length; j++) {
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; j++) {
             if (board[i][j] !== EMPTY) {
                 board[i][j] = EMPTY
                 renderSymbolInCell(EMPTY, i, j);
