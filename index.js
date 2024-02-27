@@ -31,14 +31,14 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler(row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (currentStepQuery === 0) {
-        field[row][col] = 'x';
+    if (currentStepQuery === 0 && !field[row][col]) {
+        field[row][col] = 'x'
         renderSymbolInCell(CROSS, row, col);
         currentStepQuery = 1;
-    } else {
-        field[row][col] = '0';
+    }
+    if(currentStepQuery === 1 && !field[row][col]) {
+        field[row][col] = '0'
         renderSymbolInCell(ZERO, row, col);
         currentStepQuery = 0;
     }
@@ -81,6 +81,14 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    field = [[null, null, null], [null, null, null], [null, null, null]]
+    for(let i = 0; i < 3; i++){
+        for(let j = 0; j < 3; j++){
+            renderSymbolInCell(EMPTY, i, j);
+        }
+    }
+    currentStepQuery = 0;
+
 }
 
 
