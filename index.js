@@ -9,7 +9,7 @@ addResetListener();
 
 let currentClick = ZERO
 let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
-
+let isWinnerFound = false;
 function resetField (field) {
     for (let y = 0; y < 3; y++){
         for (let x = 0; x < 3; x++){
@@ -107,8 +107,12 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
     debugger;
-    if (field[row][col] !== EMPTY)
+    if (field[row][col] !== EMPTY){
         return;
+    }
+    if (isWinnerFound){
+        return;
+    }
 
     renderSymbolInCell(currentClick, row, col);
     
@@ -122,6 +126,7 @@ function cellClickHandler (row, col) {
         for (cell of crossSequence){
             renderSymbolInCell(CROSS, cell[0], cell[1], color = '#FF0000');
         }
+        isWinnerFound = true;
         alert('CROSS!!!!!');
         return;
     }
@@ -129,6 +134,7 @@ function cellClickHandler (row, col) {
         for (cell of zeroSequence){
             renderSymbolInCell(ZERO, cell[0], cell[1], color = '#FF0000');
         }
+        isWinnerFound = true;
         alert('ZERO!!!!!');
         return;
     }
