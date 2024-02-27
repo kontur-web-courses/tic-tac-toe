@@ -3,7 +3,9 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-const field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
+const field = [[EMPTY, EMPTY, EMPTY],
+                [EMPTY, EMPTY, EMPTY],
+                [EMPTY, EMPTY, EMPTY]];
 
 startGame();
 addResetListener();
@@ -56,6 +58,24 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+}
+
+function checkMove() {
+    outer1: for (let column of field) {
+        const element = column[0];
+        if (element === EMPTY) {
+            continue;
+        }
+        for (let cell in column) {
+            if (cell !== element) {
+                continue outer1;
+            }
+        }
+        alert(`Победитель: ${element}`)
+    }
+
+    const rowElement = field[0][0]
+
 }
 
 
