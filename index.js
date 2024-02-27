@@ -2,6 +2,12 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
+const board = [
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY]
+];
+
 const container = document.getElementById('fieldWrapper');
 
 startGame();
