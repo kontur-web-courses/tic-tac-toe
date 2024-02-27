@@ -3,7 +3,8 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-gameStarted = true;
+
+let gameStarted = true;
 let currentPlayer = CROSS;
 
 let board = [
@@ -17,8 +18,11 @@ startGame();
 addResetListener();
 
 function startGame () {
+    gameStarted = true;
+    currentPlayer = CROSS;
     renderGrid(3);
 }
+
 
 function renderGrid (dimension) {
     container.innerHTML = '';
@@ -38,24 +42,32 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler(row, col) {
+    if (!gameStarted){
+        return;
+    }
     if (board[row][col] === EMPTY) {
         const currentPlayer = getCurrentPlayer();
         board[row][col] = currentPlayer;
         renderSymbolInCell(currentPlayer, row, col);
-        if (checkWinner(row, col, currentPlayer)) {
-            const winner = getCurrentPlayer() === ZERO ? "Крестики" : "Нолики";
+
+        if (checkWinner()) {
+            const winner = getCurrentPlayer() === CROSS ? "Крестики" : "Нолики";
             alert(`Победитель: ${winner}`);
             disableClickHandlers();
         } else if (checkDraw()) {
             alert("Победила дружба");
         }
+        nextTurn();
     }
 }
 
 function getCurrentPlayer() {
-    const crosses = board.flat().filter(cell => cell === CROSS);
-    const zeros = board.flat().filter(cell => cell === ZERO);
-    return crosses.length === zeros.length ? CROSS : ZERO;
+    return currentPlayer;
+}
+
+function nextTurn(){
+    console.log(currentPlayer);
+    currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
 }
 
 function checkWinner() {
@@ -106,16 +118,14 @@ function checkDraw() {
     return true;
 }
 
-
-
 function disableClickHandlers() {
+    gameStarted = false;
     const cells = document.querySelectorAll('td');
-    cells.forEach(cell => cell.addEventListener('click', ''));
+    cells.forEach(cell => cell.addEventListener('click', () => {}));
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
-
     targetCell.textContent = symbol;
     targetCell.style.color = color;
 }
