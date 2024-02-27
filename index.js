@@ -64,7 +64,7 @@ function cellClickHandler (row, col) {
     changeTurn();
 }
 
-function changeTurnTurn() {
+function changeTurn() {
     turn = (turn == CROSS) ? ZERO : CROSS;
 }
 
