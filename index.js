@@ -12,10 +12,11 @@ startGame();
 addResetListener();
 
 function newBoard(dimension) {
-    data = []
+    let data = []
     for (let i = 0; i < dimension; i++) {
-        data.push(Array(dimension).fill({x: -1, y: -1, side: EMPTY}))
+        data.push(Array(dimension).fill({x: -1, y: -1, side: EMPTY}));
     }
+
     board = {
         _data: data,
         curSide: CROSS,
@@ -59,10 +60,10 @@ function newBoard(dimension) {
             return [[], false]
         },
         at: function (row, col) {
-            return this._data[row * dimension + col].side
+            return this._data[row][col].side
         },
         set: function (row, col, side) {
-            this._data[row * dimension + col].side = side
+            this._data[row][col].side = side
         },
     }
 
