@@ -31,13 +31,14 @@ function checkForAvailable (field) {
 
 function checkSequence(symbol, yIterator, xIterator, initialY, initalX){
     for (let y = initialY, x = initalX; y < 3 && x < 3; x = xIterator(x), y = yIterator(y)){
-        if (field[y][x] !== symbol)
+        if (field[y][x] !== symbol) {
             return null;
+        }
     }
 
     let arr = []
     for (let y = initialY, x = initalX; y < 3 && x < 3; x = xIterator(x), y = yIterator(y)){
-        arr.push([y, x])
+        arr.push([y, x]) 
     }
     return arr;
 }
