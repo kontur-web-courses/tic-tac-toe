@@ -35,32 +35,47 @@ function renderGrid (dimension) {
     }
 }
 
+function isVictory() {
+    let combs = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
+    for (let comb of combs) {
+        if (
+            grid[Math.floor(comb[0] / 3)][comb[0] % 3] === grid[Math.floor(comb[1] / 3)][comb[1] % 3] &&
+            grid[Math.floor(comb[1] / 3)][comb[1] % 3] === grid[Math.floor(comb[2] / 3)][comb[2] % 3] &&
+            grid[Math.floor(comb[0] / 3)][comb[0] % 3] !== EMPTY
+        ) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
     if (grid[row][col] === EMPTY) {
+        step++;
         let symbol = STEPS[step % 2];
         grid[row][col] = symbol;
         renderSymbolInCell(symbol, row, col);
-        if (step === 8 && !checkWinner(step % 2)) {
+        let res = isVictory()
+        if (step === 9 && res === false) {
             alert('Победила дружба!');
         }
-        step++;
-
-    }
-}
-
-function checkWinner(lastSymbolIndex) {
-    let result = false;
-    let opponentSymbol = STEPS[(lastSymbolIndex + 1) % 2]
-    for (const line in grid) {
-        if (!(EMPTY in line) && !(opponentSymbol in line)) {
-            result = true;
+        if (isVictory()) {
+            alert(`${symbol} победил!`)
         }
-
     }
-    return result
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
