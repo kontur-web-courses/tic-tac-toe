@@ -16,7 +16,6 @@ startGame();
 addResetListener();
 
 function startGame () {
-    currentPlayer = CROSS;
     renderGrid(3);
 }
 
@@ -43,10 +42,9 @@ function cellClickHandler(row, col) {
         board[row][col] = currentPlayer;
         renderSymbolInCell(currentPlayer, row, col);
 
-        if (checkWinner()) {
+        if (checkWinner(row, col, currentPlayer)) {
             const winner = getCurrentPlayer() === ZERO ? "Крестики" : "Нолики";
             alert(`Победитель: ${winner}`);
-            highlightWinningCells();
             disableClickHandlers();
         } else if (checkDraw()) {
             alert("Победила дружба");
@@ -55,31 +53,52 @@ function cellClickHandler(row, col) {
 }
 
 function getCurrentPlayer() {
-    return currentPlayer;
-    //const crosses = board.flat().filter(cell => cell === CROSS);
-    //const zeros = board.flat().filter(cell => cell === ZERO);
-    //return crosses.length === zeros.length ? CROSS : ZERO;
+    const crosses = board.flat().filter(cell => cell === CROSS);
+    const zeros = board.flat().filter(cell => cell === ZERO);
+    return crosses.length === zeros.length ? CROSS : ZERO;
 }
 
-function checkWinner() {
-    const lines = [
-        [board[0][0], board[0][1], board[0][2]],
-        [board[1][0], board[1][1], board[1][2]],
-        [board[2][0], board[2][1], board[2][2]],
-        [board[0][0], board[1][0], board[2][0]],
-        [board[0][1], board[1][1], board[2][1]],
-        [board[0][2], board[1][2], board[2][2]],
-        [board[0][0], board[1][1], board[2][2]],
-        [board[0][2], board[1][1], board[2][0]]
-    ];
-
-    for (let line of lines) {
-        if (line.every(cell => cell === CROSS) || line.every(cell => cell === ZERO)) {
+function checkWinner(row, col, player) {
+    const symbols = [CROSS, ZERO];
+    if (symbols.some(symbol => checkLine(row, col, 0, 1, symbol)))
+    {
+        return true;
+    }
+    if (symbols.some(symbol => checkLine(row, col, 1, 0, symbol)))
+    {
+        return true;
+    }
+    if (row === col || row + col === 2) {
+        if (symbols.some(symbol => checkLine(0, 0, 1, 1, symbol)))
+        {
+            return true;
+        }
+        if (symbols.some(symbol => checkLine(0, 2, 1, -1, symbol)))
+        {
             return true;
         }
     }
-
     return false;
+}
+
+function highlightWinningCells(startRow, startCol, rowInc, colInc) {
+    for (let i = 0; i < 3; i++) {
+        const row = startRow + i * rowInc;
+        const col = startCol + i * colInc;
+        findCell(row, col).style.backgroundColor = 'red';
+    }
+}
+
+function checkLine(startRow, startCol, rowInc, colInc, symbol) {
+    for (let i = 0; i < 3; i++) {
+        const row = startRow + i * rowInc;
+        const col = startCol + i * colInc;
+        if (board[row][col] !== symbol) {
+            return false;
+        }
+    }
+    highlightWinningCells(startRow, startCol, rowInc, colInc);
+    return true;
 }
 
 function checkDraw() {
@@ -93,10 +112,7 @@ function checkDraw() {
     return true;
 }
 
-function highlightWinningCells() {
 
-
-}
 
 function disableClickHandlers() {
     const cells = document.querySelectorAll('td');
