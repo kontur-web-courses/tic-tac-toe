@@ -3,12 +3,16 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
+let field;
+let turn;
 
 startGame();
 addResetListener();
 
 function startGame () {
     renderGrid(3);
+    field = [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY];
+    turn = 0;
 }
 
 function renderGrid (dimension) {
@@ -26,14 +30,37 @@ function renderGrid (dimension) {
     }
 }
 
+function isWin (field) {
+    return field[0] === field1[1] && field[1] === field[2] && field[0] !== EMPTY ||
+        field[3] === field1[4] && field[4] === field[5] && field[3] !== EMPTY ||
+        field[6] === field1[7] && field[7] === field[8] && field[6] !== EMPTY ||
+        field[0] === field1[3] && field[3] === field[6] && field[0] !== EMPTY ||
+        field[1] === field1[4] && field[4] === field[7] && field[1] !== EMPTY ||
+        field[2] === field1[5] && field[5] === field[8] && field[2] !== EMPTY ||
+        field[0] === field1[4] && field[4] === field[8] && field[0] !== EMPTY ||
+        field[2] === field1[4] && field[4] === field[6] && field[2] !== EMPTY;
+}
+
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
+    if (field[row * 3 + col] !== EMPTY) {
+        return;
+    }    
+    if (turn === 0) {
+        field[row * 3 + col] = ZERO;
         renderSymbolInCell(ZERO, row, col);
-     */
+    }
+    else {
+        field[row * 3 + col] = CROSS;
+        renderSymbolInCell(CROSS, row, col);
+    }
+    if (isWin(field)) {
+        alert(`${turn + 1}-ый игрок победил!`);
+    } else if (field.indexOf('EMPTY') === -1) {
+        alert(`Победила дружба!`);
+    }
+    turn ^= 1;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
