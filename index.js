@@ -113,7 +113,7 @@ function checkWinner() {
     }
 
     if (field[2][0] === field[1][1] && field[1][1] === field[0][2] && field[0][2] !== EMPTY) {
-        winner = field[0][0];
+        winner = field[0][2];
         renderSymbolInCell(winner, 2, 0, 'red');
         renderSymbolInCell(winner, 1, 1, 'red');
         renderSymbolInCell(winner, 0, 2, 'red');
