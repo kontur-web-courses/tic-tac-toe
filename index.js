@@ -7,6 +7,9 @@ const container = document.getElementById('fieldWrapper');
 startGame();
 addResetListener();
 
+const FIELD = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
+let turn = CROSS;
+
 function startGame () {
     renderGrid(3);
 }
@@ -27,6 +30,9 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
+    FIELD[row][col] = turn;
+    renderSymbolInCell(turn, row, col);
+    turn = turn === CROSS ? ZERO : CROSS;
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
