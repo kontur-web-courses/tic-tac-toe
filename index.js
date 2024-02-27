@@ -50,8 +50,8 @@ function cellClickHandler(row, col) {
         gameBoard[row][col] = symbol;
         let winnerCheck = isWinnerOnBoard();
         if (winnerCheck.winner) {
-            alert(`Победил игрок ${Player}`);
             winnerCheck.line.forEach(([r, c]) => renderSymbolInCell(gameBoard[r][c], r, c, 'red'));
+            alert(`Победил игрок ${Player}`);
         }
         Player = Player === 1 ? 2 : 1;
         counter++;
@@ -62,7 +62,6 @@ function cellClickHandler(row, col) {
 
 
 function isWinnerOnBoard() {
-    // Check rows
     for (let i = 0; i < dimension; i++) {
         if (gameBoard[i].every(cell => cell === gameBoard[i][0] && cell !== EMPTY)) {
             let line1 = [];
@@ -72,7 +71,7 @@ function isWinnerOnBoard() {
             return { winner: true, line: line1 };
         }
     }
-    // Check columns
+    
     for (let i = 0; i < dimension; i++) {
         if (gameBoard.every(row => row[i] === gameBoard[0][i] && row[i] !== EMPTY)) {
             let line1 = [];
@@ -82,7 +81,7 @@ function isWinnerOnBoard() {
             return { winner: true, line: line1};
         }
     }
-    // Check diagonals
+
     if (gameBoard.every((row, index) => row[index] === gameBoard[0][0] && row[index] !== EMPTY)) {
         let line1 = [];
         for (let j = 0; j < dimension; j++) {
@@ -90,6 +89,7 @@ function isWinnerOnBoard() {
         }
         return { winner: true, line: line1 };
     }
+
     if (gameBoard.every((row, index) => row[dimension - index - 1] === gameBoard[0][dimension - 1] && row[dimension - index - 1] !== EMPTY)) {
         let line1 = [];
         for (let j = 0; j < dimension; j++) {
@@ -127,8 +127,6 @@ function resetClickHandler() {
     counter = 0;
 }
 
-/* Test Function */
-/* Win for the first player */
 function testWin() {
     clickOnCell(0, 2);
     clickOnCell(0, 0);
@@ -139,7 +137,6 @@ function testWin() {
     clickOnCell(2, 1);
 }
 
-/* Draw */
 function testDraw() {
     clickOnCell(2, 0);
     clickOnCell(1, 0);
