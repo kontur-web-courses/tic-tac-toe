@@ -7,6 +7,7 @@ const container = document.getElementById('fieldWrapper');
 startGame();
 addResetListener();
 
+let turnCounter = 0;
 function startGame () {
     renderGrid(3);
 }
@@ -34,6 +35,14 @@ function cellClickHandler (row, col) {
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
+    if (turnCounter % 2 === 1){
+        renderSymbolInCell(ZERO, row, col)
+        turnCounter += 1;
+    }
+    else {
+        renderSymbolInCell(CROSS, row, col)
+        turnCounter += 1;
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
