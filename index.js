@@ -127,6 +127,8 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
+    if (isGameEnded)
+        return;
     if (crossTurn){
         if (changeField(row, col, CROSS)){
             renderSymbolInCell(CROSS, row, col);
@@ -161,14 +163,15 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    isGameEnded = false;
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
             field[i][j] = EMPTY;
-            renderSymbolInCell(EMPTY, i, j)
         }
     }
     crossTurn = true;
     alert('Game reseted')
+    startGame();
 }
 
 
