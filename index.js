@@ -85,15 +85,37 @@ function cellClickHandler (row, col) {
     }
 
     currentTurn = currentTurn === CROSS ? ZERO : CROSS;
+
+    if (halfFilled(field)){
+        field = extendField(field);
+    }
+}
+
+function extendField(field){
+    const newRow = [];
+    for (let i = 0; i < field.length; i++) {
+        field[i].push(new Point(i, field.length));
+        newRow.push(new Point(field.length, i))
+    }
+    newRow.push(new Point(field.length, field.length));
+    field.push(newRow);
+    return field;
 }
 
 function endGame() {
-    if (winner) {
+    if (winner !== EMPTY) {
         alert(winner);
+        winner = EMPTY;
         return;
     }
-    
+
     alert('Победила дружба!');
+}
+
+function halfFilled(field){
+    const filledCount = field.reduce((x, y) => x + y.count(a => a.color !== EMPTY), 0);
+    const allCount = field.length ** 2;
+    return filledCount > allCount / 2;
 }
 
 function isGameEnded(field) {
@@ -176,15 +198,15 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
-    clearField();
+    clearField(field);
     currentTurn = CROSS;
     winner = EMPTY;
 }
 
-function clearField() {
+function clearField(field) {
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            field[i][j] = EMPTY;
+            field[i][j] = new Point(i, j);
             renderSymbolInCell(EMPTY, i, j);
         }
     }
