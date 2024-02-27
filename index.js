@@ -6,14 +6,19 @@ const container = document.getElementById('fieldWrapper');
 
 
 const GAME_IN_PROGRESS = 0;
-const DRAW = 1;
-const CROSS_WIN = 2;
-const ZERO_WIN = 3;
+const GAME_FINISHED = 1;
 
 let game_stage = GAME_IN_PROGRESS;
 let counter = 0;
 let field;
 let n = 3;
+
+function ask_user_for_n(){
+    let num = Number(prompt('input dimension number'));
+    if (!Number.isNaN(num)){
+        n = num;
+    }
+}
 
 function init_game_model() {
     field = [];
@@ -66,12 +71,15 @@ function get_figure() {
     return a[counter++ % 2];
 }
 
+
+ask_user_for_n();
 init_game_model();
 startGame();
 addResetListener();
 
+
 function startGame() {
-    renderGrid(3);
+    renderGrid(n);
 }
 
 function renderGrid(dimension) {
@@ -96,20 +104,25 @@ function cellClickHandler(row, col) {
     if (game_stage === GAME_IN_PROGRESS && field[row][col] === EMPTY){
         let figure = get_figure();
         field[row][col] = figure;
-        if (is_turns_ended()) alert("Победила дружба!")
+        
         renderSymbolInCell(figure, row, col);
+
         if (findWinner(CROSS)){
-            console.log(CROSS);
+            onWinner(CROSS);
+            game_stage = GAME_FINISHED;
+            colorSymbols(CROSS);
         }
         if (findWinner(ZERO)){
-            console.log(ZERO);
+            onWinner(ZERO);
+            game_stage = GAME_FINISHED;
+            colorSymbols(ZERO);
         }
+        if (is_turns_ended()) alert("Победила дружба!");
     }
-    
+}
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+function onWinner(winner){
+    alert(`winner is ${winner}`);
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
@@ -142,6 +155,7 @@ function addResetListener() {
 
 function resetClickHandler() {
     console.log('reset!');
+    ask_user_for_n();
     renderGrid(n);
     init_game_model();
 }
