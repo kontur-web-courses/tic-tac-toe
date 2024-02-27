@@ -4,11 +4,29 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+let player = CROSS
+
+const START_GRID = 3
+
+let field = Array(START_GRID).fill(Array(START_GRID).fill(' '));
+
+function check_winner(field, sym) {
+    for (let el = 0; el < field.length; el++) {
+        const element = array[el];
+        
+    }
+}
+
+function switchPlayers() {
+    player = player === CROSS ? ZERO : CROSS 
+}
+ 
+
 startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(START_GRID);
 }
 
 function renderGrid (dimension) {
@@ -31,8 +49,9 @@ function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
 
 
+    renderSymbolInCell(player, row, col);
+    switchPlayers();
     /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
      */
 }
 
