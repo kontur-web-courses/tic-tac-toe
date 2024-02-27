@@ -13,12 +13,12 @@ let board = newBoard();
 
 function newBoard(dimension) {
     board = {
-        _data: Array(dimension * dimension).fill(EMPTY),
+        _data: Array(dimension * dimension).fill({x: -1, y: -1, side: EMPTY}),
         curSide: CROSS,
-        is_winner: function (side) {
+        getWinningValues: function (side) {
             for (let row of this._data) {
                 if (row.every((el) => el === side)) {
-                    return true;
+                    return [row, true];
                 }
             }
 
@@ -29,7 +29,7 @@ function newBoard(dimension) {
                 }
 
                 if (column.every((el) => el === side)) {
-                    return true;
+                    return [column, true]
                 }
             }
 
@@ -42,7 +42,16 @@ function newBoard(dimension) {
                 }
             }
 
-            return diag1.every((el) => el === side) || diag2.every((el) => el === side);
+            if (diag1.every((el) => el === side)) {
+                return [diag1, true]
+            }
+
+
+            if (diag2.every((el) => el === side)) {
+                return [diag2, true];
+            }
+
+            return [[], false]
         },
         at: function (row, col) {
             return this._data[row * dimension + col]
@@ -56,7 +65,8 @@ function newBoard(dimension) {
 }
 
 function startGame() {
-    renderGrid(3);
+    renderGrid(DIMENSION);
+    board = newBoard(DIMENSION);
 }
 
 function renderGrid(dimension) {
@@ -82,7 +92,9 @@ function cellClickHandler(row, col) {
     board.set(row, col, board.curSide);
     renderSymbolInCell(board.curSide, row, col);
 
-    if (board.is_winner())
+    if (board.is_winner(board.curSide)) {
+
+    }
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
@@ -104,8 +116,7 @@ function addResetListener() {
 
 function resetClickHandler() {
     console.log('reset!');
-    renderGrid(3)
-    board = newBoard();
+    startGame();
 }
 
 
