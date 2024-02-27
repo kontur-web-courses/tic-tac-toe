@@ -17,12 +17,12 @@ function startGame() {
 }
 
 function renderGrid(dimension) {
-    STEPS = dimension * dimension
-    SIZE = dimension
+    STEPS = dimension * dimension;
+    SIZE = dimension;
     for (let i = 0; i < dimension; i++) {
-        FIELD[i] = []
+        FIELD[i] = [];
         for (let j = 0; j < dimension; j++) {
-            FIELD[i][j] = EMPTY
+            FIELD[i][j] = EMPTY;
         }
     }
     container.innerHTML = '';
@@ -43,15 +43,15 @@ function cellClickHandler(row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
     if (FIELD[row][col] !== EMPTY || getWinner()) {
-			return
+			return;
 		}
     if (STEPS === 0) {
-			alert('Победила дружба')
-			return
+			alert('Победила дружба');
+			return;
 		}
-    FIELD[row][col] = PLAYER ? CROSS : ZERO
-    renderSymbolInCell(FIELD[row][col], row, col)
-    PLAYER = !PLAYER
+    FIELD[row][col] = PLAYER ? CROSS : ZERO;
+    renderSymbolInCell(FIELD[row][col], row, col);
+    PLAYER = !PLAYER;
     let winner = getWinner();
     console.log(winner);
     if (winner) {
@@ -75,8 +75,8 @@ function getWinner() {
 function checkRow() {
     for (let i = 0; i < SIZE; i++) {
         let win = true;
-        let winner = FIELD[i][0]
-        let points = [[i, 0]]
+        let winner = FIELD[i][0];
+        let points = [[i, 0]];
         if (winner === EMPTY) {
             break;
         }
@@ -98,13 +98,13 @@ function checkRow() {
 function checkColumn() {
     for (let i = 0; i < SIZE; i++) {
         let win = true;
-        let winner = FIELD[0][i]
+        let winner = FIELD[0][i];
         let points = [[0, i]];
         if (winner === EMPTY) {
             break;
         }
         for (let j = 1; j < SIZE; j++) {
-            points[j] = [j, i]
+            points[j] = [j, i];
             win = (winner === FIELD[j][i]);
             if (!win) {
                 break;
@@ -114,16 +114,16 @@ function checkColumn() {
             return [winner, points];
         }
     }
-    return [undefined]
+    return [undefined];
 }
 
 function checkDiagonals() {
     let win = true;
-    let winner = FIELD[0][0]
-    let points = [[0, 0]]
+    let winner = FIELD[0][0];
+    let points = [[0, 0]];
     if (winner !== EMPTY) {
         for (let i = 1; i < SIZE; i++) {
-            points[i] = [i, i]
+            points[i] = [i, i];
             win = (winner === FIELD[i][i]);
             if (!win) {
                 break;
@@ -134,11 +134,11 @@ function checkDiagonals() {
         }
     }
     win = true;
-    winner = FIELD[0][SIZE - 1]
-    points = [[0, SIZE - 1]]
+    winner = FIELD[0][SIZE - 1];
+    points = [[0, SIZE - 1]];
     if (winner !== EMPTY) {
         for (let i = 1; i < SIZE; i++) {
-            points[i] = [i, SIZE - 1 - i]
+            points[i] = [i, SIZE - 1 - i];
             win = (winner === FIELD[i][SIZE - 1 - i]);
             if (!win) {
                 break;
@@ -148,7 +148,7 @@ function checkDiagonals() {
             return [winner, points];
         }
     }
-    return [undefined]
+    return [undefined];
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
