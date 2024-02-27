@@ -102,9 +102,8 @@ function nextTurn(){
 
     if (currentPlayer === ZERO && wantBot){
         aiMove();
+        currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
     }
-
-    currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
 }
 
 function checkWinner() {
