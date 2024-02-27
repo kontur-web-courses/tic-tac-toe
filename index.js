@@ -1,17 +1,131 @@
+class Board {
+    constructor(dimension) {
+        this.isGameFinished = false;
+        this.matrix = this.matrix = Array.from({length: dimension}, () => Array.from({length: dimension}, () => null));
+        this.player = ZERO;
+    }
+
+    changePlayer() {
+        this.player = this.player === CROSS ? ZERO : CROSS;
+    }
+
+    paint(row, col) {
+        this.changePlayer();
+        this.matrix[row][col] = this.player;
+        return this.player;
+    }
+
+    is_painted(row, col) {
+        return this.matrix[row][col] !== null;
+    }
+
+    is_all_painted() {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (this.matrix[i][j] === null)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    checkWinner() {
+        for (let j = 0; j < this.matrix[0].length; j++) {
+            let player = this.matrix[0][j];
+            let isWinner = true;
+            let winningCells = [];
+            for (let i = 0; i < this.matrix.length; i++) {
+                if (this.matrix[i][j] !== player) {
+                    isWinner = false;
+                    break;
+                }
+                winningCells.push([i, j]);
+            }
+            if (isWinner && player !== null) {
+                return [player, winningCells];
+            }
+        }
+
+        for (let i = 0; i < this.matrix.length; i++) {
+            let player = this.matrix[i][0];
+            let isWinner = true;
+            let winningCells = [];
+            for (let j = 0; j < this.matrix[i].length; j++) {
+                if (this.matrix[i][j] !== player) {
+                    isWinner = false;
+                    break;
+                }
+                winningCells.push([i, j]);
+            }
+            if (isWinner && player !== null) {
+                return [player, winningCells];
+            }
+        }
+
+        let player = this.matrix[0][0];
+        let isWinner = true;
+        let winningCells = [];
+        for (let i = 0; i < this.matrix.length; i++) {
+            if (this.matrix[i][i] !== player) {
+                isWinner = false;
+                break;
+            }
+            winningCells.push([i, i]);
+        }
+        if (isWinner && player !== null) {
+            return [player, winningCells];
+        }
+
+        player = this.matrix[this.matrix.length - 1][0];
+        isWinner = true;
+        winningCells = [];
+        for (let i = 0; i < this.matrix.length; i++) {
+            if (this.matrix[this.matrix.length - i - 1][i] !== player) {
+                isWinner = false;
+                break;
+            }
+            winningCells.push([this.matrix.length - i - 1, i]);
+        }
+        if (isWinner && player !== null) {
+            return [player, winningCells];
+        }
+
+        return [null, []];
+    }
+}
+
+
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-
+const BLACK_COLOR = '#333'
+const RED_COLOR = '#FF0000'
 const container = document.getElementById('fieldWrapper');
 
-startGame();
-addResetListener();
+let board;
+let boardDimension;
 
-function startGame () {
-    renderGrid(3);
+showDimensionInput();
+
+function showDimensionInput() {
+    let input = prompt("Введите размер поля (от 3 и выше):");
+
+    if (input && !isNaN(input) && parseInt(input) >= 3) {
+        boardDimension = parseInt(input);
+        board = new Board(boardDimension);
+        startGame();
+        addResetListener();
+    } else {
+        alert("Пожалуйста, введите корректное значение для размера поля.");
+        showDimensionInput();
+    }
 }
 
-function renderGrid (dimension) {
+function startGame() {
+    renderGrid(boardDimension);
+}
+
+function renderGrid(dimension) {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
@@ -26,41 +140,63 @@ function renderGrid (dimension) {
     }
 }
 
-function cellClickHandler (row, col) {
+function cellClickHandler(row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
+    if (board.isGameFinished) {
+        return;
+    }
+    if (!board.is_painted(row, col)) {
+        renderSymbolInCell(board.paint(row, col), row, col);
+    }
 
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    if (board.checkWinner()[0] !== null) {
+        let winnerData = board.checkWinner();
+        let winner = winnerData[0] === CROSS ? 'Крестик' : 'Нолик';
+        let winFields = winnerData[1];
+        winFields.forEach(function (field) {
+            let row = field[0];
+            let col = field[1];
+            renderSymbolInCell(winnerData[0], row, col, RED_COLOR)
+        })
+        board.isGameFinished = true;
+        alert(`Победил ${winner}!`)
+        return;
+    }
+    if (board.is_all_painted()) {
+        board.isGameFinished = true;
+        alert('Победила дружба');
+    }
 }
 
-function renderSymbolInCell (symbol, row, col, color = '#333') {
+function renderSymbolInCell(symbol, row, col, color = BLACK_COLOR) {
     const targetCell = findCell(row, col);
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
 }
 
-function findCell (row, col) {
+function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
 }
 
-function addResetListener () {
+function addResetListener() {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
 }
 
-function resetClickHandler () {
+function resetClickHandler() {
     console.log('reset!');
+    board = new Board(boardDimension);
+    startGame();
 }
 
 
 /* Test Function */
+
 /* Победа первого игрока */
-function testWin () {
+function testWin() {
     clickOnCell(0, 2);
     clickOnCell(0, 0);
     clickOnCell(2, 0);
@@ -71,7 +207,7 @@ function testWin () {
 }
 
 /* Ничья */
-function testDraw () {
+function testDraw() {
     clickOnCell(2, 0);
     clickOnCell(1, 0);
     clickOnCell(1, 1);
@@ -84,6 +220,6 @@ function testDraw () {
     clickOnCell(2, 2);
 }
 
-function clickOnCell (row, col) {
+function clickOnCell(row, col) {
     findCell(row, col).click();
 }
