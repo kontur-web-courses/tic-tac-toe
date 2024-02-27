@@ -47,12 +47,41 @@ function cellClickHandler (row, col) {
             const winner = currentPlayer === CROSS ? 'Крестики' : 'Нолики';
             alert(`${winner} выиграли`);
             currentState = 'game over'
+            return;
         }
+        if (movesLeft === 0) {
+            alert('Победила дружба');
+            currentState = 'game over'
+            return;
+        }
+        currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
+        let x = getRandomInt(dimension);
+        let y = getRandomInt(dimension);
+        while (board[x][y] !== EMPTY) {
+            x = getRandomInt(dimension);
+            y = getRandomInt(dimension);
+        }
+        renderSymbolInCell(currentPlayer, x, y);
+        board[x][y] = currentPlayer;
+        --movesLeft;
+        if (checkAndHighlightWinner()) {
+            const winner = currentPlayer === CROSS ? 'Крестики' : 'Нолики';
+            alert(`${winner} выиграли`);
+            currentState = 'game over'
+            return;
+        }
+        if (movesLeft === 0) {
+            alert('Победила дружба');
+            currentState = 'game over'
+            return;
+        }
+        currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
     }
-    if (movesLeft === 0) {
-        alert('Победила дружба');
-    }
-    currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
+
+}
+
+function getRandomInt(n) {
+    return Math.floor(Math.random() * (n - 1));
 }
 
 function checkAndHighlightWinner() {
