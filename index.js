@@ -80,6 +80,12 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    for (let i = 0; i < pole[0].length; i++) {
+        for (let j = 0; j < pole[0].length; j++) {
+            pole[i][j] = EMPTY;
+            findCell(i, j).textContent = EMPTY;
+        }
+    }
     console.log('reset!');
 }
 
