@@ -30,6 +30,8 @@ class Field {
     }
 }
 
+let grid = Field();
+
 startGame();
 addResetListener();
 
