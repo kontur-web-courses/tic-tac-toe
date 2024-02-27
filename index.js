@@ -3,16 +3,17 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
+const FIELD_SIZE = 3;
+const FIELD = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
+let turn = CROSS;
+let turnsLeft = FIELD_SIZE * FIELD_SIZE;
 
 startGame();
 addResetListener();
 
-const FIELD = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
-let turn = CROSS;
-let turnsLeft = 9;
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(FIELD_SIZE);
 }
 
 function renderGrid (dimension) {
@@ -31,8 +32,6 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
     if(FIELD[row][col] !== EMPTY)
     {
@@ -45,10 +44,6 @@ function cellClickHandler (row, col) {
     if (turnsLeft === 0) {
         setTimeout(() => { alert('Победила дружба!'); }, 20);
     }
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -72,6 +67,42 @@ function resetClickHandler () {
     console.log('reset!');
 }
 
+function checkRow(rowIndex)
+{
+    const type = FIELD[rowIndex][0];
+    if(type === EMPTY){
+        return false;
+    }
+    for(const item of FIELD[rowIndex]){
+        if(type !== item){
+            return false;
+        }
+    }
+    return type;
+}
+
+function checkCol(colIndex)
+{
+    const type = FIELD[0][colIndex];
+    if(type === EMPTY){
+        return false;
+    }
+    for(const i = 0; i < dimension; i++){
+        let item = FIELD[i][colIndex];
+        if(type !== item){
+            return false;
+        }
+    }
+    return type;
+}
+
+function checkDiag(diagNum){
+    let dir = diagNum === 1 ? 1 : -1;
+    
+    for(let i = 0; i < FIELD_SIZE; i++){
+
+    }
+}
 
 /* Test Function */
 /* Победа первого игрока */
