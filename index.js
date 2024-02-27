@@ -1,7 +1,10 @@
+const RED = '#ed52c3';
 
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+
+let isGameEnded = false;
 
 const container = document.getElementById('fieldWrapper');
 let crossTurn = true;
@@ -17,11 +20,12 @@ function changeField(row_index, column_index, value){
 }
 
 function checkGameState(){
-    console.log(field)
+
     for (const row of field){
         if (row[0] === row[1] && row[1] === row[2]){
             if (row[0] === CROSS){
                 alert('First win')
+                render
             }
             else if (row[1] === ZERO){
                 alert('Second win')
