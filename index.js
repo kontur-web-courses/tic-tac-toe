@@ -162,6 +162,9 @@ function checkDiag(diagNum) {
 }
 
 function checkForWinner() {
+    if(gameOver){
+        return;
+    }
     let possibleWinner = checkDiag(0) || checkDiag(1);
 
     for (let i = 0; i < FIELD_SIZE; i++) {
