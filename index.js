@@ -4,6 +4,7 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+let board = []
 startGame();
 addResetListener();
 
