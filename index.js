@@ -8,7 +8,10 @@ let player = CROSS
 
 const START_GRID = 3
 
-let field = Array(START_GRID).fill(Array(START_GRID).fill(EMPTY));
+//let field = Array(START_GRID).fill(Array(START_GRID).fill(EMPTY));
+
+let field = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
+
 
 function checkWinner(field, sym) {
     for (let i = 0; i < field.length; i++) {
@@ -20,19 +23,21 @@ function checkWinner(field, sym) {
             }
         }
         if (flag) {
+            console.log('row')
             return true
         }
     }
     
-    for (let j = 0; j < field.length; j++) {
+    for (let i = 0; i < field.length; i++) {
         let flag = true
-        for (let i = 0; i < field[0].length; i++) {
-            const col_element = field[i][j]
+        for (let j = 0; j < field[0].length; j++) {
+            const col_element = field[j][i]
             if (col_element !== sym) {
                 flag = false
             }
         }
         if (flag) {
+            console.log('col')
             return true
         }
     }
@@ -40,22 +45,24 @@ function checkWinner(field, sym) {
     let flag = true
     for (let i = 0; i < field.length; i++) {
         const diag_element = field[i][i];
-        if (diag_element === sym) {
+        if (diag_element !== sym) {
             flag = false
         }
     }
     if (flag) {
+        console.log('diag')
         return true
     }
     
     flag = true
     for (let i = 0; i < field.length; i++) {
         const diag_element = field[i][field.length - i - 1];
-        if (diag_element === sym) {
+        if (diag_element !== sym) {
             flag = false
         }
     }
     if (flag) {
+        console.log('rev')
         return true
     }
 
@@ -92,13 +99,10 @@ function renderGrid (dimension) {
 }
 
 function checkDraw() {
-
     // Проверяем, все ли ячейки на поле заполнены
     for (let i = 0; i < field.length; i++) {
         for (let j = 0; j < field[i].length; j++) {
-            console.log(field[i][j])
             if (field[i][j] === EMPTY) {
-                
                 return false; // Не все ячейки заполнены, игра продолжается
             }
         }
@@ -118,18 +122,16 @@ function cellClickHandler (row, col) {
         renderSymbolInCell(player, row, col);
         if (checkWinner(field, player)) {
             alert('${player} wins');
-            return;
         }
 
-        checkDraw()
-        switchPlayers();
         if (checkDraw()){
             alert("Победила дружба!");
+            return
         }
+        switchPlayers();
     }
      else {
         console.log(`Cell ${row}, ${col} is already filled`);
-    
 
     }
     
