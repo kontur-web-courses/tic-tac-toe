@@ -200,6 +200,9 @@ function resetClickHandler() {
 function aiClickHandler() {
     console.log('ai!');
     aiSide = aiSide === EMPTY ? ZERO : EMPTY;
+    if (board.curSide !== aiSide) {
+        aiMove(board, randomAiMove, aiSide)
+    }
 }
 
 
