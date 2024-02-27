@@ -26,6 +26,7 @@ function newBoard(dimension) {
         _data: data,
         curSide: EMPTY,
         finished: false,
+        dimension: dimension,
         getWinningValues: function (side) {
             for (let row of this._data) {
                 if (row.every((el) => el.side === side)) {
@@ -33,7 +34,7 @@ function newBoard(dimension) {
                 }
             }
 
-            for (let colIdx = 0; colIdx < dimension; colIdx++) {
+            for (let colIdx = 0; colIdx < this.dimension; colIdx++) {
                 let column = [];
                 for (let row of this._data) {
                     column.push(row[colIdx]);
@@ -46,9 +47,9 @@ function newBoard(dimension) {
 
             let diag1 = [];
             let diag2 = [];
-            for (let diagIdx = 0; diagIdx < dimension; diagIdx++) {
+            for (let diagIdx = 0; diagIdx < this.dimension; diagIdx++) {
                 diag1.push(this._data[diagIdx][diagIdx]);
-                diag2.push(this._data[diagIdx][dimension - diagIdx - 1]);
+                diag2.push(this._data[diagIdx][this.dimension - diagIdx - 1]);
             }
 
             if (diag1.every((el) => el.side === side)) {
@@ -74,6 +75,10 @@ function newBoard(dimension) {
     }
 
     return board;
+}
+
+function randomAi(board, side) {
+    let freeFields = []
 }
 
 function startGame() {
