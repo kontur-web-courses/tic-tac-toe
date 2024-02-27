@@ -54,47 +54,28 @@ function cellClickHandler(row, col) {
 }
 
 function isWinnerOnBoard() {
-    let rows, cols, diag, antiDiag;
-
+    // Check rows and columns
     for (let i = 0; i < dimension; i++) {
-        rows = true;
-        cols = true;
-        console.log(gameBoard[i][0]);
-        for (let j = 0; j < dimension - 1 ; j++) {
-            if (gameBoard[i][j] === EMPTY || gameBoard[i][j] !== gameBoard[i][j + 1]) {
-                rows = false;
-                break;
-            }
-            if (gameBoard[j][i] === EMPTY || gameBoard[j][i] !== gameBoard[j + 1][i]) {
-                cols = false;
-                break;
-            }
-        }
-        if (rows || cols) {
-            console.log(i)
-            console.log('hehe');
+        if (
+            gameBoard[i].every(cell => cell === gameBoard[i][0] && cell !== EMPTY)  ||
+            gameBoard.every(row => row[i] === gameBoard[0][i] && row[i] !== EMPTY)
+        ) {
             return true;
         }
     }
 
-    diag = true;
-    for (let i = 0; i < dimension - 1; i++) {
-        if (gameBoard[i][i] === EMPTY || gameBoard[i][i] !== gameBoard[i + 1][i + 1]) {
-            diag = false;
-            break;
-        }
+    // Check diagonals
+    if (
+        gameBoard.every((row, index) => row[index] === gameBoard[0][0] && row[index] !== EMPTY) ||
+        gameBoard.every((row, index) => row[dimension - index - 1] === gameBoard[0][dimension - 1]
+            && row[dimension - index - 1] !== EMPTY)
+    ) {
+        return true;
     }
 
-    antiDiag = true;
-    for (let i = 0; i < dimension - 1; i++) {
-        if (gameBoard[i][dimension - i - 1] === EMPTY || gameBoard[i][dimension - i - 1] !== gameBoard[i + 1][dimension - i - 2]) {
-            antiDiag = false;
-            break;
-        }
-    }
-
-    return diag || antiDiag;
+    return false;
 }
+
 
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
