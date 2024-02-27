@@ -10,6 +10,7 @@ let isActive = false;
 
 startGame();
 addResetListener();
+addStartListener();
 
 function startGame () {
     renderGrid(dimension);
@@ -72,6 +73,17 @@ function findCell (row, col) {
 function addResetListener () {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
+}
+
+function addStartListener() {
+    const startButton = document.getElementById('start');
+    startButton.addEventListener('click', startClickHandler);
+}
+
+
+function startClickHandler() {
+    dimension = Number(document.getElementById('fieldSize').value);
+    resetClickHandler();
 }
 
 function resetClickHandler () {

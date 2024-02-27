@@ -6,16 +6,24 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <table class="table">
-            <tbody id="fieldWrapper">
+<div class="container">
+    <table class="table">
+        <tbody id="fieldWrapper">
 
-            </tbody>
-        </table>
-    </div>
-    <div>
-        <button class="resetButton" id="reset">Сначала</button>
-    </div>
-    <script src="index.js"></script>
+        </tbody>
+    </table>
+</div>
+<div>
+    <p align="center">Выберите размер поля:</p>
+    <select class="options" id="fieldSize">
+        <option value=3>3x3</option>
+        <option value=4>4x4</option>
+        <option value=5>5x5</option>
+        <option value=6>6x6</option>
+    </select>
+    <button class="startButton" id="start">Начать игру</button>
+    <button class="resetButton" id="reset">Сначала</button>
+</div>
+<script src="index.js"></script>
 </body>
 </html>
