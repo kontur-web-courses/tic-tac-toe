@@ -1,7 +1,7 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-let count = 0;
+let free_index = [];
 let pole = [];
 let k = 0;
 let stop = false;
@@ -22,6 +22,7 @@ function renderGrid (dimension) {
         const row = document.createElement('tr');
         for (let j = 0; j < dimension; j++) {
             pole[i][j] = EMPTY;
+            free_index.push([i, j]);
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
             cell.addEventListener('click', () => cellClickHandler(i, j));
@@ -31,35 +32,76 @@ function renderGrid (dimension) {
     }
 }
 
+function getRandomInt(min, max) {
+    console.log(`random`);
+    min = Math.ceil(min)
+    max = Math.floor(max)
+    return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
 function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
-    k += 1;
     if (!stop) {
+        if (findCell(row, col).textContent === ZERO) {
+            return;
+        }
         if (findCell(row, col).textContent === EMPTY){
-            if (count === 0){
-                pole[row][col] = ZERO;
-                renderSymbolInCell(ZERO, row, col);
-                count = 1;
-            }
-            else{
-                pole[row][col] = CROSS;
-                renderSymbolInCell(CROSS, row, col);
-                count = 0;
-            }
+            pole[row][col] = CROSS;
+            free_index.filter(number => (number[0] !== row || number[1] !== col));
+            renderSymbolInCell(CROSS, row, col);
+            k += 1;
+            console.log(`update1`);
         }
     }
 
     let b = checkWinner();
-    if (b[0]) {
+    if (!stop && b[0]) {
         stop = true;
         for (let i = 0; i < b[1].length; i++) {
-            renderSymbolInCell(b[0], b[1][i][1], b[1][i][0], '#FF0000');
+            renderSymbolInCell(b[0], b[1][i][0], b[1][i][1], '#FF0000');
         }
         alert('Победил ' + b[0])
     }
 
-    if (k === pole[0].length * pole[0].length)
+    if (!stop && k === pole[0].length * pole[0].length) {
+        stop = true;
         alert('Победила дружба!')
+    }
+
+
+    if (!stop) {
+        let p = true;
+        while (p) {
+            let m = getRandomInt(0, free_index.length - 1);
+            let i = free_index[m][0];
+            let j = free_index[m][1];
+            console.log(free_index[m][0]);
+            console.log(free_index[m][1]);
+            if (pole[i][j] === EMPTY) {
+                console.log(`1`);
+                p = false;
+                pole[i][j] = ZERO;
+                free_index.filter(number => (number[0] !== i || number[1] !== j));
+                renderSymbolInCell(ZERO, i, j, '#333');
+            }
+        }
+        console.log(`update2`);
+        k += 1;
+    }
+
+    b = checkWinner();
+    if (!stop && b[0]) {
+        stop = true;
+        for (let i = 0; i < b[1].length; i++) {
+            renderSymbolInCell(b[0], b[1][i][0], b[1][i][1], '#FF0000');
+        }
+        alert('Победил ' + b[0])
+    }
+
+    if (!stop && k === pole[0].length * pole[0].length) {
+        stop = true;
+        alert('Победила дружба!')
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -80,9 +122,13 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    free_index = []
+    stop = false;
+    k = 0;
     for (let i = 0; i < pole[0].length; i++) {
         for (let j = 0; j < pole[0].length; j++) {
             pole[i][j] = EMPTY;
+            free_index.push([i, j]);
             findCell(i, j).textContent = EMPTY;
         }
     }
@@ -90,9 +136,11 @@ function resetClickHandler () {
 }
 
 function checkWinner () {
+    console.log('cheackwinner!');
     let win = [];
     let l = 0;
     let a = '';
+    console.log('1');
     for (let i = 0; i < pole[0].length; i++) {
         a = pole[i][0];
         for (let j = 0; j < pole[0].length; j++) {
@@ -111,6 +159,7 @@ function checkWinner () {
         win = [];
     }
 
+    console.log('2');
     win = [];
     a = '';
     l = 0;
@@ -121,7 +170,7 @@ function checkWinner () {
                 break;
             }
             if (pole[j][i] === a) {
-                win.push([i, j])
+                win.push([j, i])
                 l += 1;
             }
         }
@@ -132,6 +181,7 @@ function checkWinner () {
         win = [];
     }
 
+    console.log('3');
     win = [];
     l = 0;
     a = pole[0][0];
@@ -148,6 +198,7 @@ function checkWinner () {
         }
     }
 
+    console.log('4');
     win = [];
     l = 0;
     a = pole[0][pole[0].length - 1];
