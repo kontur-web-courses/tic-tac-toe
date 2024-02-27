@@ -3,7 +3,6 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-
 const field = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
@@ -129,13 +128,14 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
-    startGame();
     for (let i = 0; i < GameDimension; i++) {
         for (let j = 0; j < GameDimension; j++) {
             renderSymbolInCell(EMPTY, i, j);
             field[i][j] = EMPTY;
+            isGameOver = false;
         }
     }
+    startGame();
 }
 
 
