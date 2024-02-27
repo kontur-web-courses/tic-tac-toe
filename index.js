@@ -42,6 +42,16 @@ function cellClickHandler (row, col) {
     }
 }
 
+function randomMove () {
+    for (let i = 0; i < 2; i++) {
+        for (let j = 0; j < 2; j++) {
+            if (field[i][j] === EMPTY) {
+                renderSymbolInCell(ZERO, i, j);
+            }
+        }
+    }
+}
+
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
