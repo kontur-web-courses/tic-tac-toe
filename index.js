@@ -64,7 +64,8 @@ function cellClickHandler (row, col) {
 
     const point = field[row][col];
 
-    if (winner !== EMPTY) {
+    if (winner !== EMPTY || isGameEnded(field)) {
+        endGame()
         return;
     }
 
@@ -80,9 +81,23 @@ function cellClickHandler (row, col) {
     if (winnerTriple) {
         renderSymbols(winnerTriple[0].color, winnerTriple, '#FF0000');
         winner = currentTurn
+        endGame();
     }
 
     currentTurn = currentTurn === CROSS ? ZERO : CROSS;
+}
+
+function endGame() {
+    if (winner) {
+        alert(winner);
+        return;
+    }
+    
+    alert('Победила дружба!');
+}
+
+function isGameEnded(field) {
+    return field.every(x => x.every(a => a.color !== EMPTY))
 }
 
 function renderSymbols(symbol, points, color) {
