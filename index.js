@@ -40,6 +40,18 @@ function cellClickHandler (row, col) {
         return;
     FIELD[row][col] = TURN;
     renderSymbolInCell(TURN, row, col);
+    doAfterStep();
+    if (WINNER === EMPTY)
+        delayAIStep();
+
+    console.log(`Clicked on cell: ${row}, ${col}`);
+    /* Пользоваться методом для размещения символа в клетке так:
+        renderSymbolInCell(ZERO, row, col);
+     */
+}
+
+function doAfterStep()
+{
     TURN = TURN === CROSS ? ZERO : CROSS;
     PASSED_TURNS++;
     let winner_items = checkForWinner();
@@ -51,22 +63,42 @@ function cellClickHandler (row, col) {
             const targetCell = findCell(cell[0], cell[1]);
             targetCell.style.color = "#FF0000";
         }
-        alert(`Winner: ${WINNER}`)
+        delayAlert(`Winner: ${WINNER}`)
         return;
     }
     if (PASSED_TURNS === DIMENSION * DIMENSION)
-        alert("Победила дружба")
-    console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+        delayAlert("Победила дружба")
 }
 
-function drawWinner()
-{
+function delayAIStep() {
+    setTimeout(doAIStep, 1000)
+}
 
+function delayAlert(text)
+{
+    setTimeout(() => alert(text), 500, text)
+}
+
+function getRandomArrayValue(arr) {
+    const randomIndex = Math.floor(Math.random() * arr.length);
+    return arr[randomIndex];
+}
+
+function doAIStep()
+{
+    const indexes = [];
+    for (let i = 0; i < DIMENSION; i++) {
+        for (let j = 0; j < DIMENSION; j++) {
+            if (FIELD[i][j] === EMPTY) {
+                indexes.push([i, j]);
+            }
+        }
+    }
+
+    let step = getRandomArrayValue(indexes);
+    FIELD[step[0]][step[1]] = TURN;
+    renderSymbolInCell(TURN, step[0], step[1]);
+    doAfterStep();
 }
 
 function checkForWinner()
@@ -87,6 +119,7 @@ function checkForWinner()
         if (vert.every(el => el === vert[0] && el !== EMPTY))
             return [vert[0], vert_indexes];
         vert = [];
+        vert_indexes = []
         diag1.push(FIELD[i][i]);
         diag1_indexes.push([i, i]);
         diag2.push(FIELD[i][DIMENSION- 1 - i]);
