@@ -36,6 +36,17 @@ function nextCurrentMove(board){
     }
 }
 
+function haveMoves(board){
+   for (let i = 0; i < dimension; i++) {
+        for (let j = 0; j < dimension; j++) {
+            if (board.board[i][j] === EMPTY){
+                return true;
+            }
+        }
+    }
+   return false;
+}
+
 // ---------- Board Methods End -------
 
 function startGame () {
@@ -72,11 +83,9 @@ function cellClickHandler (row, col, board) {
         renderSymbolInCell(board.currentMove, row, col);
         nextCurrentMove(board)
     }
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    if (!haveMoves(board)){
+        alert("Победила дружба!")
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
