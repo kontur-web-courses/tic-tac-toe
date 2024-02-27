@@ -4,16 +4,18 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 const FIELD_SIZE = 3;
-const FIELD = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
+let FIELD = [];
 let turn = CROSS;
 let turnsLeft = FIELD_SIZE * FIELD_SIZE;
 let gameOver = false;
+
 
 startGame();
 addResetListener();
 
 
 function startGame () {
+    resetGame();
     renderGrid(FIELD_SIZE);
 }
 
@@ -67,6 +69,7 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    startGame();
 }
 
 function checkRow(rowIndex)
@@ -123,11 +126,27 @@ function checkForWinner() {
     for(let i = 0; i < FIELD_SIZE; i++) {
         possibleWinner ||= (checkCol(i) || checkRow(i));
         if (possibleWinner) {
-            alert(`Победил ${possibleWinner}`);
+            setTimeout(() => { alert(`Победил ${possibleWinner}`); }, 20);
+            
             gameOver = true;
             return;
         }
     }
+}
+
+function resetGame(){
+    FIELD = [];
+    for(let i = 0; i < FIELD_SIZE; i++)
+    {
+        let arr = [];
+        for(let j = 0; j < FIELD_SIZE; j++){
+            arr.push(" ")
+        }
+        FIELD.push(arr);
+    }
+    gameOver = false;
+    turnsLeft = FIELD_SIZE * FIELD_SIZE;
+    turn = CROSS;
 }
 
 /* Test Function */
