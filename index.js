@@ -7,6 +7,7 @@ const FIELD_SIZE = 3;
 const FIELD = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
 let turn = CROSS;
 let turnsLeft = FIELD_SIZE * FIELD_SIZE;
+let gameOver = false;
 
 startGame();
 addResetListener();
@@ -33,7 +34,7 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if(FIELD[row][col] !== EMPTY)
+    if(FIELD[row][col] !== EMPTY || gameOver)
     {
         return
     }
@@ -118,19 +119,14 @@ function checkDiag(diagNum){
 }
 
 function checkForWinner() {
-
+    let possibleWinner = checkDiag(0) || checkDiag(1);
     for(let i = 0; i < FIELD_SIZE; i++) {
-        let possibleWinner = checkCol(i) || checkRow(i);
-
+        possibleWinner ||= (checkCol(i) || checkRow(i));
         if (possibleWinner) {
             alert(`Победил ${possibleWinner}`);
+            gameOver = true;
             return;
         }
-    }
-
-    let possibleWinner = checkDiag(0) || checkDiag(1);
-    if (possibleWinner) {
-        alert(`Победил ${possibleWinner}`);
     }
 }
 
