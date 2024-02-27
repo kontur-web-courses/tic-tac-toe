@@ -2,6 +2,7 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 const dimension = 3;
+const redColor = '#FF0000'
 
 const container = document.getElementById('fieldWrapper');
 
@@ -52,45 +53,54 @@ function checkWin(board){
 
     for (let i = 0; i < dimension; i++) {
         let sum = '';
+        let pairs = [];
         for (let j = 0; j < dimension; j++) {
             sum += board.board[i][j];
+            pairs.push([i, j]);
         }
         let checkLine = checkLineWin(sum);
         if (checkLine !== undefined){
-            return checkLine
+            return [checkLine, pairs];
         }
     }
 
     // Горизонталь
     for (let i = 0; i < dimension; i++) {
         let sum = '';
+        let pairs = [];
         for (let j = 0; j < dimension; j++) {
             sum += board.board[j][i];
+            pairs.push([i, j]);
         }
         let checkLine = checkLineWin(sum);
         if (checkLine !== undefined){
-            return checkLine
+            return [checkLine, pairs];
         }
     }
 
     // Диагональ (0,0) -> (d, d)
     let sum = '';
+    let pairs = [];
     for (let i = 0; i < dimension; i++) {
         sum += board.board[i][i];
+        pairs.push([i, i]);
     }
     let checkLine = checkLineWin(sum);
     if (checkLine !== undefined){
-        return checkLine;
+        return [checkLine, pairs];
     }
 
-    sum = '';
+
     // Диагональ (d, 0) -> (0, d)
+    pairs = [];
+    sum = '';
     for (let i = 0; i < dimension; i++) {
         sum += board.board[i][dimension - 1 - i];
+        pairs.push([i][dimension - 1 - i]);
     }
     checkLine = checkLineWin(sum);
     if (checkLine !== undefined){
-        return checkLine;
+        return [checkLine, pairs];
     }
 }
 
@@ -141,7 +151,10 @@ function cellClickHandler (row, col, board) {
     let win = checkWin(board);
     console.log(win);
     if(win !== undefined){
-        alert(`Победил ${win}`)
+        for (let winElementElement of win[1]) {
+            renderSymbolInCell(win[0], winElementElement[0], winElementElement[1], redColor);
+        }
+        alert(`Победил ${win[0]}`)
     }else if (!haveMoves(board)){
         alert("Победила дружба!")
     }
