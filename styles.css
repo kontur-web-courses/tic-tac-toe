@@ -53,7 +53,7 @@ body {
 }
 
 .changeButton {
-    display: block;
+    display: flex;
     margin: 20px auto;
     padding: 10px;
     background: none;
