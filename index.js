@@ -8,8 +8,8 @@ let player = CROSS
 
 const START_GRID = 3
 
-let field = Array(START_GRID).fill(Array(START_GRID).fill(EMPTY));
-
+// let field = Array(START_GRID).fill(Array(START_GRID).fill(EMPTY));
+let field = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
 function checkWinner(field, sym) {
     for (let i = 0; i < field.length; i++) {
         let flag = true
@@ -115,13 +115,13 @@ function cellClickHandler (row, col) {
     if (targetCell === EMPTY) {
         console.log(`Clicked on cell: ${row}, ${col}`);
         field[row][col] = player
+        console.log(field,row,col)
         renderSymbolInCell(player, row, col);
         if (checkWinner(field, player)) {
             alert('${player} wins');
-            return;
+            //return;
         }
 
-        checkDraw()
         switchPlayers();
         if (checkDraw()){
             alert("Победила дружба!");
@@ -160,6 +160,8 @@ function resetClickHandler () {
         for (let j = 0; j < START_GRID; j++) {
             const cell = findCell(i, j);
             cell.textContent = EMPTY;
+            field = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
+            player = CROSS
         }
     }
     console.log('reset!');
