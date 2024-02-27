@@ -1,12 +1,12 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-
-const board = [
+const boardTemplate = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY]
 ];
+let board = boardTemplate;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -60,7 +60,7 @@ function cellClickHandler (row, col) {
         }
 
         if (checkTie()) {
-            console.log('Победила Дружба');
+            alert('Победила Дружба');
         }
 
         currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
@@ -122,6 +122,8 @@ function addResetListener () {
 function resetClickHandler () {
     console.log('reset!');
     turn = 0;
+    board = boardTemplate;
+    renderGrid(3);
 }
 
 
