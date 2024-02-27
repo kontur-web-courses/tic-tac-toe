@@ -2,9 +2,10 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 const xo = [ZERO, CROSS];
-let curr_step = 1;
-let map = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
-let isEnd = false;
+const emptyMap = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
+let curr_step;
+let map;
+let isEnd;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -15,12 +16,11 @@ function startGame () {
     isEnd = false;
     renderGrid(3);
     curr_step = 1;
-    map = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
+    map = emptyMap;
 }
 
 function renderGrid (dimension) {
     container.innerHTML = '';
-
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
         for (let j = 0; j < dimension; j++) {
@@ -29,12 +29,12 @@ function renderGrid (dimension) {
             cell.addEventListener('click', () => cellClickHandler(i, j));
             row.appendChild(cell);
         }
+
         container.appendChild(row);
     }
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
     if (map[row][col] !== EMPTY || isEnd)
         return;
     console.log(`Clicked on cell: ${row}, ${col}`);
@@ -50,14 +50,11 @@ function cellClickHandler (row, col) {
     map[row][col] = curr_symbol;
     curr_step++;
     checkWinner(curr_symbol);
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
 }
 
 function checkDiagonalWinner(diagonal) {
     let diag = [];
+
     for (let i = 0; i < map.length; i++) {
         diag[i] = diagonal ? map[i][i] : map[map.length - i - 1][i];
     }
