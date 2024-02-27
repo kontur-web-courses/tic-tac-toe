@@ -6,6 +6,7 @@ const container = document.getElementById('fieldWrapper');
 
 let board = undefined
 let turn = CROSS
+let isFinish = false;
 
 createTicTacToeBoard()
 startGame();
@@ -47,18 +48,23 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (board[row][col] !== EMPTY) {
+    if (isFinish || board[row][col] !== EMPTY) {
         return;
     }
     board[row][col] = turn
     renderSymbolInCell(turn, row, col);
+    if (checkWin()){
+        isFinish = true;
+        return;
+    }
+
     if (isFinished(board)){
         alert("Победила дружба");
     }
 }
 
 function nextTurn() {
-    turn = turn == CROSS ? ZERO : CROSS;
+    turn = (turn == CROSS) ? ZERO : CROSS;
 }
 
 function checkWin(){
