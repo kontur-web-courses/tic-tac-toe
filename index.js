@@ -7,6 +7,8 @@ let step = 0;
 const STEPS = [CROSS, ZERO];
 let isRunning = true;
 const dimension = 4;
+let withBot = false;
+
 
 
 let grid = []
@@ -93,7 +95,7 @@ function colourVictoryCombination(row, col) {
     }
 }
 
-function cellClickHandler (row, col) {
+function cellClickHandler (row, col, nextBotMove = true) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
@@ -112,6 +114,10 @@ function cellClickHandler (row, col) {
             alert(`${symbol} победил!`);
         }
     }
+    if (withBot && nextBotMove){
+        BotStep()
+    }
+    console.log(withBot)
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -126,16 +132,35 @@ function findCell (row, col) {
     return targetRow.querySelectorAll('td')[col];
 }
 
+function changeMode() {
+    console.log('bot')
+    withBot = !withBot;
+}
+
 function addResetListener () {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
+    const gameModeButton = document.getElementById('bot');
+    resetButton.addEventListener('click', changeMode);
+}
+
+function BotStep(){
+    while (true){
+        let row = Math.floor(Math.random() * dimension);
+        let col = Math.floor(Math.random() * dimension);
+        if (grid[col][row] === EMPTY){
+            console.log('bot hodit');
+            cellClickHandler(row, col, false);
+            break;
+        }
+    }
 }
 
 function resetClickHandler () {
-    for (let line of [0, 1, 2]) {
-        for (const col of [0, 1, 2]) {
-            grid[line][col] = EMPTY;
-            renderSymbolInCell(EMPTY, line, col);
+    for (let i = 0; i < dimension; i++) {
+        for (let col =0; col < dimension; col++) {
+            grid[i][col] = EMPTY;
+            renderSymbolInCell(EMPTY, i, col);
         }
     }
     isRunning = true;
