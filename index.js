@@ -6,15 +6,20 @@ const DIMENSION = 3;
 
 const container = document.getElementById('fieldWrapper');
 
+let board;
+
 startGame();
 addResetListener();
 
-let board = newBoard();
-
 function newBoard(dimension) {
+    data = []
+    for (let i = 0; i < dimension; i++) {
+        data.push(Array(dimension).fill({x: -1, y: -1, side: EMPTY}))
+    }
     board = {
-        _data: Array(dimension * dimension).fill({x: -1, y: -1, side: EMPTY}),
+        _data: data,
         curSide: CROSS,
+        finished: false,
         getWinningValues: function (side) {
             for (let row of this._data) {
                 if (row.every((el) => el.side === side)) {
@@ -54,10 +59,10 @@ function newBoard(dimension) {
             return [[], false]
         },
         at: function (row, col) {
-            return this._data[row * dimension + col]
+            return this._data[row * dimension + col].side
         },
         set: function (row, col, side) {
-            this._data[row * dimension + col] = side
+            this._data[row * dimension + col].side = side
         },
     }
 
@@ -86,16 +91,25 @@ function renderGrid(dimension) {
 
 function cellClickHandler(row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (board.at(row, col) !== EMPTY)
+    if (board.at(row, col) !== EMPTY || board.finished)
         return;
+
+    if (board.curSide === EMPTY || board.curSide === ZERO) {
+        board.curSide = CROSS;
+    } else if (board.curSide === CROSS) {
+        board.curSide = ZERO;
+    }
 
     board.set(row, col, board.curSide);
     renderSymbolInCell(board.curSide, row, col);
 
     let [winningCells, isWinner] = board.getWinningValues(board.curSide)
     if (isWinner) {
-        alert("")
-
+        board.finished = true;
+        alert(`${board.curSide} won!`)
+        for (let cell of winningCells) {
+            renderSymbolInCell(cell.side, cell.x, cell.y, '#800')
+        }
     }
 }
 
