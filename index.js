@@ -29,6 +29,62 @@ function checkForAvailable (field) {
     return false;
 }
 
+function checkSequence(symbol, yIterator, xIterator, initialY, initalX){
+    for (let y = initialY; y < 3; y = yIterator(y) ){
+        for (let x = initalX; x < 3; x = xIterator(x)){
+            if (field[y][x] !== symbol)
+                return null;
+            if (xIterator === null){
+                break;
+            }
+        }
+        if (yIterator === null){
+            break;
+        }
+    }
+
+    let arr = []
+    for (let y = initialY; y < 3; y = yIterator(y) ){
+        for (let x = initalX; x < 3; x = xIterator(x)){
+            arr.push([y, x])
+            if (xIterator === null){
+                break;
+            }
+        }
+        if (yIterator === null){
+            break;
+        }
+    }
+    return arr;
+}
+
+function checkRows(symbol){
+    for (let i = 0; i < 3; i++){
+        let sequence = checkSequence(symbol, null, x => x + 1, i, 0);
+        if (sequence !== null)
+            return sequence;
+    }
+    return null;
+}
+
+function checkColumns(symbol){
+    for (let i = 0; i < 3; i++){
+        let sequence = checkSequence(symbol, y => y + 1, null, 0, i);
+        if (sequence !== null)
+            return sequence;
+    }
+    return null;
+}
+
+function checkDiagonals(symbol){
+    return checkSequence(symbol, y => y + 1, x => x + 1, 0, 0) || checkSequence(symbol, y => y + 1, x => x - 1, 0, 2)
+}
+
+
+function checkWinner(symbol){
+    return checkColumns(symbol) || checkRows(symbol) || checkDiagonals(symbol)
+}
+
 function startGame () {
     renderGrid(3);
 }
@@ -50,12 +106,33 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
+    debugger;
     if (field[row][col] !== EMPTY)
         return;
 
     renderSymbolInCell(currentClick, row, col);
+    
     field[row][col] = currentClick;
     currentClick = currentClick === ZERO ? CROSS : ZERO;
+    
+    let crossSequence = checkWinner(CROSS);
+    let zeroSequence = checkWinner(ZERO);
+    
+    if (crossSequence !== null){
+        for (cell of crossSequence){
+            renderSymbolInCell(CROSS, cell[0], cell[1], color = '#FF0000');
+        }
+        alert('CROSS!!!!!');
+        return;
+    }
+    if (zeroSequence !== null){
+        for (cell of zeroSequence){
+            renderSymbolInCell(ZERO, cell[0], cell[1], color = '#FF0000');
+        }
+        alert('ZERO!!!!!');
+        return;
+    }
+
     if (!checkForAvailable(field))
         alert('Победила дружба')
 
