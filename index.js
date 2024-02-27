@@ -7,6 +7,8 @@ const container = document.getElementById('fieldWrapper');
 startGame();
 addResetListener();
 
+let field = [[null, null, null], [null, null, null], [null, null, null]]
+
 function startGame () {
     renderGrid(3);
 }
@@ -26,14 +28,22 @@ function renderGrid (dimension) {
     }
 }
 
-function cellClickHandler (row, col) {
+function cellClickHandler(row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
+    if (currentStepQuery === 0) {
+        field[row][col] = 'x'
+        renderSymbolInCell(CROSS, row, col);
+        currentStepQuery = 1;
+    } else {
+        field[row][col] = '0'
         renderSymbolInCell(ZERO, row, col);
-     */
+        currentStepQuery = 0;
+    }
+}
+
+function isWinner() {
+
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
