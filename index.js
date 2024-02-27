@@ -3,6 +3,7 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
+gameStarted = true;
 let currentPlayer = CROSS;
 
 let board = [
@@ -41,7 +42,6 @@ function cellClickHandler(row, col) {
         const currentPlayer = getCurrentPlayer();
         board[row][col] = currentPlayer;
         renderSymbolInCell(currentPlayer, row, col);
-
         if (checkWinner(row, col, currentPlayer)) {
             const winner = getCurrentPlayer() === ZERO ? "Крестики" : "Нолики";
             alert(`Победитель: ${winner}`);
@@ -58,27 +58,21 @@ function getCurrentPlayer() {
     return crosses.length === zeros.length ? CROSS : ZERO;
 }
 
-function checkWinner(row, col, player) {
+function checkWinner() {
     const symbols = [CROSS, ZERO];
-    if (symbols.some(symbol => checkLine(row, col, 0, 1, symbol)))
-    {
-        return true;
-    }
-    if (symbols.some(symbol => checkLine(row, col, 1, 0, symbol)))
-    {
-        return true;
-    }
-    if (row === col || row + col === 2) {
-        if (symbols.some(symbol => checkLine(0, 0, 1, 1, symbol)))
-        {
+    for (let i = 0; i < 3; i++) {
+        if (symbols.some(symbol => checkLine(i, 0, 0, 1, symbol))) {
             return true;
         }
-        if (symbols.some(symbol => checkLine(0, 2, 1, -1, symbol)))
-        {
+        if (symbols.some(symbol => checkLine(0, i, 1, 0, symbol))) {
             return true;
         }
     }
-    return false;
+    if (symbols.some(symbol => checkLine(0, 0, 1, 1, symbol)))
+    {
+        return true;
+    }
+    return symbols.some(symbol => checkLine(0, 2, 1, -1, symbol));
 }
 
 function highlightWinningCells(startRow, startCol, rowInc, colInc) {
