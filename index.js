@@ -124,6 +124,8 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    grid = new Field();
+    startGame();
     console.log('reset!');
 }
 
