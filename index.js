@@ -4,7 +4,9 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 let field;
+let freeSpace = 9;
 let currentSymbol = CROSS;
+let determinedWinner = EMPTY;
 
 startGame();
 addResetListener();
@@ -22,12 +24,6 @@ function initField(x) {
             subArray.push(EMPTY);
         }
         field.push(subArray);
-    }
-}
-
-function checkWinner(field, currentSymbol) {
-    for (const row of field) {
-
     }
 }
 
@@ -55,15 +51,26 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (field[row][col] !== EMPTY) {
+    if (field[row][col] !== EMPTY || determinedWinner !== EMPTY) {
         return;
     }
 
+
     field[row][col] = currentSymbol;
     renderSymbolInCell(currentSymbol, row, col);
-    checkWinner(field, currentSymbol);
+    let possibleWinner = checkWinner();
+    if (possibleWinner === currentSymbol) {
+        alert(`${currentSymbol === CROSS ? "Крестики" : "Нолики"} выиграли!`);
+        determinedWinner = possibleWinner;
+        return;
+    }
+    freeSpace -= 1;
+
+    if (freeSpace === 0) {
+        alert("Ничья!");
+        return;
+    }
 
     flipCurrentSymbol();
     /* Пользоваться методом для размещения символа в клетке так:
@@ -91,6 +98,9 @@ function addResetListener () {
 function resetClickHandler () {
     initField(3);
     renderGrid(3);
+    freeSpace = 9;
+    determinedWinner = EMPTY;
+    currentSymbol = CROSS;
     console.log('reset!');
 }
 
@@ -99,7 +109,7 @@ function checkWinner() {
         if (field[i][0] === field[i][1] && field[i][1] === field[i][2]) {
             return field[i][0];
         }
-        if (field[0][i] === field[1][i] && field[i][1] === field[2][i]) {
+        if (field[0][i] === field[1][i] && field[1][i] === field[2][i]) {
             return field[0][i];
         }
     }
