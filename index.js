@@ -33,11 +33,60 @@ function cellClickHandler (row, col) {
             renderSymbolInCell(CROSS, row, col);
             turn = false;
             gameboard[row][col] = CROSS;
-        }
-        else {
+
+            if (gameboard[row].indexOf(ZERO) === -1 && gameboard[row].indexOf(EMPTY) === -1) {
+                alert('Победили крестики');
+                return;
+            }
+
+            if (Array.from(gameboard, (x) => x.at(col)).indexOf(ZERO) === -1 &&
+                Array.from(gameboard, (x) => x.at(col)).indexOf(EMPTY) === -1) {
+                alert('Победили крестики');
+                return;
+            }
+
+            if (gameboard[0][2] == CROSS
+                && gameboard[1][1] == CROSS
+                && gameboard[2][0] == CROSS) {
+                alert('Победили крестики');
+            }
+
+            for (let i = 0; i < 3; i++){
+                if (gameboard.at(i).at(i) !== CROSS) {
+                    return;
+                }
+            }
+            alert('Победили крестики');
+
+
+        } else {
             renderSymbolInCell(ZERO, row, col);
             turn = true;
             gameboard[row][col] = ZERO;
+
+            if (gameboard[row].indexOf(CROSS) === -1 && gameboard[row].indexOf(EMPTY) === -1) {
+                alert('Победили нолики');
+                return;
+            }
+
+            if (Array.from(gameboard, (x) => x.at(col)).indexOf(CROSS) === -1 &&
+                Array.from(gameboard, (x) => x.at(col)).indexOf(EMPTY) === -1) {
+                alert('Победили нолики');
+                return;
+            }
+
+            if (gameboard[0][2] === ZERO
+                && gameboard[1][1] === ZERO
+                && gameboard[2][0] === ZERO) {
+                alert('Победили нолики');
+            }
+
+            for (let i = 0; i < 3; i++){
+                if (gameboard.at(i).at(i) !== ZERO) {
+                    return;
+                }
+            }
+            alert('Победили нолики');
         }
     }
     if (gameboard.flat(Infinity).indexOf(EMPTY) === -1){
@@ -65,6 +114,9 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    gameboard = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
+    turn = true;
+    renderGrid(3);
 }
 
 
