@@ -85,9 +85,12 @@ function checkMove() {
 function checkWinner() {
     let winner = false;
 
-    for (let column of field) {
-        if (column[0] === column[1] && column[1] === column[2] && column[2] !== EMPTY) {
-            winner = column[0];
+    for (let i = 0; i < 3; i++) {
+        if (field[i][0] === field[i][1] && field[i][1] === field[i][2] && field[i][2] !== EMPTY) {
+            winner = field[i][0];
+            renderSymbolInCell(winner, i, 0, 'red');
+            renderSymbolInCell(winner, i, 1, 'red');
+            renderSymbolInCell(winner, i, 2, 'red');
             break;
         }
     }
@@ -95,16 +98,25 @@ function checkWinner() {
     for (let i = 0; i < 3; i++) {
         if (field[0][i] === field[1][i] && field[1][i] === field[2][i] && field[2][i] !== EMPTY) {
             winner = field[0][i];
+            renderSymbolInCell(winner, 0, i, 'red');
+            renderSymbolInCell(winner, 1, i, 'red');
+            renderSymbolInCell(winner, 2, i, 'red');
             break;
         }
     }
 
     if (field[0][0] === field[1][1] && field[1][1] === field[2][2] && field[2][2] !== EMPTY) {
         winner = field[0][0];
+        renderSymbolInCell(winner, 0, 0, 'red');
+        renderSymbolInCell(winner, 1, 1, 'red');
+        renderSymbolInCell(winner, 2, 2, 'red');
     }
 
     if (field[2][0] === field[1][1] && field[1][1] === field[0][2] && field[0][2] !== EMPTY) {
         winner = field[0][0];
+        renderSymbolInCell(winner, 2, 0, 'red');
+        renderSymbolInCell(winner, 1, 1, 'red');
+        renderSymbolInCell(winner, 0, 2, 'red');
     }
 
     if (winner) {
