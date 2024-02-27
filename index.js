@@ -1,7 +1,8 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-
+let TURN = true;
+const field = new Array(3).fill(EMPTY).map(() => new Array(3).fill(EMPTY));
 const container = document.getElementById('fieldWrapper');
 
 startGame();
@@ -27,13 +28,34 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    if (field[row][col] !== EMPTY) {
+        return;
+    }
+
+    if (TURN) {
+        renderSymbolInCell(CROSS, row, col);
+        field[row][col] = CROSS;
+    } else {
+        renderSymbolInCell(ZERO, row, col);
+        field[row][col] = ZERO;
+    }
+
     console.log(`Clicked on cell: ${row}, ${col}`);
 
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    switch (checkWinner(row, col)) {
+        case 'Ничья':
+            alert('Ничья')
+            return;
+        case CROSS:
+            alert('Победили крестики')
+            return;
+        case ZERO:
+            alert('Победили нолики')
+            return;
+        default:
+            TURN = !TURN;
+            break;
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -54,6 +76,7 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    field.clear();
     console.log('reset!');
 }
 
