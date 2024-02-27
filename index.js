@@ -4,11 +4,30 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+let board = undefined
+let turn = CROSS
+
+createTicTacToeBoard()
 startGame();
 addResetListener();
 
 function startGame () {
     renderGrid(3);
+}
+
+function createTicTacToeBoard() {
+    let n = prompt("Введите количество полей для игры в крестики-нолики:", "3"); // Запрашиваем у пользователя размер доски
+    n = parseInt(n, 10); // Преобразуем введенное значение в число
+
+    if (isNaN(n) || n <= 0) {
+        console.error("Некорректный ввод. Пожалуйста, введите положительное число.");
+        return;
+    }
+
+    board = Array.from({ length: n }, () => Array(n).fill(EMPTY)); // Создаем массив n*n, инициализируя каждый элемент EMPTY
+
+    console.log(board);
+    return board;
 }
 
 function renderGrid (dimension) {
@@ -27,13 +46,15 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    if (board[row][col] !== EMPTY) {
+        return;
+    }
+    board[row][col] = turn
+    renderSymbolInCell(turn, row, col);
+    if (isFinished(board)){
+        alert("Победила дружба");
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -55,6 +76,7 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    resetField()
 }
 
 
@@ -86,4 +108,19 @@ function testDraw () {
 
 function clickOnCell (row, col) {
     findCell(row, col).click();
+}
+
+function isFinished(board){
+    return !board.some(subArray => subArray.includes(EMPTY));
+}
+
+function resetField(){
+    for (let i = 0; i < field.length; i++) {
+        for (let j = 0; j < field[i].length; j++) {
+            if (board[i][j] !== EMPTY) {
+                board[i][j] = EMPTY
+                renderSymbolInCell(EMPTY, i, j);
+            }
+        }
+    }
 }
