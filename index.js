@@ -7,14 +7,15 @@ const container = document.getElementById('fieldWrapper');
 let board = [];
 let currentPlayer = CROSS;
 let currentState = 'game';
+dimension = parseInt(prompt('Введи размер игры'));
 let movesLeft;
 startGame();
 addResetListener();
 
 function startGame () {
     board = []
-    renderGrid(3);
-    movesLeft = 9;
+    renderGrid(dimension);
+    movesLeft = dimension * dimension;
     currentState = 'game';
 }
 
@@ -56,9 +57,9 @@ function cellClickHandler (row, col) {
 
 function checkAndHighlightWinner() {
     let check = false;
-    for (let col = 0; col < 3; ++col) {
+    for (let col = 0; col < dimension; ++col) {
         check = true;
-        for (let row = 0; row < 3; ++row) {
+        for (let row = 0; row < dimension; ++row) {
             check &&= board[row][col] === currentPlayer;
         }
         if (check) {
@@ -66,9 +67,9 @@ function checkAndHighlightWinner() {
             return true;
         }
     }
-    for (let row = 0; row < 3; ++row) {
+    for (let row = 0; row < dimension; ++row) {
         check = true;
-        for (let col = 0; col < 3; ++col) {
+        for (let col = 0; col < dimension; ++col) {
             check &&= board[row][col] === currentPlayer;
         }
         if (check) {
@@ -77,7 +78,7 @@ function checkAndHighlightWinner() {
         }
     }
     check = true;
-    for (let i = 0; i < 3; ++i) {
+    for (let i = 0; i < dimension; ++i) {
         check &&= board[i][i] === currentPlayer;
     }
     if (check) {
@@ -86,8 +87,8 @@ function checkAndHighlightWinner() {
     }
 
     check = true;
-    for (let i = 0; i < 3; ++i) {
-        check &&= board[i][2 - i] === currentPlayer;
+    for (let i = 0; i < dimension; ++i) {
+        check &&= board[i][dimension - i - 1] === currentPlayer;
     }
     if (check) {
         highlightDiagonal(false);
@@ -98,25 +99,25 @@ function checkAndHighlightWinner() {
 
 function highlightDiagonal(main = true){
     if(main){
-        for(let i = 0; i < 3; i++){
+        for(let i = 0; i < dimension; i++){
             findCell(i, i).style.color = 'red';
         }
     }
     else{
-        for(let i = 0; i < 3; i++){
-            findCell(i, 2 - i).style.color = 'red';
+        for(let i = 0; i < dimension; i++){
+            findCell(i, dimension - i - 1).style.color = 'red';
         }
     }
 }
 
 function highlightRowOrColumn(row = true, number) {
     if (row) {
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < dimension; i++) {
             findCell(number, i).style.color = 'red';
         }
     }
     else {
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < dimension; i++) {
             findCell(i, number).style.color = 'red';
         }
     }
@@ -141,33 +142,6 @@ function addResetListener () {
 
 function resetClickHandler () {
     startGame();
-}
-
-
-/* Test Function */
-/* Победа первого игрока */
-function testWin () {
-    clickOnCell(0, 2);
-    clickOnCell(0, 0);
-    clickOnCell(2, 0);
-    clickOnCell(1, 1);
-    clickOnCell(2, 2);
-    clickOnCell(1, 2);
-    clickOnCell(2, 1);
-}
-
-/* Ничья */
-function testDraw () {
-    clickOnCell(2, 0);
-    clickOnCell(1, 0);
-    clickOnCell(1, 1);
-    clickOnCell(0, 0);
-    clickOnCell(1, 2);
-    clickOnCell(1, 2);
-    clickOnCell(0, 2);
-    clickOnCell(0, 1);
-    clickOnCell(2, 1);
-    clickOnCell(2, 2);
 }
 
 function clickOnCell (row, col) {
