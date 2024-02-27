@@ -2,13 +2,17 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
+let currentPlayer = CROSS;
+
 const container = document.getElementById('fieldWrapper');
+let dimension = 3;
+let isActive = false;
 
 startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(dimension);
 }
 
 function renderGrid (dimension) {
@@ -24,16 +28,33 @@ function renderGrid (dimension) {
         }
         container.appendChild(row);
     }
+    isActive = true;
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    if (!isActive){
+        return;
+    }
+    const cellContent = findCell(row, col).textContent;
+    if (cellContent !== EMPTY) {
+        return;
+    }
+    renderSymbolInCell(currentPlayer, row, col);
+    if (checkWinner(row, col)) {
+        highlightWinner(row, col);
+        const winner = currentPlayer;
+        setTimeout(function() {
+            alert(`${winner} победил!`);
+        }, 200);
+        currentPlayer = null;
+        isActive = false;
+    } else if (checkDraw()) {
+        alert("Победила дружба!");
+        currentPlayer = null;
+        isActive = false;
+    } else {
+        currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -54,36 +75,81 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
-    console.log('reset!');
+    currentPlayer = CROSS;
+    renderGrid(dimension);
 }
 
+function checkWinner (row, col) {
+    const symbol = findCell(row, col).textContent;
 
-/* Test Function */
-/* Победа первого игрока */
-function testWin () {
-    clickOnCell(0, 2);
-    clickOnCell(0, 0);
-    clickOnCell(2, 0);
-    clickOnCell(1, 1);
-    clickOnCell(2, 2);
-    clickOnCell(1, 2);
-    clickOnCell(2, 1);
+    let horizontalCount = 0;
+    let verticalCount = 0;
+    for (let i = 0; i < dimension; i++) {
+        if (findCell(row, i).textContent === symbol) horizontalCount++;
+        if (findCell(i, col).textContent === symbol) verticalCount++;
+    }
+    if (horizontalCount === dimension || verticalCount === dimension) return true;
+
+    let diagonal1Count = 0;
+    let diagonal2Count = 0;
+    for (let i = 0; i < dimension; i++) {
+        if (findCell(i, i).textContent === symbol) diagonal1Count++;
+        if (findCell(i, dimension - 1 - i).textContent === symbol) diagonal2Count++;
+    }
+    return diagonal1Count === dimension || diagonal2Count === dimension;
 }
 
-/* Ничья */
-function testDraw () {
-    clickOnCell(2, 0);
-    clickOnCell(1, 0);
-    clickOnCell(1, 1);
-    clickOnCell(0, 0);
-    clickOnCell(1, 2);
-    clickOnCell(1, 2);
-    clickOnCell(0, 2);
-    clickOnCell(0, 1);
-    clickOnCell(2, 1);
-    clickOnCell(2, 2);
+function checkDraw () {
+    for (let i = 0; i < dimension; i++) {
+        for (let j = 0; j < dimension; j++) {
+            if (findCell(i, j).textContent === EMPTY) return false;
+        }
+    }
+    return true;
 }
 
-function clickOnCell (row, col) {
-    findCell(row, col).click();
+function highlightWinner (row, col) {
+    const symbol = findCell(row, col).textContent;
+    let horizontalCount = 0;
+    let verticalCount = 0;
+    for (let i = 0; i < dimension; i++) {
+        if (findCell(row, i).textContent === symbol) horizontalCount++;
+        if (findCell(i, col).textContent === symbol) verticalCount++;
+    }
+    if (horizontalCount === dimension){
+        for (let i = 0; i < dimension; i++) {
+            if (findCell(row, i).textContent === symbol) {
+                findCell(row, i).style.backgroundColor = 'red';
+            }
+        }
+    }
+    else if (verticalCount === dimension){
+        for (let i = 0; i < dimension; i++) {
+            if (findCell(i, col).textContent === symbol) {
+                findCell(i, col).style.backgroundColor = 'red';
+            }
+        }
+    }
+
+    let diagonal1Count = 0;
+    let diagonal2Count = 0;
+    for (let i = 0; i < dimension; i++) {
+        if (findCell(i, i).textContent === symbol) diagonal1Count++;
+        if (findCell(i, dimension - 1 - i).textContent === symbol) diagonal2Count++;
+    }
+
+    if (diagonal1Count === dimension){
+        for (let i = 0; i < dimension; i++) {
+            if (findCell(i, i).textContent === symbol) {
+                findCell(i, i).style.backgroundColor = 'red';
+            }
+        }
+    }
+    else if (diagonal2Count === dimension){
+        for (let i = 0; i < dimension; i++) {
+            if (findCell(i, dimension - 1 - i).textContent === symbol) {
+                findCell(i, dimension - 1 - i).style.backgroundColor = 'red';
+            }
+        }
+    }
 }
