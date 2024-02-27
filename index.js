@@ -34,17 +34,10 @@ function cellClickHandler (row, col) {
     // Пиши код тут
     if(!checkWinner()&&checkMove()) {
         let move;
-        if(_counter % 2 === 0){
-            console.log("11")
-            randomMove();
-            move = ZERO
-        } else {
-
-            move = CROSS
-            _counter++;
-            renderSymbolInCell(CROSS, row, col);
-        }
+        move = CROSS
+        renderSymbolInCell(CROSS, row, col);
         field[row][col] = move
+        randomMove();
         checkWinner();
         checkMove();
     }
@@ -53,9 +46,13 @@ function cellClickHandler (row, col) {
 function randomMove () {
     for (let i = 0; i <= 2; i++) {
         for (let j = 0; j <= 2; j++) {
-            if (field[i][j] === EMPTY && checkWinner(false)) {
+            if (field[i][j] === EMPTY) {
+                field[i][j] = ZERO;
+                if (!checkWinner(false)) {
+                    field[i][j] = EMPTY;
+                    continue;
+                }
                 renderSymbolInCell(ZERO, i, j);
-                _counter++;
                 return;
             }
         }
@@ -63,8 +60,8 @@ function randomMove () {
     for (let i = 0; i <= 2; i++) {
         for (let j = 0; j <= 2; j++) {
             if (field[i][j] === EMPTY) {
+                field[i][j] = ZERO;
                 renderSymbolInCell(ZERO, i, j);
-                _counter++;
                 return;
             }
         }
