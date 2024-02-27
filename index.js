@@ -17,15 +17,16 @@ function startGame () {
 }
 
 function renderGrid (dimension) {
-    DIMENSION = dimension;
-    for (let i = 0; i < dimension; i++) {
+
+    DIMENSION = dimension; //prompt("Choose dimension");
+    for (let i = 0; i < DIMENSION; i++) {
         FIELD.push(Array(DIMENSION).fill(EMPTY));
     }
     container.innerHTML = '';
 
-    for (let i = 0; i < dimension; i++) {
+    for (let i = 0; i < DIMENSION; i++) {
         const row = document.createElement('tr');
-        for (let j = 0; j < dimension; j++) {
+        for (let j = 0; j < DIMENSION; j++) {
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
             cell.addEventListener('click', () => cellClickHandler(i, j));
@@ -36,7 +37,7 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    if (WINNER !== EMPTY || FIELD[row][col] !== EMPTY)
+    if (WINNER !== EMPTY || !(FIELD[row][col] === TURN && TURN === CROSS))
         return;
     FIELD[row][col] = TURN;
     renderSymbolInCell(TURN, row, col);
@@ -110,8 +111,10 @@ function checkForWinner()
     let diag2 = [];
     let diag2_indexes = [];
     for (let i = 0; i < DIMENSION; i++) {
-        if (FIELD[i].every(el => el === FIELD[i][0] && el !== EMPTY))
+        if (FIELD[i].every(el => el === FIELD[i][0] && el !== EMPTY)) {
+            console.log(1111111)
             return [FIELD[i][0], getHorizontalRow(i)];
+        }
         for (let j = 0; j < DIMENSION; j++) {
             vert.push(FIELD[j][i]);
             vert_indexes.push([j, i])
