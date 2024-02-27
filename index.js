@@ -19,6 +19,40 @@ function init_game_model() {
     counter = 0;
 }
 
+function is_turns_ended() {
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            if (field[i][j] === EMPTY) return false;
+        }
+    }
+    return true;
+}
+
+function findWinner() {
+    for (let i = 0; i < n; i++) {
+        figureInStr = field[i][0];
+        strCount = 1;
+        figureInCol = field[0][i];
+        colCount = 1;
+        figureInLeftCorner = field[0][0]
+        leftCornerCount = 0
+        figureInRightCorner = field[0][n - 1]
+        rightCornerCount = 0
+        for (let j = 1; i < n; i++) {
+            if (field[i][j] === figureInStr) strCount += 1;
+            if (field[j][i] === figureInCol) colCount += 1;
+        }
+        if (strCount === n) return figureInStr;
+        if (colCount === n) return figureInCol;
+        if (field[i][i] === figureInLeftCorner) leftCornerCount += 1;
+        if (field[i][n - i - 1] === figureInRightCorner) rightCornerCount += 1;
+        if (leftCornerCount === n) return figureInLeftCorner;
+        if (rightCornerCount === n) return figureInRightCorner;
+    }
+    return null;
+}
+
+
 function get_figure() {
     a = [CROSS, ZERO];
     return a[counter++ % 2];
@@ -53,7 +87,9 @@ function cellClickHandler(row, col) {
     if (field[row][col] === EMPTY) {
         let figure = get_figure();
         field[row][col] = figure;
+        if (is_turns_ended()) alert("Победила дружба!")
         renderSymbolInCell(figure, row, col);
+        console.log(findWinner());
     }
 
     /* Пользоваться методом для размещения символа в клетке так:
