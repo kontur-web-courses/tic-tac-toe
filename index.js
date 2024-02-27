@@ -1,6 +1,7 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let Player = 1;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -29,6 +30,16 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
+    if (Player === 1) {
+        renderSymbolInCell(ZERO, row, col);
+        Player = 2;
+    }
+
+    else {
+        renderSymbolInCell(CROSS, row, col);
+        Player = 1;
+    }
+    console.log(Player)
 
 
     /* Пользоваться методом для размещения символа в клетке так:
