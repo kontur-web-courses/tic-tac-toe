@@ -10,6 +10,8 @@ let grid = [
 
 let step = 0;
 const STEPS = [CROSS, ZERO];
+let victoryCombination;
+let isRunning = true;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -52,18 +54,24 @@ function isVictory() {
             grid[Math.floor(comb[1] / 3)][comb[1] % 3] === grid[Math.floor(comb[2] / 3)][comb[2] % 3] &&
             grid[Math.floor(comb[0] / 3)][comb[0] % 3] !== EMPTY
         ) {
+            victoryCombination = comb;
             return true;
         }
     }
     return false;
 }
 
+function colourVictoryCombination() {
+    for (const ind of victoryCombination) {
+        findCell(Math.floor(ind / 3), ind % 3).style.color = 'red';
+    }
+}
 
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
-    if (grid[row][col] === EMPTY) {
+    if (grid[row][col] === EMPTY && isRunning) {
         step++;
         let symbol = STEPS[step % 2];
         grid[row][col] = symbol;
@@ -73,7 +81,9 @@ function cellClickHandler (row, col) {
             alert('Победила дружба!');
         }
         if (isVictory()) {
-            alert(`${symbol} победил!`)
+            colourVictoryCombination();
+            isRunning = false;
+            alert(`${symbol} победил!`);
         }
     }
 }
@@ -96,7 +106,14 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
-    console.log('reset!');
+    for (let line of [0, 1, 2]) {
+        for (const col of [0, 1, 2]) {
+            grid[line][col] = EMPTY;
+            renderSymbolInCell(EMPTY, line, col);
+        }
+    }
+    isRunning = true;
+    step = 0;
 }
 
 
