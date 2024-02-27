@@ -47,52 +47,55 @@ function cellClickHandler(row, col) {
         const symbol = Player === 1 ? ZERO : CROSS;
         renderSymbolInCell(symbol, row, col);
         gameBoard[row][col] = symbol;
-        if (isWinnerOnBoard(dimension))
+        if (isWinnerOnBoard())
             alert(`Победил игрок ${Player}`);
         Player = Player === 1 ? 2 : 1;
     }
 }
 
-function isWinnerOnBoard(dimension) {
-    function isWinnerOnBoard(board) {
-        const dimension = board.length;
-        let rows, cols, diag, antiDiag;
+function isWinnerOnBoard() {
+    let rows, cols, diag, antiDiag;
 
-        for (let i = 0; i < dimension; i++) {
-            rows = true;
-            cols = true;
-            for (let j = 0; j < dimension - 1; j++) {
-                if (board[i][j] === '' || board[i][j] !== board[i][j + 1]) {
-                    rows = false;
-                }
-                if (board[j][i] === '' || board[j][i] !== board[j + 1][i]) {
-                    cols = false;
-                }
+    for (let i = 0; i < dimension; i++) {
+        rows = true;
+        cols = true;
+        console.log(gameBoard[i][0]);
+        for (let j = 0; j < dimension - 1 ; j++) {
+            if (gameBoard[i][j] === EMPTY || gameBoard[i][j] !== gameBoard[i][j + 1]) {
+                rows = false;
+                break;
             }
-            if (rows || cols)
-                return true;
-        }
-
-        diag = true;
-        for (let i = 0; i < dimension - 1; i++) {
-            if (board[i][i] === '' || board[i][i] !== board[i + 1][i + 1]) {
-                diag = false;
+            if (gameBoard[j][i] === EMPTY || gameBoard[j][i] !== gameBoard[j + 1][i]) {
+                cols = false;
                 break;
             }
         }
-
-        antiDiag = true;
-        for (let i = 0; i < dimension - 1; i++) {
-            if (board[i][dimension - i - 1] === '' || board[i][dimension - i - 1] !== board[i + 1][dimension - i - 2]) {
-                antiDiag = false;
-                break;
-            }
+        if (rows || cols) {
+            console.log(i)
+            console.log('hehe');
+            return true;
         }
-
-        return diag || antiDiag;
     }
 
+    diag = true;
+    for (let i = 0; i < dimension - 1; i++) {
+        if (gameBoard[i][i] === EMPTY || gameBoard[i][i] !== gameBoard[i + 1][i + 1]) {
+            diag = false;
+            break;
+        }
+    }
+
+    antiDiag = true;
+    for (let i = 0; i < dimension - 1; i++) {
+        if (gameBoard[i][dimension - i - 1] === EMPTY || gameBoard[i][dimension - i - 1] !== gameBoard[i + 1][dimension - i - 2]) {
+            antiDiag = false;
+            break;
+        }
+    }
+
+    return diag || antiDiag;
 }
+
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
