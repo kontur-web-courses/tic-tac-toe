@@ -26,14 +26,16 @@ function renderGrid (dimension) {
     }
 }
 
-function cellClickHandler (row, col) {
+function cellClickHandler(row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
+    if (currentStepQuery === 0) {
+        renderSymbolInCell(CROSS, row, col);
+        currentStepQuery = 1;
+    } else {
         renderSymbolInCell(ZERO, row, col);
-     */
+        currentStepQuery = 0;
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
