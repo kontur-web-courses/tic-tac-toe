@@ -38,12 +38,29 @@ function cellClickHandler (row, col) {
         renderSymbolInCell(currentPlayer, row, col);
         board[row][col] = currentPlayer;
         --movesLeft;
-
+        if (checkWinner()) {
+            const winner = currentPlayer === CROSS ? 'Крестики' : 'Нолики';
+            alert(`${winner} выиграли`);
+        }
     }
     if (movesLeft === 0) {
         alert('Победила дружба');
     }
-    console.log(`Clicked on cell: ${row}, ${col}`);
+    currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
+}
+
+function checkWinner() {
+    for (let i = 0; i < 3; i++) {
+        if (board[i][0] === currentPlayer && board[i][1] === currentPlayer &&
+            board[i][2] === currentPlayer || board[0][i] === currentPlayer &&
+            board[1][i] === currentPlayer && board[2][i] === currentPlayer) {
+            return true;
+        }
+    }
+
+    return board[0][0] === currentPlayer && board[1][1] === currentPlayer &&
+        board[2][2] === currentPlayer || board[0][2] === currentPlayer &&
+        board[1][1] === currentPlayer && board[2][0] === currentPlayer;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
