@@ -55,9 +55,11 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     const targetCell = findCell(row, col);
+    grid.MarkAs(row, col);
     if (targetCell.textContent === EMPTY) {
         console.log(`Clicked on cell: ${row}, ${col}`);
-        renderSymbolInCell(symbol, row, col)
+        let symbol = grid.state[row][col];
+        renderSymbolInCell(symbol, row, col);
     }
 }
 
