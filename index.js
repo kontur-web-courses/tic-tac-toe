@@ -74,6 +74,39 @@ function checkMove() {
     return false;
 }
 
+function checkWinner() {
+    let winner;
+
+    for (let column of field) {
+        if (column[0] === column[1] === column[2]) {
+            winner = column[0];
+            break;
+        }
+    }
+
+    for (let i = 0; i < 3; i++) {
+        if (field[0][i] === field[1][i] === field[2][i]) {
+            winner = field[0][i];
+            break;
+        }
+    }
+
+    if (field[0][0] === field[1][1] === field[2][2]) {
+        winner = field[0][0];
+    }
+
+    if (field[2][0] === field[1][1] === field[0][2]) {
+        winner = field[0][0];
+    }
+
+    if (winner || false) {
+        alert(`Победитель: ${winner}`);
+        return true;
+    }
+
+    return false;
+}
+
 
 /* Test Function */
 /* Победа первого игрока */
