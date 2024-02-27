@@ -8,10 +8,10 @@ let isWin = false;
 let currentStepQuery = 0;
 let stepNumber = 0;
 
+let field = [[null, null, null], [null, null, null], [null, null, null]]
+
 startGame();
 addResetListener();
-
-let field = [[null, null, null], [null, null, null], [null, null, null]]
 
 function startGame() {
     renderGrid(3);
@@ -47,11 +47,15 @@ function cellClickHandler(row, col) {
             currentStepQuery = 0;
             stepNumber++;
     }
-            if (isWinner()) {
-            alert("Победил " + field[row][col]);
-            isWin = true;
-        }
-    }
+    let winner = findWinner();
+    if (winner)
+    {
+        alert("Победил " + field[row][col]);
+        isWin = true;
+        winner.forEach(element => {
+            renderSymbolInCell(field[row][col], element[0], element[1], '#e60026');
+        });
+    } 
     if (stepNumber === field.length ** 2) 
     {
         alert("Победила дружба");
@@ -59,15 +63,15 @@ function cellClickHandler(row, col) {
     }
 }
 
-function isWinner() {
-    if (field[0][0] === field[0][1] && field[0][1] === field[0][2] && field[0][0]) return true;
-    if (field[1][0] === field[1][1] && field[1][1] === field[1][2] && field[1][0]) return true;
-    if (field[2][0] === field[2][1] && field[2][1] === field[2][2] && field[2][0]) return true;
-    if (field[0][0] === field[1][1] && field[1][1] === field[2][2] && field[0][0]) return true;
-    if (field[2][0] === field[1][1] && field[1][1] === field[0][2] && field[2][0]) return true;
-    if (field[0][0] === field[1][0] && field[1][0] === field[2][0] && field[0][0]) return true;
-    if (field[0][1] === field[1][1] && field[1][1] === field[2][1] && field[0][1]) return true;
-    if (field[0][2] === field[1][2] && field[1][2] === field[2][2] && field[0][2]) return true;
+function findWinner() {
+    if (field[0][0] === field[0][1] && field[0][1] === field[0][2] && field[0][0]) return [[0, 0], [0, 1], [0, 2]];
+    if (field[1][0] === field[1][1] && field[1][1] === field[1][2] && field[1][0]) return [[1, 0], [1, 1], [1, 2]];
+    if (field[2][0] === field[2][1] && field[2][1] === field[2][2] && field[2][0]) return [[2, 0], [2, 1], [2, 2]];
+    if (field[0][0] === field[1][1] && field[1][1] === field[2][2] && field[0][0]) return [[0, 0], [1, 1], [2, 2]];
+    if (field[2][0] === field[1][1] && field[1][1] === field[0][2] && field[2][0]) return [[2, 0], [1, 1], [0, 2]];
+    if (field[0][0] === field[1][0] && field[1][0] === field[2][0] && field[0][0]) return [[0, 0], [1, 0], [2, 0]];
+    if (field[0][1] === field[1][1] && field[1][1] === field[2][1] && field[0][1]) return [[0, 1], [1, 1], [2, 1]];
+    if (field[0][2] === field[1][2] && field[1][2] === field[2][2] && field[0][2]) return [[0, 2], [1, 2], [2, 2]];
     return false;
 }
 
@@ -130,4 +134,4 @@ function testDraw() {
 
 function clickOnCell(row, col) {
     findCell(row, col).click();
-}
+}}
