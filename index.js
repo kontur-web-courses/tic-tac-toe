@@ -3,6 +3,7 @@ const ZERO = 'O';
 const EMPTY = ' ';
 let count = 0;
 let pole = [];
+let k = 0;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -30,8 +31,8 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
+    k += 1;
     if (findCell(row, col).textContent === EMPTY){
         if (count === 0){
             pole[row][col] = ZERO;
@@ -44,6 +45,9 @@ function cellClickHandler (row, col) {
             count = 0;
         }
     }
+
+    if (k === pole[0].length * pole[0].length)
+        alert('Победила дружба!')
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
