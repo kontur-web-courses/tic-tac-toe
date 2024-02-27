@@ -17,7 +17,7 @@ class Field {
     }
 
     MarkAs(row, col) {
-        if (this.state[row][col] !== ' ') {
+        if (this.state[row][col] !== ' ' || this.IsWin()) {
             return null;
         }
 
@@ -41,18 +41,26 @@ class Field {
 
     IsWin () {
         for (let i = 0; i < 2; i++) {
-            if (this.state[i][0] === this.state[i][1] === this.state[i][2]) {
-                return true;
+            if ((this.state[i][0] === this.state[i][1]) && (this.state[i][1] === this.state[i][2])) {
+                if (this.state[i][0] !== EMPTY) {
+                    return true;
+                }
             }
-            if (this.state[0][i] === this.state[1][i] === this.state[2][i]) {
+            if ((this.state[0][i] === this.state[1][i]) && (this.state[1][i] === this.state[2][i])) {
+                if (this.state[0][i] !== EMPTY) {
+                    return true;
+                }
+            }
+        }
+        if ((this.state[0][0] === this.state[1][1]) && (this.state[1][1] === this.state[2][2])) {
+            if (this.state[0][0] !== EMPTY) {
                 return true;
             }
         }
-        if (this.state[0][0] === this.state[1][1] === this.state[2][2]) {
-            return true;
-        }
-        if (this.state[2][0] === this.state[1][1] === this.state[0][2]) {
-            return true;
+        if ((this.state[2][0] === this.state[1][1]) && (this.state[1][1] === this.state[0][2])) {
+            if (this.state[2][0] !== EMPTY) {
+                return true;
+            }
         }
         return false;
     }
