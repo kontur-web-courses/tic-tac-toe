@@ -4,6 +4,7 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 let currentPlayer = CROSS;
+let gameStarted = true;
 
 let board = [
     [EMPTY, EMPTY, EMPTY],
@@ -16,6 +17,7 @@ startGame();
 addResetListener();
 
 function startGame () {
+    gameStarted = true;
     currentPlayer = CROSS;
     renderGrid(3);
 }
@@ -38,27 +40,38 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler(row, col) {
+    if (!gameStarted){
+        alert('fuck you, game ended');
+        return;
+    }
     if (board[row][col] === EMPTY) {
         const currentPlayer = getCurrentPlayer();
         board[row][col] = currentPlayer;
         renderSymbolInCell(currentPlayer, row, col);
+        
 
         if (checkWinner()) {
-            const winner = getCurrentPlayer() === ZERO ? "Крестики" : "Нолики";
+            const winner = getCurrentPlayer() === CROSS ? "Крестики" : "Нолики";
             alert(`Победитель: ${winner}`);
             highlightWinningCells();
             disableClickHandlers();
         } else if (checkDraw()) {
             alert("Победила дружба");
         }
+        nextTurn();
     }
 }
 
 function getCurrentPlayer() {
     return currentPlayer;
-    //const crosses = board.flat().filter(cell => cell === CROSS);
-    //const zeros = board.flat().filter(cell => cell === ZERO);
-    //return crosses.length === zeros.length ? CROSS : ZERO;
+    const crosses = board.flat().filter(cell => cell === CROSS);
+    const zeros = board.flat().filter(cell => cell === ZERO);
+    return crosses.length === zeros.length ? CROSS : ZERO;
+}
+
+function nextTurn(){
+    currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
+    //alert(currentPlayer);
 }
 
 function checkWinner() {
@@ -99,6 +112,7 @@ function highlightWinningCells() {
 }
 
 function disableClickHandlers() {
+    gameStarted = false;
     const cells = document.querySelectorAll('td');
     cells.forEach(cell => cell.addEventListener('click', ''));
 }
