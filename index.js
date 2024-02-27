@@ -46,8 +46,9 @@ function checkSequence(symbol, yIterator, xIterator, initialY, initalX){
 function checkRows(symbol){
     for (let i = 0; i < 3; i++){
         let sequence = checkSequence(symbol, y => y, x => x + 1, i, 0);
-        if (sequence !== null)
+        if (sequence !== null) {
             return sequence;
+        }
     }
     return null;
 }
@@ -55,8 +56,9 @@ function checkRows(symbol){
 function checkColumns(symbol){
     for (let i = 0; i < 3; i++){
         let sequence = checkSequence(symbol, y => y + 1, x => x, 0, i);
-        if (sequence !== null)
+        if (sequence !== null) {
             return sequence;
+        }
     }
     return null;
 }
@@ -124,8 +126,9 @@ function cellClickHandler (row, col) {
         return;
     }
 
-    if (!checkForAvailable(field))
+    if (!checkForAvailable(field)){
         alert('Победила дружба')
+    }
 
     console.log(`Clicked on cell: ${row}, ${col}`);
 
