@@ -42,6 +42,7 @@ function cellClickHandler (row, col) {
         alert('Победила дружба!');
     }
     console.log(`Clicked on cell: ${row}, ${col}`);
+
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
