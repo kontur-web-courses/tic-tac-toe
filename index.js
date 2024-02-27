@@ -18,15 +18,43 @@ class Field {
 
     MarkAs(row, col) {
         if (this.state[row][col] !== ' ') {
-            return;
+            return null;
         }
 
         if (this.moves % 2 === 0) {
             this.state[row][col] = CROSS;
+            if (this.IsWin()) {
+                return CROSS;
+            }
         } else {
             this.state[row][col] = ZERO;
+            if (this.IsWin()) {
+                return ZERO;
+            }
         }
         this.moves++;
+        if (this.moves === 9) {
+            return EMPTY;
+        }
+        return null;
+    }
+
+    IsWin () {
+        for (let i = 0; i < 2; i++) {
+            if (this.state[i][0] === this.state[i][1] === this.state[i][2]) {
+                return true;
+            }
+            if (this.state[0][i] === this.state[1][i] === this.state[2][i]) {
+                return true;
+            }
+        }
+        if (this.state[0][0] === this.state[1][1] === this.state[2][2]) {
+            return true;
+        }
+        if (this.state[2][0] === this.state[1][1] === this.state[0][2]) {
+            return true;
+        }
+        return false;
     }
 }
 
@@ -55,11 +83,18 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     const targetCell = findCell(row, col);
-    grid.MarkAs(row, col);
+    let winSymbol = grid.MarkAs(row, col);
     if (targetCell.textContent === EMPTY) {
         console.log(`Clicked on cell: ${row}, ${col}`);
         let symbol = grid.state[row][col];
         renderSymbolInCell(symbol, row, col);
+    }
+    if (winSymbol === CROSS) {
+        alert('Победили крестики');
+    } else if (winSymbol === ZERO) {
+        alert('Победили нолики');
+    } else if (winSymbol === EMPTY) {
+        alert('Победила дружба');
     }
 }
 
