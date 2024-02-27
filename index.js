@@ -4,6 +4,13 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+
+const GAME_IN_PROGRESS = 0;
+const DRAW = 1;
+const CROSS_WIN = 2;
+const ZERO_WIN = 3;
+
+let game_stage = GAME_IN_PROGRESS;
 let counter = 0;
 let field;
 let n = 3;
@@ -17,6 +24,7 @@ function init_game_model() {
         }
     }
     counter = 0;
+    game_stage = GAME_IN_PROGRESS;
 }
 
 function get_figure() {
@@ -50,11 +58,13 @@ function renderGrid(dimension) {
 function cellClickHandler(row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (field[row][col] === EMPTY) {
+
+    if (game_stage === GAME_IN_PROGRESS && field[row][col] === EMPTY){
         let figure = get_figure();
         field[row][col] = figure;
         renderSymbolInCell(figure, row, col);
     }
+    
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
@@ -91,6 +101,8 @@ function addResetListener() {
 
 function resetClickHandler() {
     console.log('reset!');
+    renderGrid();
+    init_game_model();
 }
 
 
