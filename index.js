@@ -7,6 +7,8 @@ const container = document.getElementById('fieldWrapper');
 let gameStarted = true;
 let currentPlayer = CROSS;
 
+let dimension = 4;
+
 let board = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
@@ -20,12 +22,13 @@ addResetListener();
 function startGame () {
     gameStarted = true;
     currentPlayer = CROSS;
-    renderGrid(3);
+    renderGrid(dimension);
 }
 
 
 function renderGrid (dimension) {
     container.innerHTML = '';
+    board[0].push(0);
     board=[]
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
@@ -72,7 +75,7 @@ function nextTurn(){
 
 function checkWinner() {
     const symbols = [CROSS, ZERO];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < dimension; i++) {
         if (symbols.some(symbol => checkLine(i, 0, 0, 1, symbol))) {
             return true;
         }
@@ -84,11 +87,11 @@ function checkWinner() {
     {
         return true;
     }
-    return symbols.some(symbol => checkLine(0, 2, 1, -1, symbol));
+    return symbols.some(symbol => checkLine(0, dimension -1, 1, -1, symbol));
 }
 
 function highlightWinningCells(startRow, startCol, rowInc, colInc) {
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < dimension; i++) {
         const row = startRow + i * rowInc;
         const col = startCol + i * colInc;
         findCell(row, col).style.backgroundColor = 'red';
@@ -96,7 +99,7 @@ function highlightWinningCells(startRow, startCol, rowInc, colInc) {
 }
 
 function checkLine(startRow, startCol, rowInc, colInc, symbol) {
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < dimension; i++) {
         const row = startRow + i * rowInc;
         const col = startCol + i * colInc;
         if (board[row][col] !== symbol) {
