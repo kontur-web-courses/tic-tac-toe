@@ -88,17 +88,18 @@ function checkGameState(){
             renderSymbolInCell(ZERO, 2, 0, RED);
         }
     }
-
-    let count = 0
-    for (const row of field){
-        for (const value of row){
-            if (value !== EMPTY){
-                count++
+    if (!isGameEnded) {
+        let count = 0
+        for (const row of field) {
+            for (const value of row) {
+                if (value !== EMPTY) {
+                    count++
+                }
             }
         }
-    }
-    if (count === 9){
-        alert('Draw')
+        if (count === 9) {
+            alert('Draw')
+        }
     }
 }
 
