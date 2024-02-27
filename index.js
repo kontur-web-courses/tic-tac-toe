@@ -3,7 +3,8 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-
+let turn = true;
+let gameboard = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
 startGame();
 addResetListener();
 
@@ -27,7 +28,21 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    if (gameboard[row][col] === EMPTY){
+        if (turn){
+            renderSymbolInCell(CROSS, row, col);
+            turn = false;
+            gameboard[row][col] = CROSS;
+        }
+        else {
+            renderSymbolInCell(ZERO, row, col);
+            turn = true;
+            gameboard[row][col] = ZERO;
+        }
+    }
+    if (!(EMPTY in gameboard)){
+        alert("Победила дружба");
+    }
     console.log(`Clicked on cell: ${row}, ${col}`);
 
 
