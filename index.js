@@ -8,7 +8,7 @@ let player = CROSS
 
 const START_GRID = 3
 
-let field = Array(START_GRID).fill(Array(START_GRID).fill(' '));
+let field = Array(START_GRID).fill(Array(START_GRID).fill(EMPTY));
 
 function check_winner(field, sym) {
     for (let el = 0; el < field.length; el++) {
@@ -44,6 +44,22 @@ function renderGrid (dimension) {
     }
 }
 
+function checkDraw() {
+
+    // Проверяем, все ли ячейки на поле заполнены
+    for (let i = 0; i < field.length; i++) {
+        for (let j = 0; j < field[i].length; j++) {
+            console.log(field[i][j])
+            if (field[i][j] === EMPTY) {
+                
+                return false; // Не все ячейки заполнены, игра продолжается
+            }
+        }
+    }
+
+    return true; // Все ячейки заполнены, объявляем ничью
+}
+
 function cellClickHandler (row, col) {
     // Пиши код тут
     const targetCell = findCell(row, col);
@@ -53,10 +69,16 @@ function cellClickHandler (row, col) {
         console.log(`Clicked on cell: ${row}, ${col}`);
         renderSymbolInCell(player, row, col);
         switchPlayers();
-    } else {
-        console.log(`Cell ${row}, ${col} is already filled`);
+        if (checkDraw()){
+            alert("Победила дружба!");
+        }
     }
+     else {
+        console.log(`Cell ${row}, ${col} is already filled`);
+    
 
+    }
+    
     
     /* Пользоваться методом для размещения символа в клетке так:
      */
