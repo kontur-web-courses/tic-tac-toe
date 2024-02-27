@@ -16,6 +16,42 @@ function changeField(row_index, column_index, value){
     return false;
 }
 
+function checkGameState(){
+    for (const row of field){
+        if (row[0] === row[1] && row[1] === row[2]){
+            if (row[0] === CROSS){
+                alert('First win')
+            }
+            else if (row[1] === ZERO){
+                alert('Second win')
+            }
+        }
+    }
+
+    for (let i= 0; i<field.length; i++){
+        if (field[0][i] === field[1][i] && field[1][i] === field[2][i]){
+            if (field[0][i] === CROSS){
+                alert('First win')
+            }
+            else if (field[0][i] === ZERO){
+                alert('Second win')
+            }
+        }
+    }
+
+    let count = 0
+    for (const row of field){
+        for (const value of row){
+            if (value !== EMPTY){
+                count++
+            }
+        }
+    }
+    if (count === 9){
+        alert('Draw')
+    }
+}
+
 startGame();
 addResetListener();
 
