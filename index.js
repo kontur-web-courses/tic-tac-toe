@@ -51,7 +51,7 @@ function cellClickHandler (row, col) {
     if (isFinish || board[row][col] !== EMPTY) {
         return;
     }
-    board[row][col] = turn
+    board[row][col] = turn;
     renderSymbolInCell(turn, row, col);
     if (checkWin()){
         isFinish = true;
@@ -64,7 +64,7 @@ function cellClickHandler (row, col) {
     changeTurn();
 }
 
-function changeTurnTurn() {
+function changeTurn() {
     turn = (turn == CROSS) ? ZERO : CROSS;
 }
 
@@ -145,6 +145,7 @@ function resetField(){
             }
         }
     }
+    isFinish = false;
 }
 
 /* Test Function */
