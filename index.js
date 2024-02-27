@@ -1,6 +1,7 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
+let count = 0;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -13,7 +14,6 @@ function startGame () {
 
 function renderGrid (dimension) {
     container.innerHTML = '';
-
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
         for (let j = 0; j < dimension; j++) {
@@ -29,11 +29,14 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
+    if (count == 0){
         renderSymbolInCell(ZERO, row, col);
-     */
+        count = 1;
+    }
+    else{
+        renderSymbolInCell(CROSS, row, col);
+        count = 0;
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
