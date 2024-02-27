@@ -62,6 +62,9 @@ function newBoard(dimension) {
 
             return [[], false]
         },
+        allFieldsPlaced: function() {
+            return this._data.every((row) => row.every((el) => el.side !== EMPTY))
+        },
         at: function (row, col) {
             return this._data[row][col].side
         },
@@ -115,6 +118,11 @@ function cellClickHandler(row, col) {
         }
 
         alert(`${board.curSide} won!`);
+    }
+
+    if (!board.finished && board.allFieldsPlaced()) {
+        board.finished = true;
+        alert(`Draw!`);
     }
 }
 
