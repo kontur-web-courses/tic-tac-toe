@@ -53,6 +53,7 @@ function cellClickHandler (row, col) {
         if (checkWinner(row, col)) {
             alert(`Игрок ${currentPlayer} победил!`);
             gameOver = true;
+            markWinningCells(row, col)
             return;
         }
 
