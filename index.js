@@ -4,14 +4,27 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+let field = [];
+let player = true;
+let countSteps = 0;
+let size;
+
 startGame();
 addResetListener();
 
-function startGame () {
+function startGame() {
     renderGrid(3);
 }
 
-function renderGrid (dimension) {
+function renderGrid(dimension) {
+    countSteps = dimension * dimension;
+    size = dimension;
+    for (let i = 0; i < dimension; i++) {
+        field[i] = [];
+        for (let j = 0; j < dimension; j++) {
+            field[i][j] = EMPTY;
+        }
+    }
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
@@ -26,41 +39,131 @@ function renderGrid (dimension) {
     }
 }
 
-function cellClickHandler (row, col) {
+function cellClickHandler(row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
+    if (field[row][col] !== EMPTY || getWinner()) {
+        return;
+    }
+    if (countSteps === 0) {
+        alert('Победила дружба');
+        return;
+    }
+    field[row][col] = player ? CROSS : ZERO;
+    renderSymbolInCell(field[row][col], row, col);
+    player = !player;
+    let winner = getWinner();
+    console.log(winner);
+    if (winner) {
+        alert(winner);
+    }
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
 }
 
-function renderSymbolInCell (symbol, row, col, color = '#333') {
+function getWinner() {
+    return checkRow() || checkColumn() || checkDiagonals();
+}
+
+function checkRow() {
+    for (let i = 0; i < size; i++) {
+        let win = true;
+        let winner = field[i][0];
+        if (winner === EMPTY) {
+            break;
+        }
+        for (let j = 1; j < size; j++) {
+            win = winner === field[i][j];
+            console.log(win);
+            if (!win) {
+                break;
+            }
+        }
+        if (win) {
+            return winner;
+        }
+    }
+    return undefined;
+}
+
+function checkColumn() {
+    for (let i = 0; i < size; i++) {
+        let win = true;
+        let winner = field[0][i];
+        if (winner === EMPTY) {
+            break;
+        }
+        for (let j = 1; j < size; j++) {
+            win = winner === field[j][i];
+            if (!win) {
+                break;
+            }
+        }
+        if (win) {
+            return winner;
+        }
+    }
+    return undefined;
+}
+
+function checkDiagonals() {
+    let win = true;
+    let winner = field[0][0];
+    if (winner !== EMPTY) {
+        for (let i = 1; i < size; i++) {
+
+            win = winner === field[i][i];
+            if (!win) {
+                break;
+            }
+        }
+        if (win) {
+            return winner;
+        }
+    }
+    win = true;
+    winner = field[0][size - 1];
+    if (winner !== EMPTY) {
+        for (let i = 1; i < size; i++) {
+            win = winner === field[i][size - 1 - i];
+            if (!win) {
+                break;
+            }
+        }
+        if (win) {
+            return winner;
+        }
+    }
+    return undefined;
+}
+
+function renderSymbolInCell(symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
 }
 
-function findCell (row, col) {
+function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
 }
 
-function addResetListener () {
+function addResetListener() {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
 }
 
-function resetClickHandler () {
+function resetClickHandler() {
     console.log('reset!');
 }
 
 
 /* Test Function */
 /* Победа первого игрока */
-function testWin () {
+function testWin() {
     clickOnCell(0, 2);
     clickOnCell(0, 0);
     clickOnCell(2, 0);
@@ -71,7 +174,7 @@ function testWin () {
 }
 
 /* Ничья */
-function testDraw () {
+function testDraw() {
     clickOnCell(2, 0);
     clickOnCell(1, 0);
     clickOnCell(1, 1);
@@ -84,6 +187,6 @@ function testDraw () {
     clickOnCell(2, 2);
 }
 
-function clickOnCell (row, col) {
+function clickOnCell(row, col) {
     findCell(row, col).click();
 }
