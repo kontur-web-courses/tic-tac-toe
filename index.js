@@ -54,7 +54,7 @@ function checkWinner(board) {
 }
 
 function checkTie(){
-    return board.any()
+    return board.every(row => row.every(cell => cell !== EMPTY));
 }
 
 function cellClickHandler (row, col) {
@@ -69,7 +69,9 @@ function cellClickHandler (row, col) {
         board[row][col] = ZERO;
     }
     turn++;
-
+    if ( checkTie() ){
+        console.log('Победила Дружба');
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
