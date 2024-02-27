@@ -8,6 +8,8 @@ let player = CROSS
 
 const START_GRID = 3
 
+let finished = false
+
 // let field = Array(START_GRID).fill(Array(START_GRID).fill(EMPTY));
 let field = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']]
 function checkWinner(field, sym) {
@@ -20,10 +22,11 @@ function checkWinner(field, sym) {
             }
         }
         if (flag) {
-            for (let m = 0; m < i; m++) {
+            for (let m = 0; m < START_GRID; m++) {
                 renderSymbolInCell(player, i, m, 'red')                
             }
             console.log('row')
+            finished = true
             return true
         }
     }
@@ -38,10 +41,11 @@ function checkWinner(field, sym) {
             }
         }
         if (flag) {
-            for (let m = 0; m < i; m++) {
+            for (let m = 0; m < START_GRID; m++) {
                 renderSymbolInCell(player, m, i, 'red')                
             }
             console.log('col')
+            finished = true
             return true
         }
     }
@@ -58,6 +62,7 @@ function checkWinner(field, sym) {
             renderSymbolInCell(player, m, m, 'red')                
         }
         console.log('diag')
+        finished = true
         return true
     }
     
@@ -70,9 +75,10 @@ function checkWinner(field, sym) {
     }
     if (flag) {
         for (let m = 0; m < START_GRID; m++) {
-            renderSymbolInCell(player, m, m, 'red')                
+            renderSymbolInCell(player, m, START_GRID - m - 1, 'red')                
         }
         console.log('rev')
+        finished = true
         return true
     }
 
@@ -123,33 +129,36 @@ function checkDraw() {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
-    const targetCell = field[row][col];
+    if (!finished)
+    {
+        const targetCell = field[row][col];
 
-    // Проверяем, что ячейка еще не заполнена
-    if (targetCell === EMPTY) {
-        console.log(`Clicked on cell: ${row}, ${col}`);
-        field[row][col] = player
+        // Проверяем, что ячейка еще не заполнена
+        if (targetCell === EMPTY) {
+            console.log(`Clicked on cell: ${row}, ${col}`);
+            field[row][col] = player
 
-        renderSymbolInCell(player, row, col);
+            renderSymbolInCell(player, row, col);
 
-        if (checkWinner(field, player)) {
-            alert('${player} wins');
-            //return;
+            if (checkWinner(field, player)) {
+                alert(`${player} wins`);
+                //return;
+            }
+
+            console.log(field,row,col)
+
+
+            if (checkDraw()){
+                alert("Победила дружба!");
+                return
+            }
+            switchPlayers();
         }
-
-        console.log(field,row,col)
-
-
-        if (checkDraw()){
-            alert("Победила дружба!");
-            return
-        }
-        switchPlayers();
-    }
-     else {
-        console.log(`Cell ${row}, ${col} is already filled`);
+        else {
+            console.log(`Cell ${row}, ${col} is already filled`);
 
     }
+}
     
     
     /* Пользоваться методом для размещения символа в клетке так:
@@ -174,6 +183,7 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    finished = false
     for (let i = 0; i < START_GRID; i++) {
         for (let j = 0; j < START_GRID; j++) {
             const cell = findCell(i, j);
