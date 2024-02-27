@@ -2,7 +2,7 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
-const DIMENSION = 3;
+let dimension = 3;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -78,8 +78,8 @@ function newBoard(dimension) {
 }
 
 function startGame() {
-    renderGrid(DIMENSION);
-    board = newBoard(DIMENSION);
+    renderGrid(dimension);
+    board = newBoard(dimension);
 }
 
 function renderGrid(dimension) {
@@ -185,6 +185,8 @@ function addResetListener() {
 
 function resetClickHandler() {
     console.log('reset!');
+    const changeButton = document.getElementById("change");
+    dimension = parseInt(changeButton.value, 10);
     startGame();
 }
 
