@@ -33,12 +33,14 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    if (gameField[row][col] === ''){
+    if (gameField[row][col] === '') {
         renderSymbolInCell(currentPlayer, row, col);
         gameField[row][col] = currentPlayer;
         currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
     }
-
+    if (!gameField.flat().includes('')) {
+        alert('Победила дружба!');
+    }
     console.log(`Clicked on cell: ${row}, ${col}`);
 }
 
@@ -61,6 +63,18 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+}
+
+function checkWinner(symbol) {
+    for (let i = 0; i < SIZE; i++) {
+        if (gameField[i].every(cell => cell === symbol)) return true; // Check rows
+        if (gameField.every(row => row[i] === symbol)) return true; // Check columns
+    }
+
+    if (gameField.every((row, index) => row[index] === symbol)) return true; // Check diagonal
+    if (gameField.every((row, index) => row[SIZE - 1 - index] === symbol)) return true; // Check reverse diagonal
+
+    return false;
 }
 
 
