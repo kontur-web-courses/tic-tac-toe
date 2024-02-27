@@ -17,6 +17,7 @@ function changeField(row_index, column_index, value){
 }
 
 function checkGameState(){
+    console.log(field)
     for (const row of field){
         if (row[0] === row[1] && row[1] === row[2]){
             if (row[0] === CROSS){
@@ -36,6 +37,24 @@ function checkGameState(){
             else if (field[0][i] === ZERO){
                 alert('Second win')
             }
+        }
+    }
+
+    if (field[0][0] === field[1][1] && field[1][1] === field[2][2]){
+        if (field[0][0] === CROSS){
+            alert('First win')
+        }
+        else if (field[0][0] === ZERO){
+            alert('Second win')
+        }
+    }
+
+    if (field[0][2] === field[1][1] && field[1][1] === field[2][0]){
+        if (field[0][2] === CROSS){
+            alert('First win')
+        }
+        else if (field[0][2] === ZERO){
+            alert('Second win')
         }
     }
 
@@ -88,6 +107,7 @@ function cellClickHandler (row, col) {
             crossTurn = true;
         }
     }
+    checkGameState()
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
