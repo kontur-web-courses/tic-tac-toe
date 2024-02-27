@@ -97,17 +97,24 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
+    const targetCell = findCell(row, col);
 
-
-    renderSymbolInCell(player, row, col);
-
+    // Проверяем, что ячейка еще не заполнена
+    if (targetCell.textContent === EMPTY) {
+        console.log(`Clicked on cell: ${row}, ${col}`);
+        renderSymbolInCell(player, row, col);
+    
     if (checkWinner) {
         alert('${player} wins')
     }
 
     
     switchPlayers();
+    } else {
+        console.log(`Cell ${row}, ${col} is already filled`);
+    }
+
+    
 
     /* Пользоваться методом для размещения символа в клетке так:
      */
