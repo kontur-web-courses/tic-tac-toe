@@ -49,14 +49,11 @@ function cellClickHandler(row, col) {
     if (winner) {
         highlightWinnerCells(winner);
         container.removeEventListener('click', cellClickHandler);
-        setTimeout(() => alert(`The winner is ${winner}!`), 1000);
-        END_GAME = true;
-
+        alert(`The winner is ${winner}!`);
     } else {
         turnCounter++;
         if (turnCounter === 9) {
-            setTimeout(() => alert('Friendship wins!'), 1000);
-            END_GAME = true;
+            alert('Friendship wins!');
         }
     }
 }
