@@ -17,8 +17,11 @@ startGame();
 addResetListener();
 
 function startGame () {
+<<<<<<< HEAD
     gameStarted = true;
     currentPlayer = CROSS;
+=======
+>>>>>>> 9df55c1552a6ac3c6cd589bf2cea827b8c76943a
     renderGrid(3);
 }
 
@@ -50,10 +53,14 @@ function cellClickHandler(row, col) {
         renderSymbolInCell(currentPlayer, row, col);
         
 
+<<<<<<< HEAD
         if (checkWinner()) {
             const winner = getCurrentPlayer() === CROSS ? "Крестики" : "Нолики";
+=======
+        if (checkWinner(row, col, currentPlayer)) {
+            const winner = getCurrentPlayer() === ZERO ? "Крестики" : "Нолики";
+>>>>>>> 9df55c1552a6ac3c6cd589bf2cea827b8c76943a
             alert(`Победитель: ${winner}`);
-            highlightWinningCells();
             disableClickHandlers();
         } else if (checkDraw()) {
             alert("Победила дружба");
@@ -63,6 +70,7 @@ function cellClickHandler(row, col) {
 }
 
 function getCurrentPlayer() {
+<<<<<<< HEAD
     return currentPlayer;
     const crosses = board.flat().filter(cell => cell === CROSS);
     const zeros = board.flat().filter(cell => cell === ZERO);
@@ -72,27 +80,54 @@ function getCurrentPlayer() {
 function nextTurn(){
     currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
     //alert(currentPlayer);
+=======
+    const crosses = board.flat().filter(cell => cell === CROSS);
+    const zeros = board.flat().filter(cell => cell === ZERO);
+    return crosses.length === zeros.length ? CROSS : ZERO;
+>>>>>>> 9df55c1552a6ac3c6cd589bf2cea827b8c76943a
 }
 
-function checkWinner() {
-    const lines = [
-        [board[0][0], board[0][1], board[0][2]],
-        [board[1][0], board[1][1], board[1][2]],
-        [board[2][0], board[2][1], board[2][2]],
-        [board[0][0], board[1][0], board[2][0]],
-        [board[0][1], board[1][1], board[2][1]],
-        [board[0][2], board[1][2], board[2][2]],
-        [board[0][0], board[1][1], board[2][2]],
-        [board[0][2], board[1][1], board[2][0]]
-    ];
-
-    for (let line of lines) {
-        if (line.every(cell => cell === CROSS) || line.every(cell => cell === ZERO)) {
+function checkWinner(row, col, player) {
+    const symbols = [CROSS, ZERO];
+    if (symbols.some(symbol => checkLine(row, col, 0, 1, symbol)))
+    {
+        return true;
+    }
+    if (symbols.some(symbol => checkLine(row, col, 1, 0, symbol)))
+    {
+        return true;
+    }
+    if (row === col || row + col === 2) {
+        if (symbols.some(symbol => checkLine(0, 0, 1, 1, symbol)))
+        {
+            return true;
+        }
+        if (symbols.some(symbol => checkLine(0, 2, 1, -1, symbol)))
+        {
             return true;
         }
     }
-
     return false;
+}
+
+function highlightWinningCells(startRow, startCol, rowInc, colInc) {
+    for (let i = 0; i < 3; i++) {
+        const row = startRow + i * rowInc;
+        const col = startCol + i * colInc;
+        findCell(row, col).style.backgroundColor = 'red';
+    }
+}
+
+function checkLine(startRow, startCol, rowInc, colInc, symbol) {
+    for (let i = 0; i < 3; i++) {
+        const row = startRow + i * rowInc;
+        const col = startCol + i * colInc;
+        if (board[row][col] !== symbol) {
+            return false;
+        }
+    }
+    highlightWinningCells(startRow, startCol, rowInc, colInc);
+    return true;
 }
 
 function checkDraw() {
@@ -106,10 +141,7 @@ function checkDraw() {
     return true;
 }
 
-function highlightWinningCells() {
 
-
-}
 
 function disableClickHandlers() {
     gameStarted = false;
