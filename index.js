@@ -2,6 +2,7 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 let Player = 1;
+const dimension = 3;
 
 const container = document.getElementById('fieldWrapper');
 let gameBoard = [];
@@ -10,8 +11,8 @@ startGame();
 addResetListener();
 
 function startGame() {
-    gameBoard = initializeBoard(3);
-    renderGrid(3);
+    gameBoard = initializeBoard(dimension);
+    renderGrid(dimension);
 }
 
 function initializeBoard(dimension) {
@@ -26,7 +27,7 @@ function initializeBoard(dimension) {
     return board;
 }
 
-function renderGrid(dimension) {
+function renderGrid() {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
@@ -46,8 +47,51 @@ function cellClickHandler(row, col) {
         const symbol = Player === 1 ? ZERO : CROSS;
         renderSymbolInCell(symbol, row, col);
         gameBoard[row][col] = symbol;
+        if (isWinnerOnBoard(dimension))
+            alert(`Победил игрок ${Player}`);
         Player = Player === 1 ? 2 : 1;
     }
+}
+
+function isWinnerOnBoard(dimension) {
+    function isWinnerOnBoard(board) {
+        const dimension = board.length;
+        let rows, cols, diag, antiDiag;
+
+        for (let i = 0; i < dimension; i++) {
+            rows = true;
+            cols = true;
+            for (let j = 0; j < dimension - 1; j++) {
+                if (board[i][j] === '' || board[i][j] !== board[i][j + 1]) {
+                    rows = false;
+                }
+                if (board[j][i] === '' || board[j][i] !== board[j + 1][i]) {
+                    cols = false;
+                }
+            }
+            if (rows || cols)
+                return true;
+        }
+
+        diag = true;
+        for (let i = 0; i < dimension - 1; i++) {
+            if (board[i][i] === '' || board[i][i] !== board[i + 1][i + 1]) {
+                diag = false;
+                break;
+            }
+        }
+
+        antiDiag = true;
+        for (let i = 0; i < dimension - 1; i++) {
+            if (board[i][dimension - i - 1] === '' || board[i][dimension - i - 1] !== board[i + 1][dimension - i - 2]) {
+                antiDiag = false;
+                break;
+            }
+        }
+
+        return diag || antiDiag;
+    }
+
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
