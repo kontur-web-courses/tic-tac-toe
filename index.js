@@ -71,6 +71,7 @@ function checkMove() {
         }
     }
 
+    alert('Победила дружба');
     return false;
 }
 
@@ -78,24 +79,24 @@ function checkWinner() {
     let winner;
 
     for (let column of field) {
-        if (column[0] === column[1] === column[2]) {
+        if (column[0] === column[1] === column[2] !== EMPTY) {
             winner = column[0];
             break;
         }
     }
 
     for (let i = 0; i < 3; i++) {
-        if (field[0][i] === field[1][i] === field[2][i]) {
+        if (field[0][i] === field[1][i] === field[2][i] !== EMPTY) {
             winner = field[0][i];
             break;
         }
     }
 
-    if (field[0][0] === field[1][1] === field[2][2]) {
+    if (field[0][0] === field[1][1] === field[2][2] !== EMPTY) {
         winner = field[0][0];
     }
 
-    if (field[2][0] === field[1][1] === field[0][2]) {
+    if (field[2][0] === field[1][1] === field[0][2] !== EMPTY) {
         winner = field[0][0];
     }
 
