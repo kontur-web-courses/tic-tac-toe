@@ -1,11 +1,13 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-const dimension = 3;
+let dimension = 3;
 const redColor = '#FF0000'
 
 const container = document.getElementById('fieldWrapper');
 
+
+askDimension();
 startGame();
 
 
@@ -116,6 +118,16 @@ function checkLineWin(sum){
 
 // ---------- Board Methods End -------
 
+function askDimension(){
+    let a = prompt('Введи размер поля');
+    let num =  Number(a);
+    if (!isNaN(num)){
+        dimension = num;
+    }else {
+        askDimension();
+    }
+}
+
 function startGame () {
     let board = createBoard()
     createBoard(board);
@@ -185,7 +197,7 @@ function addResetListener (board) {
 function resetClickHandler (board) {
     console.log('reset!');
     for (let row = 0; row < dimension; row++) {
-        for (let column = 0; column < 3; column++) {
+        for (let column = 0; column < dimension; column++) {
             renderSymbolInCell(EMPTY, row, column);
         }
     }
