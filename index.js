@@ -3,17 +3,18 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
+let field;
+let currentSymbol = CROSS;
 
 startGame();
 addResetListener();
-let field;
 
 function startGame () {
     renderGrid(3);
-    init_field(3);
+    initField(3);
 }
 
-function init_field(x) {
+function initField(x) {
     field = []
     for (let i = 0; i < x; i++) {
         let subArray = [];
@@ -21,6 +22,20 @@ function init_field(x) {
             subArray.push(EMPTY);
         }
         field.push(subArray);
+    }
+}
+
+function checkWinner(field, currentSymbol) {
+    for (const row of field) {
+
+    }
+}
+
+function flipCurrentSymbol() {
+    if (currentSymbol === CROSS) {
+        currentSymbol = ZERO;
+    } else if (currentSymbol === ZERO) {
+        currentSymbol = CROSS;
     }
 }
 
@@ -42,7 +57,15 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
+    if (field[row][col] !== EMPTY) {
+        return;
+    }
 
+    field[row][col] = currentSymbol;
+    renderSymbolInCell(currentSymbol, row, col);
+    checkWinner(field, currentSymbol);
+
+    flipCurrentSymbol();
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
@@ -66,6 +89,8 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    initField(3);
+    renderGrid(3);
     console.log('reset!');
 }
 
