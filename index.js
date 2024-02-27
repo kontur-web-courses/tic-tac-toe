@@ -38,7 +38,7 @@ function cellClickHandler (row, col) {
         renderSymbolInCell(currentPlayer, row, col);
         board[row][col] = currentPlayer;
         --movesLeft;
-        if (checkWinner()) {
+        if (checkAndHighlightWinner()) {
             const winner = currentPlayer === CROSS ? 'Крестики' : 'Нолики';
             alert(`${winner} выиграли`);
         }
@@ -49,18 +49,74 @@ function cellClickHandler (row, col) {
     currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
 }
 
-function checkWinner() {
-    for (let i = 0; i < 3; i++) {
-        if (board[i][0] === currentPlayer && board[i][1] === currentPlayer &&
-            board[i][2] === currentPlayer || board[0][i] === currentPlayer &&
-            board[1][i] === currentPlayer && board[2][i] === currentPlayer) {
+
+function checkAndHighlightWinner() {
+    let check = false;
+    for (let row = 0; row < 3; ++row) {
+        check = true;
+        for (let col = 0; col < 3; ++col) {
+            check &&= board[row][col] === currentPlayer;
+        }
+        if (check) {
+            highlightRowOrColumn(true, row);
+            return true;
+        }
+    }
+    for (let col = 0; col < 3; ++col) {
+        check = true;
+        for (let row = 0; row < 3; ++row) {
+            check &&= board[row][col] === currentPlayer;
+        }
+        if (check) {
+            highlightRowOrColumn(false, col);
             return true;
         }
     }
 
-    return board[0][0] === currentPlayer && board[1][1] === currentPlayer &&
-        board[2][2] === currentPlayer || board[0][2] === currentPlayer &&
-        board[1][1] === currentPlayer && board[2][0] === currentPlayer;
+    check = true;
+    for (let i = 0; i < 3; ++i) {
+        check &&= board[i][i] === currentPlayer;
+    }
+    if (check) {
+        highlightDiagonal(true);
+        return true;
+    }
+
+    check = true;
+    for (let i = 0; i < 3; ++i) {
+        check &&= board[i][2 - i] === currentPlayer;
+    }
+    if (check) {
+        highlightDiagonal(false);
+        return true;
+    }
+    return check;
+}
+
+function highlightDiagonal(main = true){
+    if(main){
+        for(let i = 0; i < 3; i++){
+            findCell(i, i).style.color = 'red';
+        }
+    }
+    else{
+        for(let i = 0; i < 3; i++){
+            findCell(i, 2 - i).style.color = 'red';
+        }
+    }
+}
+
+function highlightRowOrColumn(row = true, number) {
+    if (row) {
+        for (let i = 0; i < 3; i++) {
+            findCell(number, j).style.color = 'red';
+        }
+    }
+    else {
+        for (let i = 0; i < 3; i++) {
+            findCell(i, number).style.color = 'red';
+        }
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
