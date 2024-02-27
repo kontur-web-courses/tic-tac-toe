@@ -12,9 +12,9 @@ startGame();
 addResetListener();
 
 function newBoard(dimension) {
-    let data = []
+    let data = [];
     for (let i = 0; i < dimension; i++) {
-        let arr = []
+        let arr = [];
         for (let j = 0; j < dimension; j++) {
             arr.push({x: i, y: j, side: EMPTY});
         }
@@ -23,12 +23,12 @@ function newBoard(dimension) {
     }
 
     board = {
-        _data: data,
+        field: data,
         curSide: EMPTY,
         finished: false,
         dimension: dimension,
         getWinningValues: function (side) {
-            for (let row of this._data) {
+            for (let row of this.field) {
                 if (row.every((el) => el.side === side)) {
                     return [row, true];
                 }
@@ -36,24 +36,24 @@ function newBoard(dimension) {
 
             for (let colIdx = 0; colIdx < this.dimension; colIdx++) {
                 let column = [];
-                for (let row of this._data) {
+                for (let row of this.field) {
                     column.push(row[colIdx]);
                 }
 
                 if (column.every((el) => el.side === side)) {
-                    return [column, true]
+                    return [column, true];
                 }
             }
 
             let diag1 = [];
             let diag2 = [];
             for (let diagIdx = 0; diagIdx < this.dimension; diagIdx++) {
-                diag1.push(this._data[diagIdx][diagIdx]);
-                diag2.push(this._data[diagIdx][this.dimension - diagIdx - 1]);
+                diag1.push(this.field[diagIdx][diagIdx]);
+                diag2.push(this.field[diagIdx][this.dimension - diagIdx - 1]);
             }
 
             if (diag1.every((el) => el.side === side)) {
-                return [diag1, true]
+                return [diag1, true];
             }
 
 
@@ -61,24 +61,20 @@ function newBoard(dimension) {
                 return [diag2, true];
             }
 
-            return [[], false]
+            return [[], false];
         },
-        allFieldsPlaced: function() {
-            return this._data.every((row) => row.every((el) => el.side !== EMPTY))
+        allFieldsPlaced: function () {
+            return this.field.every((row) => row.every((el) => el.side !== EMPTY));
         },
         at: function (row, col) {
-            return this._data[row][col].side
+            return this.field[row][col].side;
         },
         set: function (row, col, side) {
-            this._data[row][col].side = side
+            this.field[row][col].side = side;
         },
-    }
+    };
 
     return board;
-}
-
-function randomAi(board, side) {
-    let freeFields = []
 }
 
 function startGame() {
@@ -103,8 +99,10 @@ function renderGrid(dimension) {
 
 function cellClickHandler(row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
+
     if (board.at(row, col) !== EMPTY || board.finished)
         return;
+
 
     if (board.curSide === EMPTY || board.curSide === ZERO) {
         board.curSide = CROSS;
@@ -115,7 +113,43 @@ function cellClickHandler(row, col) {
     board.set(row, col, board.curSide);
     renderSymbolInCell(board.curSide, row, col);
 
-    let [winningCells, isWinner] = board.getWinningValues(board.curSide)
+    checkGameFinished(board);
+    aiMove(board, randomAiMove, ZERO);
+}
+
+function aiMove(board, moveFunc, aiSide) {
+    if (!board.finished && (aiSide === ZERO || aiSide === CROSS)) {
+        if (board.curSide === EMPTY || board.curSide === ZERO) {
+            board.curSide = CROSS;
+        } else if (board.curSide === CROSS) {
+            board.curSide = ZERO;
+        }
+
+        if (board.curSide === aiSide)
+            moveFunc(board, aiSide);
+
+        checkGameFinished(board);
+    }
+}
+
+function randomAiMove(board, side) {
+    let freeFields = [];
+    for (let row of board.field) {
+        for (let field of row) {
+            if (field.side === EMPTY) {
+                freeFields.push(field);
+            }
+        }
+    }
+
+    let move = freeFields[Math.floor(Math.random() * freeFields.length)];
+
+    board.set(move.x, move.y, side);
+    renderSymbolInCell(side, move.x, move.y, '#333');
+}
+
+function checkGameFinished(board) {
+    let [winningCells, isWinner] = board.getWinningValues(board.curSide);
     if (isWinner) {
         board.finished = true;
         for (let cell of winningCells) {
@@ -129,6 +163,7 @@ function cellClickHandler(row, col) {
         board.finished = true;
         alert(`Draw!`);
     }
+
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
