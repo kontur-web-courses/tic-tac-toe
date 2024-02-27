@@ -53,7 +53,7 @@ function cellClickHandler (row, col) {
     if (winner != EMPTY) {
         return;
     }
-    
+
     if (grid[row][col] != EMPTY) {
         return;
     }
@@ -174,11 +174,11 @@ function setWinnerDiagonalReverse () {
         return;
     }
 
-    for (let i = 2; i <= DIMENSION; i++) {
-        if (grid[i][DIMENSION - i] != checkValue) {
+    for (let i = 1; i < DIMENSION; i++) {
+        if (grid[i][DIMENSION - i - 1] != checkValue) {
             return;
         }
-        locations.push([i, DIMENSION - i]);
+        locations.push([i, DIMENSION - i - 1]);
     }
 
     winner = checkValue;
