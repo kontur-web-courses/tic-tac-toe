@@ -16,7 +16,6 @@ let board = [
     [EMPTY, EMPTY, EMPTY]
 ];
 
-
 startGame();
 addResetListener();
 
