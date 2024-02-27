@@ -110,7 +110,7 @@ function getFilledTriple(arr){
         if (res.length !== 3) {
             continue;
         }
-        if (isFilled(res)) {
+        if (res[0].color !== EMPTY && isFilled(res)) {
             return res;
         }
         res.shift();
