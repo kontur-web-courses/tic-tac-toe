@@ -1,17 +1,21 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-
-const container = document.getElementById('fieldWrapper');
+let moves = 0;
+let currentPlayer = CROSS;
+let container = document.getElementById('fieldWrapper');
+dimension = 3
+let winning = false;
 
 startGame();
 addResetListener();
 
-function startGame () {
-    renderGrid(3);
+function startGame() {
+    renderGrid(dimension);
+    winning = false;
 }
 
-function renderGrid (dimension) {
+function renderGrid(dimension) {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
@@ -21,46 +25,122 @@ function renderGrid (dimension) {
             cell.textContent = EMPTY;
             cell.addEventListener('click', () => cellClickHandler(i, j));
             row.appendChild(cell);
+            if (winning){
+                break;
+            }
+        }
+        if (winning){
+            break;
         }
         container.appendChild(row);
     }
 }
 
-function cellClickHandler (row, col) {
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
+function cellClickHandler(row, col) {
+    const cell = findCell(row, col);
 
+    if (cell.textContent === EMPTY) {
+        renderSymbolInCell(currentPlayer, row, col);
+        moves++;
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+        if (checkWin(currentPlayer, row, col) || moves === dimension * dimension) {
+            if (checkWin(currentPlayer, row, col)) {
+                alert(`${currentPlayer} wins!`);
+                markWinningCells(currentPlayer);
+            } else {
+                alert("Победила дружба!");
+            }
+            container.removeEventListener('click', cellClickHandler);
+            winning = true;
+        }
+
+        currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
+    }
 }
 
-function renderSymbolInCell (symbol, row, col, color = '#333') {
+function renderSymbolInCell(symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
 }
 
-function findCell (row, col) {
+function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
 }
 
-function addResetListener () {
+function addResetListener() {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
 }
 
-function resetClickHandler () {
+function resetClickHandler() {
+    dimension = 3;
+    currentPlayer = CROSS;
+    moves = 0;
     console.log('reset!');
+
+    startGame();
 }
 
+function checkWin(symbol, row, col) {
+    return checkHorizontal(symbol, row) || checkVertical(symbol, col) || checkDiagonal(symbol, row, col);
+}
+
+function checkHorizontal(symbol, row) {
+    const targetRow = container.querySelectorAll('tr')[row];
+    return Array.from(targetRow.children).every(cell => cell.textContent === symbol);
+}
+
+function checkVertical(symbol, col) {
+    const rows = container.querySelectorAll('tr');
+    return Array.from(rows).every(row => row.children[col].textContent === symbol);
+}
+
+function checkDiagonal(symbol, row, col) {
+    if (row === col || row + col === dimension - 1) {
+        return checkMainDiagonal(symbol) || checkAntiDiagonal(symbol);
+    }
+    return false;
+}
+
+function checkMainDiagonal(symbol) {
+    const rows = container.querySelectorAll('tr');
+    return Array.from(rows).every((row, index) => row.children[index].textContent === symbol);
+}
+
+function checkAntiDiagonal(symbol) {
+    const rows = container.querySelectorAll('tr');
+    return Array.from(rows).every((row, index) => row.children[dimension - index - 1].textContent === symbol);
+}
+
+function markWinningCells(symbol) {
+    const rows = container.querySelectorAll('tr');
+
+    Array.from(rows).forEach(row => {
+        if (Array.from(row.children).every(cell => cell.textContent === symbol)) {
+            Array.from(row.children).forEach(cell => cell.style.color = 'red');
+        }
+    });
+
+    for (let col = 0; col < dimension; col++) {
+        const verticalCells = Array.from(rows).map(row => row.children[col]);
+        if (verticalCells.every(cell => cell.textContent === symbol)) {
+            verticalCells.forEach(cell => cell.style.color = 'red');
+        }
+    }
+
+    if (checkMainDiagonal(symbol)) {
+        Array.from(rows).forEach((row, index) => row.children[index].style.color = 'red');
+    } else if (checkAntiDiagonal(symbol)) {
+        Array.from(rows).forEach((row, index) => row.children[dimension - index - 1].style.color = 'red');
+    }
+}
 
 /* Test Function */
 /* Победа первого игрока */
-function testWin () {
+function testWin() {
     clickOnCell(0, 2);
     clickOnCell(0, 0);
     clickOnCell(2, 0);
@@ -71,7 +151,7 @@ function testWin () {
 }
 
 /* Ничья */
-function testDraw () {
+function testDraw() {
     clickOnCell(2, 0);
     clickOnCell(1, 0);
     clickOnCell(1, 1);
@@ -84,6 +164,6 @@ function testDraw () {
     clickOnCell(2, 2);
 }
 
-function clickOnCell (row, col) {
+function clickOnCell(row, col) {
     findCell(row, col).click();
 }
