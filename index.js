@@ -3,6 +3,7 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
+let crossTurn = true;
 
 startGame();
 addResetListener();
@@ -27,13 +28,16 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
+    if (crossTurn){
+        renderSymbolInCell(CROSS, row, col);
+        crossTurn = false;
+    }
+    else{
         renderSymbolInCell(ZERO, row, col);
-     */
+        crossTurn = true;
+    }
+
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
