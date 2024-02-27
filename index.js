@@ -62,21 +62,16 @@ function resetClickHandler () {
 }
 
 function checkMove() {
-    outer1: for (let column of field) {
-        const element = column[0];
-        if (element === EMPTY) {
-            continue;
-        }
-        for (let cell in column) {
-            if (cell !== element) {
-                continue outer1;
+
+    for (let column of field) {
+        for (let cell of field) {
+            if (cell === EMPTY) {
+                return true;
             }
         }
-        alert(`Победитель: ${element}`)
     }
 
-    const rowElement = field[0][0]
-
+    return false;
 }
 
 
