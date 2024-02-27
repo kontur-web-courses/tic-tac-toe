@@ -8,7 +8,7 @@ let board = undefined;
 let turn = CROSS;
 let isFinish = false;
 
-createTicTacToeBoard()
+createTicTacToeBoard();
 startGame();
 addResetListener();
 
@@ -51,7 +51,7 @@ function cellClickHandler (row, col) {
     if (isFinish || board[row][col] !== EMPTY) {
         return;
     }
-    board[row][col] = turn
+    board[row][col] = turn;
     renderSymbolInCell(turn, row, col);
     if (checkWin()){
         isFinish = true;
@@ -82,7 +82,7 @@ function checkWin(){
 
 function checkLineWin(stX, stY, endX, endY, dx, dy){
     if (isLineWin(stX, stY, endX, endY, dx, dy)){
-        renderWonLine(stX, stY, endX, endY, dx, dy)
+        renderWonLine(stX, stY, endX, endY, dx, dy);
         return true;
     }
     return false;
@@ -125,7 +125,7 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
-    resetField()
+    resetField();
 }
 
 function clickOnCell (row, col) {
@@ -140,7 +140,7 @@ function resetField(){
     for (let i = 0; i < board.length; i++) {
         for (let j = 0; j < board[i].length; j++) {
             if (board[i][j] !== EMPTY) {
-                board[i][j] = EMPTY
+                board[i][j] = EMPTY;
                 renderSymbolInCell(EMPTY, i, j);
             }
         }
