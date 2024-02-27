@@ -58,7 +58,7 @@ function getCurrentPlayer() {
     return crosses.length === zeros.length ? CROSS : ZERO;
 }
 
-function checkWinner() {
+function checkWinner(player) {
     const symbols = [CROSS, ZERO];
     for (let i = 0; i < 3; i++) {
         if (symbols.some(symbol => checkLine(i, 0, 0, 1, symbol))) {
