@@ -5,7 +5,7 @@ const EMPTY = ' ';
 const container = document.getElementById('fieldWrapper');
 let currentPlayer = CROSS;
 
-const board = [
+let board = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY]
@@ -16,15 +16,18 @@ startGame();
 addResetListener();
 
 function startGame () {
+    currentPlayer = CROSS;
     renderGrid(3);
 }
 
 function renderGrid (dimension) {
     container.innerHTML = '';
-
+    board=[]
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
+        board.push([])
         for (let j = 0; j < dimension; j++) {
+            board[board.length-1].push(EMPTY)
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
             cell.addEventListener('click', () => cellClickHandler(i, j));
@@ -52,9 +55,10 @@ function cellClickHandler(row, col) {
 }
 
 function getCurrentPlayer() {
-    const crosses = board.flat().filter(cell => cell === CROSS);
-    const zeros = board.flat().filter(cell => cell === ZERO);
-    return crosses.length === zeros.length ? CROSS : ZERO;
+    return currentPlayer;
+    //const crosses = board.flat().filter(cell => cell === CROSS);
+    //const zeros = board.flat().filter(cell => cell === ZERO);
+    //return crosses.length === zeros.length ? CROSS : ZERO;
 }
 
 function checkWinner() {
@@ -96,7 +100,7 @@ function highlightWinningCells() {
 
 function disableClickHandlers() {
     const cells = document.querySelectorAll('td');
-    cells.forEach(cell => cell.removeEventListener('click', cellClickHandler));
+    cells.forEach(cell => cell.addEventListener('click', ''));
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
