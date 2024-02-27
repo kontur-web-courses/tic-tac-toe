@@ -8,13 +8,64 @@ let player = CROSS
 
 const START_GRID = 3
 
-let field = Array(START_GRID).fill(Array(START_GRID).fill(' '));
+let field = Array(START_GRID).fill(Array(START_GRID).fill(EMPTY));
 
-function check_winner(field, sym) {
-    for (let el = 0; el < field.length; el++) {
-        const element = array[el];
-        
+function applyMove() {
+    
+}
+
+function checkWinner(field, sym) {
+    for (let i = 0; i < field.length; i++) {
+        let flag = true
+        for (let j = 0; j < field[0].length; j++) {
+            const row_element = field[i][j]
+            if (row_element !== sym) {
+                flag = false
+            }
+        }
+        if (flag) {
+            return true
+        }
     }
+    
+    for (let j = 0; j < field.length; j++) {
+        let flag = true
+        for (let i = 0; i < field[0].length; i++) {
+            const col_element = field[i][j]
+            if (col_element !== sym) {
+                flag = false
+            }
+        }
+        if (flag) {
+            return true
+        }
+    }
+
+    let flag = true
+    for (let i = 0; i < field.length; i++) {
+        const diag_element = field[i][i];
+        if (diag_element === sym) {
+            flag = false
+        }
+    }
+    if (flag) {
+        return true
+    }
+    
+    flag = true
+    for (let i = 0; i < field.length; i++) {
+        const diag_element = field[i][field.length - i - 1];
+        if (diag_element === sym) {
+            flag = false
+        }
+    }
+    if (flag) {
+        return true
+    }
+
+    return false
+
+
 }
 
 function switchPlayers() {
@@ -50,7 +101,14 @@ function cellClickHandler (row, col) {
 
 
     renderSymbolInCell(player, row, col);
+
+    if (checkWinner) {
+        alert('${player} wins')
+    }
+
+    
     switchPlayers();
+
     /* Пользоваться методом для размещения символа в клетке так:
      */
 }
