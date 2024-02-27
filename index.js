@@ -1,23 +1,22 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-const boardTemplate = [
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY]
-];
-let board = boardTemplate;
-
+const dim = 3;
+const boardTemplate = () => {
+    return Array.from({ length: dim }, () => Array.from({ length: dim }, () => EMPTY));
+};
+let board = boardTemplate();
 const container = document.getElementById('fieldWrapper');
-
 let turn = 0, currentPlayer = CROSS;
 let gameOver = false;
+
+
 
 startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(dim);
 }
 
 function renderGrid (dimension) {
@@ -139,7 +138,7 @@ function resetClickHandler () {
     console.log('reset!');
     turn = 0;
     board = boardTemplate;
-    renderGrid(3);
+    renderGrid(dim);
 }
 
 
