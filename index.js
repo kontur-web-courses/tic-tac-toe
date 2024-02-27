@@ -102,6 +102,22 @@ function checkWinner(row, col) {
     return false;
 }
 
+function makeAIMove(board) {
+    const emptyCells = [];
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; j++) {
+            if (board[i][j] === '') {
+                emptyCells.push({ row: i, col: j });
+            }
+        }
+    }
+
+    if (emptyCells.length > 0) {
+        const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        board[randomCell.row][randomCell.col] = 'O';
+    }
+}
+
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
