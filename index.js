@@ -7,9 +7,11 @@ let dimension = 3;
 const container = document.getElementById('fieldWrapper');
 
 let board;
+let aiSide = EMPTY;
 
 startGame();
 addResetListener();
+addAiListener();
 
 function newBoard(dimension) {
     let data = [];
@@ -114,7 +116,7 @@ function cellClickHandler(row, col) {
     renderSymbolInCell(board.curSide, row, col);
 
     checkGameFinished(board);
-    aiMove(board, randomAiMove, ZERO);
+    aiMove(board, randomAiMove, aiSide);
 }
 
 function aiMove(board, moveFunc, aiSide) {
@@ -183,11 +185,21 @@ function addResetListener() {
     resetButton.addEventListener('click', resetClickHandler);
 }
 
+function addAiListener() {
+    const aiButton = document.getElementById('aiOn');
+    aiButton.addEventListener('click', aiClickHandler);
+}
+
 function resetClickHandler() {
     console.log('reset!');
     const changeButton = document.getElementById("change");
     dimension = parseInt(changeButton.value, 10);
     startGame();
+}
+
+function aiClickHandler() {
+    console.log('ai!');
+    aiSide = aiSide === EMPTY ? ZERO : EMPTY;
 }
 
 
