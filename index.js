@@ -3,6 +3,7 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 let currentTurn = CROSS;
+let winner = EMPTY;
 
 class Point {
     constructor(x, y) {
@@ -12,19 +13,35 @@ class Point {
     }
 }
 
-const field = [
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY],
-];
+let field = []
+
+
+function createField(dimension){
+    const field = [];
+
+    for (let i = 0; i < dimension; i++) {
+        field.push([])
+        for (let j = 0; j < dimension; j++) {
+            field[i].push(new Point(i, j));
+        }
+    }
+
+    return field;
+}
 
 const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
 
-function startGame () {
-    renderGrid(3);
+function startGame() {
+    let dimension
+
+    do {
+        dimension = parseInt(prompt('Введите размер поля', '3'));
+        field = createField(dimension);
+        renderGrid(dimension);
+    } while (isNaN(dimension) || dimension < 3 || dimension > 10);
 }
 
 function renderGrid (dimension) {
@@ -45,26 +62,32 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
 
-    if (field[row][col] !== EMPTY) {
+    const point = field[row][col];
+
+    if (winner !== EMPTY) {
         return;
     }
 
-    field[row][col] = currentTurn;
+    if (point.color !== EMPTY) {
+        return;
+    }
+
+    point.color = currentTurn;
 
     renderSymbolInCell(currentTurn, row, col);
 
-    currentTurn = currentTurn === CROSS ? ZERO : CROSS;
-    
     let winnerTriple = getWinnerTriple(field);
     if (winnerTriple) {
-        renderSymbols(winnerTriple[0].color, winnerTriple, '#FF0000')
+        renderSymbols(winnerTriple[0].color, winnerTriple, '#FF0000');
+        winner = currentTurn
     }
-        
+
+    currentTurn = currentTurn === CROSS ? ZERO : CROSS;
 }
 
 function renderSymbols(symbol, points, color) {
     for (const point of points) {
-        renderSymbolInCell(symbol,  point.x, point.y);
+        renderSymbolInCell(symbol,  point.x, point.y, color);
     }
 }
 
@@ -110,9 +133,9 @@ function getDiagonals(field) {
 
 function getColumns(field) {
     let columns = [];
-    for (let j = 0; j < field.length; i++) {
+    for (let j = 0; j < field.length; j++) {
         columns.push([]);
-        for (let i = 0; i < field.length; j++) {
+        for (let i = 0; i < field.length; i++) {
             columns[j].push(field[j][i]);
         }
     }
@@ -138,7 +161,9 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
-    clearField()
+    clearField();
+    currentTurn = CROSS;
+    winner = EMPTY;
 }
 
 function clearField() {
