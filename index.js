@@ -3,7 +3,7 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-const field = [[EMPTY, EMPTY, EMPTY],
+let field = [[EMPTY, EMPTY, EMPTY],
                 [EMPTY, EMPTY, EMPTY],
                 [EMPTY, EMPTY, EMPTY]];
 
@@ -32,11 +32,13 @@ function renderGrid (dimension) {
 let _counter = 0
 function cellClickHandler (row, col) {
     // Пиши код тут
-    if (field[row][col] === EMPTY) {
-        let move = _counter % 2 === 0 ? ZERO : CROSS;
-        field[row][col] = move;
-        renderSymbolInCell(move, row, col);
-        _counter++;
+    if (!checkWinner()) {
+        if (checkMove()) {
+            let move = _counter % 2 === 0 ? ZERO : CROSS;
+            field[row][col] = move;
+            renderSymbolInCell(move, row, col);
+            _counter++;
+        }
     }
 }
 
@@ -58,7 +60,12 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
-    console.log('reset!');
+    field = [[EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY]];
+    container.querySelectorAll('tr')
+
+    alert('reset!');
 }
 
 function checkMove() {
@@ -76,7 +83,7 @@ function checkMove() {
 }
 
 function checkWinner() {
-    let winner;
+    let winner = false;
 
     for (let column of field) {
         if (column[0] === column[1] === column[2] !== EMPTY) {
@@ -100,7 +107,7 @@ function checkWinner() {
         winner = field[0][0];
     }
 
-    if (winner || false) {
+    if (winner) {
         alert(`Победитель: ${winner}`);
         return true;
     }
