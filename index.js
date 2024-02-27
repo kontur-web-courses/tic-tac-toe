@@ -3,6 +3,14 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
+let currentPlayer = CROSS;
+
+const board = [
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY]
+];
+
 
 startGame();
 addResetListener();
@@ -26,14 +34,69 @@ function renderGrid (dimension) {
     }
 }
 
-function cellClickHandler (row, col) {
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
+function cellClickHandler(row, col) {
+    if (board[row][col] === EMPTY) {
+        const currentPlayer = getCurrentPlayer();
+        board[row][col] = currentPlayer;
+        renderSymbolInCell(currentPlayer, row, col);
+
+        if (checkWinner()) {
+            const winner = getCurrentPlayer() === ZERO ? "Крестики" : "Нолики";
+            alert(`Победитель: ${winner}`);
+            highlightWinningCells();
+            disableClickHandlers();
+        } else if (checkDraw()) {
+            alert("Победила дружба");
+        }
+    }
+}
+
+function getCurrentPlayer() {
+    const crosses = board.flat().filter(cell => cell === CROSS);
+    const zeros = board.flat().filter(cell => cell === ZERO);
+    return crosses.length === zeros.length ? CROSS : ZERO;
+}
+
+function checkWinner() {
+    const lines = [
+        [board[0][0], board[0][1], board[0][2]],
+        [board[1][0], board[1][1], board[1][2]],
+        [board[2][0], board[2][1], board[2][2]],
+        [board[0][0], board[1][0], board[2][0]],
+        [board[0][1], board[1][1], board[2][1]],
+        [board[0][2], board[1][2], board[2][2]],
+        [board[0][0], board[1][1], board[2][2]],
+        [board[0][2], board[1][1], board[2][0]]
+    ];
+
+    for (let line of lines) {
+        if (line.every(cell => cell === CROSS) || line.every(cell => cell === ZERO)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function checkDraw() {
+    for (let row of board) {
+        for (let cell of row) {
+            if (cell === EMPTY) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+function highlightWinningCells() {
 
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+}
+
+function disableClickHandlers() {
+    const cells = document.querySelectorAll('td');
+    cells.forEach(cell => cell.removeEventListener('click', cellClickHandler));
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -53,8 +116,8 @@ function addResetListener () {
     resetButton.addEventListener('click', resetClickHandler);
 }
 
-function resetClickHandler () {
-    console.log('reset!');
+function resetClickHandler() {
+    startGame();
 }
 
 
