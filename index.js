@@ -81,7 +81,7 @@ function cellClickHandler (row, col) {
 }
 
 function getRandomInt(n) {
-    return Math.floor(Math.random() * (n - 1));
+    return Math.random() > 0.5 ? (Math.floor(Math.random() * (n - 1))) : 0;
 }
 
 function checkAndHighlightWinner() {
