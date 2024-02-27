@@ -37,7 +37,9 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    if (WINNER !== EMPTY || !(FIELD[row][col] === TURN && TURN === CROSS))
+    if (WINNER !== EMPTY || FIELD[row][col] !== EMPTY)
+        return;
+    if (TURN === ZERO)
         return;
     FIELD[row][col] = TURN;
     renderSymbolInCell(TURN, row, col);
