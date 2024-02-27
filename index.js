@@ -1,9 +1,20 @@
+
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 let crossTurn = true;
+const field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
+
+
+function changeField(row_index, column_index, value){
+    if (field[row_index][column_index] === EMPTY) {
+        field[row_index][column_index] = value;
+        return true;
+    }
+    return false;
+}
 
 startGame();
 addResetListener();
@@ -45,6 +56,8 @@ function renderSymbolInCell (symbol, row, col, color = '#333') {
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
+
+
 }
 
 function findCell (row, col) {
