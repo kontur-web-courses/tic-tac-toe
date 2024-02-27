@@ -38,15 +38,17 @@ function cellClickHandler(row, col) {
         if (currentStepQuery === 0 && !field[row][col]) {
             field[row][col] = 'x'
             renderSymbolInCell(CROSS, row, col);
-            currentStepQuery = 1;
+            // currentStepQuery = 1;
             stepNumber++;
+            basicAIStep();
+
     }
-        if (currentStepQuery === 1 && !field[row][col]) {
-            field[row][col] = '0'
-            renderSymbolInCell(ZERO, row, col);
-            currentStepQuery = 0;
+        // if (currentStepQuery === 1 && !field[row][col]) {
+        //     // field[row][col] = '0'
+        //     // renderSymbolInCell(ZERO, row, col);
+        //     currentStepQuery = 0;
             stepNumber++;
-    }
+    // }
     let winner = findWinner();
     if (winner)
     {
@@ -61,6 +63,20 @@ function cellClickHandler(row, col) {
         alert("Победила дружба");
         isWin = true;
     }
+}
+
+function basicAIStep() {
+    let row = Math.floor(Math.random() * 3);
+    let col = Math.floor(Math.random() * 3);
+    field[row][col] = '0'
+    renderSymbolInCell(ZERO, row, col);
+}
+
+function basicAIStep() {
+    let row = Math.floor(Math.random() * 3);
+    let col = Math.floor(Math.random() * 3);
+    field[row][col] = '0'
+    renderSymbolInCell(ZERO, row, col);
 }
 
 function findWinner() {
