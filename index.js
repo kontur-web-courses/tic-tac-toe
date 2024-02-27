@@ -30,8 +30,7 @@ class Field {
     }
 }
 
-let grid = Field();
-
+let grid = new Field();
 startGame();
 addResetListener();
 
@@ -58,7 +57,7 @@ function cellClickHandler (row, col) {
     const targetCell = findCell(row, col);
     if (targetCell.textContent === EMPTY) {
         console.log(`Clicked on cell: ${row}, ${col}`);
-        renderSymbolInCell(row, col)
+        renderSymbolInCell(symbol, row, col)
     }
 }
 
