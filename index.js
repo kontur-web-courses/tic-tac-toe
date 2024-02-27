@@ -8,6 +8,8 @@ const container = document.getElementById('fieldWrapper');
 startGame();
 addResetListener();
 
+
+// -------- Board methods ---------
 function createBoard(){
     return {
         currentMove: CROSS,
@@ -26,20 +28,33 @@ function setEmptyBoard(board){
     }
 }
 
+function nextCurrentMove(board){
+    if (board.currentMove === ZERO){
+        board.currentMove = CROSS
+    } else{
+        board.currentMove = ZERO
+    }
+}
+
+// ---------- Board Methods End -------
+
 function startGame () {
     let board = createBoard()
     createBoard(board);
+    setEmptyBoard(board);
     renderGrid(dimension, board);
 }
 
 function renderGrid (dimension, board) {
     container.innerHTML = '';
+    console.log(board)
+
 
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
         for (let j = 0; j < dimension; j++) {
             const cell = document.createElement('td');
-            cell.textContent = board[i][j];
+            cell.textContent = board.board[i][j];
             cell.addEventListener('click', () => cellClickHandler(i, j, board));
             row.appendChild(cell);
         }
@@ -52,7 +67,12 @@ function renderGrid (dimension, board) {
 function cellClickHandler (row, col, board) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    renderSymbolInCell(currentSymbol, row, col);
+    if(board.board[row][col] === EMPTY){
+        board.board[row][col] = board.currentMove;
+        renderSymbolInCell(board.currentMove, row, col);
+        nextCurrentMove(board)
+    }
+
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
