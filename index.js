@@ -3,7 +3,7 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-const FIELD_SIZE = 3;
+const FIELD_SIZE = 5;
 let FIELD = [];
 let turn = CROSS;
 let turnsLeft = FIELD_SIZE * FIELD_SIZE;
@@ -42,6 +42,11 @@ function cellClickHandler (row, col) {
     }
     FIELD[row][col] = turn;
     renderSymbolInCell(turn, row, col);
+    moveToNextTurn();
+    randomAIMove();
+}
+
+function moveToNextTurn(){
     turn = turn === CROSS ? ZERO : CROSS;
     turnsLeft--;
     checkForWinner();
@@ -98,6 +103,7 @@ function checkCol(colIndex)
             return false;
         }
     }
+
     return type;
 }
 
@@ -147,6 +153,25 @@ function resetGame(){
     gameOver = false;
     turnsLeft = FIELD_SIZE * FIELD_SIZE;
     turn = CROSS;
+}
+
+function randomAIMove()
+{
+    while(true){
+        let x = Math.floor(Math.random() * FIELD_SIZE);
+        if(x === FIELD_SIZE){
+            x--;
+        }
+        let y = Math.floor(Math.random() * FIELD_SIZE);
+        if(y === FIELD_SIZE){
+            y--;
+        }
+        if(FIELD[x][y] === EMPTY || !gameOver){
+            renderSymbolInCell(turn, x, y);
+            break;
+        }
+    }
+    moveToNextTurn();
 }
 
 /* Test Function */
