@@ -1,16 +1,16 @@
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
-
-const board = [
+const boardTemplate = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY]
 ];
+let board = boardTemplate;
 
 const container = document.getElementById('fieldWrapper');
 
-var turn = 0;
+let turn = 0;
 
 startGame();
 addResetListener();
@@ -70,7 +70,7 @@ function cellClickHandler (row, col) {
     }
     turn++;
     if ( checkTie() ){
-        console.log('Победила Дружба');
+        alert('Победила Дружба');
     }
 }
 
@@ -94,6 +94,8 @@ function addResetListener () {
 function resetClickHandler () {
     console.log('reset!');
     turn = 0;
+    board = boardTemplate;
+    renderGrid(3);
 }
 
 
