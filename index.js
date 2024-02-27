@@ -41,6 +41,7 @@ function cellClickHandler (row, col) {
     renderSymbolInCell(turn, row, col);
     turn = turn === CROSS ? ZERO : CROSS;
     turnsLeft--;
+    checkForWinner();
     if (turnsLeft === 0) {
         setTimeout(() => { alert('Победила дружба!'); }, 20);
     }
@@ -87,7 +88,7 @@ function checkCol(colIndex)
     if(type === EMPTY){
         return false;
     }
-    for(const i = 0; i < dimension; i++){
+    for(let i = 0; i < FIELD_SIZE; i++){
         let item = FIELD[i][colIndex];
         if(type !== item){
             return false;
@@ -97,10 +98,39 @@ function checkCol(colIndex)
 }
 
 function checkDiag(diagNum){
-    let dir = diagNum === 1 ? 1 : -1;
-    
-    for(let i = 0; i < FIELD_SIZE; i++){
+    let dir = diagNum === 0 ? 1 : -1;
+    let currentCol = diagNum === 0 ? 0 : FIELD_SIZE - 1;
+    const type = FIELD[0][currentCol];
 
+    if(type === EMPTY){
+        return false;
+    }
+
+    for(let i = 0; i < FIELD_SIZE; i++) {
+        if(FIELD[i][currentCol] !== type) {
+            return false;
+        }
+
+        currentCol += dir;
+    }
+
+    return type;
+}
+
+function checkForWinner() {
+
+    for(let i = 0; i < FIELD_SIZE; i++) {
+        let possibleWinner = checkCol(i) || checkRow(i);
+
+        if (possibleWinner) {
+            alert(`Победил ${possibleWinner}`);
+            return;
+        }
+    }
+
+    let possibleWinner = checkDiag(0) || checkDiag(1);
+    if (possibleWinner) {
+        alert(`Победил ${possibleWinner}`);
     }
 }
 
