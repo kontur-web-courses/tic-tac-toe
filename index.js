@@ -1,3 +1,10 @@
+
+const CROSS = 'X';
+const ZERO = 'O';
+const EMPTY = ' ';
+
+const container = document.getElementById('fieldWrapper');
+
 class Field {
 
     constructor() {
@@ -6,18 +13,18 @@ class Field {
             [' ', ' ', ' '],
             [' ', ' ', ' ']
         ];
+        this.moves = 0;
     }
 
-    MarkAs(row, col, symbol) {
-        this.state[row][col] = symbol;
+    MarkAs(row, col) {
+        if (this.moves % 2 === 0) {
+            this.state[row][col] = CROSS;
+        } else {
+            this.state[row][col] = ZERO;
+        }
+        this.moves++;
     }
 }
-
-const CROSS = 'X';
-const ZERO = 'O';
-const EMPTY = ' ';
-
-const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
@@ -45,7 +52,7 @@ function cellClickHandler (row, col) {
     const targetCell = findCell(row, col);
     if (targetCell.textContent === EMPTY) {
         console.log(`Clicked on cell: ${row}, ${col}`);
-        renderSymbolInCell(ZERO, row, col) // change ZERO to actual element
+        renderSymbolInCell(row, col)
     }
 }
 
