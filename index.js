@@ -4,6 +4,7 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 let turn = true;
+let gameEnd = false;
 let gameboard = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
 startGame();
 addResetListener();
@@ -28,6 +29,9 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
+    if (gameEnd){
+        return;
+    }
     if (gameboard[row][col] === EMPTY){
         if (turn){
             renderSymbolInCell(CROSS, row, col);
@@ -36,12 +40,20 @@ function cellClickHandler (row, col) {
 
             if (gameboard[row].indexOf(ZERO) === -1 && gameboard[row].indexOf(EMPTY) === -1) {
                 alert('Победили крестики');
+                gameEnd = true;
+                renderSymbolInCell(CROSS, row, 0, '#00FF00');
+                renderSymbolInCell(CROSS, row, 1, '#00FF00');
+                renderSymbolInCell(CROSS, row, 2, '#00FF00');
                 return;
             }
 
             if (Array.from(gameboard, (x) => x.at(col)).indexOf(ZERO) === -1 &&
                 Array.from(gameboard, (x) => x.at(col)).indexOf(EMPTY) === -1) {
                 alert('Победили крестики');
+                gameEnd = true;
+                renderSymbolInCell(CROSS, 0, col, '#00FF00');
+                renderSymbolInCell(CROSS, 1, col, '#00FF00');
+                renderSymbolInCell(CROSS, 2, col, '#00FF00');
                 return;
             }
 
@@ -49,6 +61,10 @@ function cellClickHandler (row, col) {
                 && gameboard[1][1] == CROSS
                 && gameboard[2][0] == CROSS) {
                 alert('Победили крестики');
+                gameEnd = true;
+                renderSymbolInCell(CROSS, 0, 2, '#00FF00');
+                renderSymbolInCell(CROSS, 1, 1, '#00FF00');
+                renderSymbolInCell(CROSS, 2, 0, '#00FF00');
             }
 
             for (let i = 0; i < 3; i++){
@@ -57,7 +73,10 @@ function cellClickHandler (row, col) {
                 }
             }
             alert('Победили крестики');
-
+            gameEnd = true;
+            renderSymbolInCell(CROSS, 0, 0, '#00FF00');
+            renderSymbolInCell(CROSS, 1, 1, '#00FF00');
+            renderSymbolInCell(CROSS, 2, 2, '#00FF00');
 
         } else {
             renderSymbolInCell(ZERO, row, col);
@@ -66,12 +85,20 @@ function cellClickHandler (row, col) {
 
             if (gameboard[row].indexOf(CROSS) === -1 && gameboard[row].indexOf(EMPTY) === -1) {
                 alert('Победили нолики');
+                gameEnd = true;
+                renderSymbolInCell(ZERO, row, 0, '#00FF00');
+                renderSymbolInCell(ZERO, row, 1, '#00FF00');
+                renderSymbolInCell(ZERO, row, 2, '#00FF00');
                 return;
             }
 
             if (Array.from(gameboard, (x) => x.at(col)).indexOf(CROSS) === -1 &&
                 Array.from(gameboard, (x) => x.at(col)).indexOf(EMPTY) === -1) {
                 alert('Победили нолики');
+                gameEnd = true;
+                renderSymbolInCell(ZERO, 0, col, '#00FF00');
+                renderSymbolInCell(ZERO, 1, col, '#00FF00');
+                renderSymbolInCell(ZERO, 2, col, '#00FF00');
                 return;
             }
 
@@ -79,6 +106,10 @@ function cellClickHandler (row, col) {
                 && gameboard[1][1] === ZERO
                 && gameboard[2][0] === ZERO) {
                 alert('Победили нолики');
+                gameEnd = true;
+                renderSymbolInCell(ZERO, 0, 2, '#00FF00');
+                renderSymbolInCell(ZERO, 1, 1, '#00FF00');
+                renderSymbolInCell(ZERO, 2, 0, '#00FF00');
             }
 
             for (let i = 0; i < 3; i++){
@@ -87,10 +118,15 @@ function cellClickHandler (row, col) {
                 }
             }
             alert('Победили нолики');
+            gameEnd = true;
+            renderSymbolInCell(ZERO, 0, 0, '#00FF00');
+            renderSymbolInCell(ZERO, 1, 1, '#00FF00');
+            renderSymbolInCell(ZERO, 2, 2, '#00FF00');
         }
     }
     if (gameboard.flat(Infinity).indexOf(EMPTY) === -1){
         alert("Победила дружба");
+        gameEnd = true;
     }
     console.log(`Clicked on cell: ${row}, ${col}`);
 }
