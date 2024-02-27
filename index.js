@@ -17,6 +17,10 @@ class Field {
     }
 
     MarkAs(row, col) {
+        if (this.state[row][col] !== ' ') {
+            return;
+        }
+
         if (this.moves % 2 === 0) {
             this.state[row][col] = CROSS;
         } else {
