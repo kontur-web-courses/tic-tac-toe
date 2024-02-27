@@ -2,7 +2,7 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 let Player = 1;
-const dimension = 3;
+const dimension = 4;
 let counter = 0;
 
 const container = document.getElementById('fieldWrapper');
