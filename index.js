@@ -20,8 +20,8 @@ class Board {
     }
 
     is_all_painted() {
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
+        for (let i = 0; i < this.matrix.length; i++) {
+            for (let j = 0; j < this.matrix[i].length; j++) {
                 if (this.matrix[i][j] === null)
                     return false;
             }
@@ -168,12 +168,13 @@ function renderGrid(dimension) {
     }
 }
 
-function gameClickHandler(row, col){
-    cellClickHandler(row, col);
-    if (wantsToPlayWithBot)
-    {
-        let cell = board.getRandomFreeIndex();
-        cellClickHandler(cell[0], cell[1]);
+function gameClickHandler(row, col) {
+    if (!board.is_painted(row, col)) {
+        cellClickHandler(row, col);
+        if (wantsToPlayWithBot) {
+            let cell = board.getRandomFreeIndex();
+            cellClickHandler(cell[0], cell[1]);
+        }
     }
 }
 
@@ -183,10 +184,7 @@ function cellClickHandler(row, col) {
     if (board.isGameFinished) {
         return;
     }
-    if (!board.is_painted(row, col)) {
-        renderSymbolInCell(board.paint(row, col), row, col);
-    }
-
+    renderSymbolInCell(board.paint(row, col), row, col);
     if (board.checkWinner()[0] !== null) {
         let winnerData = board.checkWinner();
         let winner = winnerData[0] === CROSS ? 'Крестик' : 'Нолик';
