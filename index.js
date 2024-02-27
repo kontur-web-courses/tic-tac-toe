@@ -36,6 +36,46 @@ function cellClickHandler (row, col) {
      */
 }
 
+function nextTurn() {
+    turn = turn == CROSS ? ZERO : CROSS;
+}
+
+function checkWin(){
+    for (let i = 0; i < 3; i++){
+        if (checkLineWin(i, 0, 3, 3, 0, 1) || checkLineWin(0, i, 3, 3, 1, 0))
+            return true;
+    }
+    if (checkLineWin(0, 0, 3, 3, 1, 1) || checkLineWin(0, 3, 3, 0, 1, -1))
+        return true;
+    return false;
+}
+
+function checkLineWin(stX, stY, endX, endY, dx, dy){
+    if (isLineWin(stX, stY, endX, endY, dx, dy)){
+        renderWonLine(stX, stY, endX, endY, dx, dy)
+        return true;
+    }
+    return false;
+}
+
+function isLineWin(stX, stY, endX, endY, dx, dy){
+    for (let i = stX; i < endX; i += dx) {
+        for (let j = stY; j < endY; i += dy) {
+            if (field[i][j] != turn)
+                return false;
+        }
+    }
+    return true;
+}
+
+function renderWonLine(stX, stY, endX, endY, dx, dy){
+    for (let i = stX; i < endX; i += dx) {
+        for (let j = stY; j < endY; i += dy) {
+            renderSymbolInCell(field[i][j], i, j, '#FF0000');
+        }
+    }
+}
+
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
