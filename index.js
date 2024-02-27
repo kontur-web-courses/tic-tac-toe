@@ -5,6 +5,7 @@ const EMPTY = ' ';
 const container = document.getElementById('fieldWrapper');
 
 let currentStepQuery = 0;
+let stepNumber = 0;
 
 startGame();
 addResetListener();
@@ -36,21 +37,19 @@ function cellClickHandler(row, col) {
         field[row][col] = 'x'
         renderSymbolInCell(CROSS, row, col);
         currentStepQuery = 1;
+        stepNumber++;
     }
     if(currentStepQuery === 1 && !field[row][col]) {
         field[row][col] = '0'
         renderSymbolInCell(ZERO, row, col);
         currentStepQuery = 0;
+        stepNumber++;
     }
-    console.log(isWinner());
     if (isWinner()) alert("Победил " + field[row][col]);
+    if (stepNumber === field.length ** 2) alert("Победила дружба");
 }
 
 function isWinner() {
-    console.log(field);
-    console.log(field[0][0] === field[0][1]);
-    console.log(field[0][1] === field[0][2]);
-    console.log(field[0][0] === field[0][1] === field[0][2]);
     if (field[0][0] === field[0][1] && field[0][1] === field[0][2] && field[0][0]) return true;
     if (field[1][0] === field[1][1] && field[1][1] === field[1][2] && field[1][0]) return true;
     if (field[2][0] === field[2][1] && field[2][1] === field[2][2] && field[2][0]) return true;
