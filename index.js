@@ -6,9 +6,22 @@ const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
+let field;
 
 function startGame () {
     renderGrid(3);
+    init_field(3);
+}
+
+function init_field(x) {
+    field = []
+    for (let i = 0; i < x; i++) {
+        let subArray = [];
+        for (let j = 0; j < x; j++) {
+            subArray.push(EMPTY);
+        }
+        field.push(subArray);
+    }
 }
 
 function renderGrid (dimension) {
@@ -29,7 +42,6 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
