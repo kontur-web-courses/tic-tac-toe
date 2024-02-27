@@ -44,6 +44,12 @@ function cellClickHandler(row, col) {
 
 function isWinner() {
 
+        renderSymbolInCell(CROSS, row, col);
+        currentStepQuery = 1;
+    } else {
+        renderSymbolInCell(ZERO, row, col);
+        currentStepQuery = 0;
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
