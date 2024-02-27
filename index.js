@@ -41,22 +41,89 @@ function cellClickHandler (row, col) {
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
      */
-    if (turnCounter % 2 === 1){
-        renderSymbolInCell(ZERO, row, col)
-        turnCounter += 1;
-        board[row][col] = 0;
+    if (board[row][col] === EMPTY) {
+        if (turnCounter % 2 === 1) {
+            renderSymbolInCell(ZERO, row, col);
+        } else {
+            renderSymbolInCell(CROSS, row, col);
+        }
     }
-    else {
-        renderSymbolInCell(CROSS, row, col)
-        turnCounter += 1;
-        board[row][col] = 1;
+
+    const winner = checkWinner();
+    if (winner) {
+        highlightWinnerCells(winner);
+        alert(`The winner is ${winner}!`);
+        container.removeEventListener('click', cellClickHandler);
+    } else {
+        turnCounter++;
+        if (turnCounter === 9) {
+            alert('Friendship wins!');
+        }
     }
 }
 
+function checkWinner() {
+    // Check rows
+    for (let i = 0; i < 3; i++) {
+        if (board[i][0] !== EMPTY && board[i][0] === board[i][1] && board[i][1] === board[i][2]) {
+            return board[i][0];
+        }
+    }
+
+    // Check columns
+    for (let i = 0; i < 3; i++) {
+        if (board[0][i] !== EMPTY && board[0][i] === board[1][i] && board[1][i] === board[2][i]) {
+            return board[0][i];
+        }
+    }
+
+    // Check diagonals
+    if (board[0][0] !== EMPTY && board[0][0] === board[1][1] && board[1][1] === board[2][2]) {
+        return board[0][0];
+    }
+    if (board[0][2] !== EMPTY && board[0][2] === board[1][1] && board[1][1] === board[2][0]) {
+        return board[0][2];
+    }
+
+    return null;
+}
+
+function highlightWinnerCells(winner) {
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (board[i][j] === winner) {
+                const cell = findCell(i, j);
+                cell.style.color = 'red';
+            }
+        }
+    }
+}
+
+function resetClickHandler() {
+    turnCounter = 0;
+    board = [
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY],
+        [EMPTY, EMPTY, EMPTY]
+    ];
+
+    const cells = container.querySelectorAll('td');
+    cells.forEach(cell => {
+        cell.textContent = EMPTY;
+        cell.style.color = '#333';
+    });
+
+    container.addEventListener('click', cellClickHandler);
+}
+
+
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
-    targetCell.textContent = symbol;
-    targetCell.style.color = color;
+
+    if (targetCell.textContent === EMPTY) {
+        targetCell.textContent = symbol;
+        board[row][col] = symbol;
+    }
 }
 
 function findCell (row, col) {
