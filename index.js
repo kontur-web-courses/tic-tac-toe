@@ -1,3 +1,18 @@
+class Field {
+
+    constructor() {
+        this.state = [
+            [' ', ' ', ' '],
+            [' ', ' ', ' '],
+            [' ', ' ', ' ']
+        ];
+    }
+
+    MarkAs(row, col, symbol) {
+        this.state[row][col] = symbol;
+    }
+}
+
 const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
