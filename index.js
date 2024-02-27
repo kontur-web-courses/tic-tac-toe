@@ -50,7 +50,11 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
+    if (field[row][col] !== EMPTY)
+        return;
+
     renderSymbolInCell(currentClick, row, col);
+    field[row][col] = currentClick;
     currentClick = currentClick === ZERO ? CROSS : ZERO;
     if (!checkForAvailable(field))
         alert('Победила дружба')
