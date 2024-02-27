@@ -66,6 +66,14 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    field = [[null, null, null], [null, null, null], [null, null, null]]
+    for(let i = 0; i < 3; i++){
+        for(let j = 0; j < 3; j++){
+            renderSymbolInCell(EMPTY, i, j);
+        }
+    }
+    currentStepQuery = 0;
+
 }
 
 
