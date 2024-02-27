@@ -9,6 +9,7 @@ addResetListener();
 
 const FIELD = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
 let turn = CROSS;
+let turnsLeft = 9;
 
 function startGame () {
     renderGrid(3);
@@ -30,6 +31,9 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
+
+    // Пиши код тут
+    console.log(`Clicked on cell: ${row}, ${col}`);
     if(FIELD[row][col] !== EMPTY)
     {
         return
@@ -37,9 +41,10 @@ function cellClickHandler (row, col) {
     FIELD[row][col] = turn;
     renderSymbolInCell(turn, row, col);
     turn = turn === CROSS ? ZERO : CROSS;
-    // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
-
+    turnsLeft--;
+    if (turnsLeft === 0) {
+        setTimeout(() => { alert('Победила дружба!'); }, 20);
+    }
 
     /* Пользоваться методом для размещения символа в клетке так:
         renderSymbolInCell(ZERO, row, col);
