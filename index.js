@@ -3,6 +3,7 @@ const ZERO = 'O';
 const EMPTY = ' ';
 let dimension = 3;
 const redColor = '#FF0000'
+const AI = true;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -109,11 +110,22 @@ function checkWin(board){
 }
 
 function checkLineWin(sum){
-    console.log(sum)
     if (sum === CROSS.repeat(dimension))
         return CROSS;
     if (sum === ZERO.repeat(dimension))
         return ZERO;
+}
+
+function getEmptyCells(board){
+    let answer = [];
+    for (let i = 0; i < dimension; i++) {
+        for (let j = 0; j < dimension; j++) {
+            if (board.board[i][j] === EMPTY){
+                answer.push([i, j]);
+            }
+        }
+    }
+    return answer;
 }
 
 // ---------- Board Methods End -------
@@ -135,6 +147,7 @@ function startGame () {
     addResetListener(board);
     renderGrid(dimension, board);
 }
+
 
 function renderGrid (dimension, board) {
     container.innerHTML = '';
@@ -161,9 +174,17 @@ function cellClickHandler (row, col, board) {
         renderSymbolInCell(board.currentMove, row, col);
         nextCurrentMove(board)
     }
+    if(board.currentMove === ZERO && AI){
+        let emptyCells = getEmptyCells(board);
+        console.log(emptyCells.length)
+        if (emptyCells.length > 0){
+            let clickCell = emptyCells[Math.floor(Math.random()*emptyCells.length)];
+            cellClickHandler(clickCell[0], clickCell[1], board);
+            return
+        }
+    }
     if (!board.end){
         let win = checkWin(board);
-        console.log(win);
         if(win !== undefined){
             for (let winElementElement of win[1]) {
                 renderSymbolInCell(win[0], winElementElement[0], winElementElement[1], redColor);
