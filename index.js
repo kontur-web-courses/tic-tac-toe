@@ -3,7 +3,7 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-const FIELD_SIZE = 5;
+const FIELD_SIZE = 3;
 let FIELD = [];
 let lastCheckRows = Array(FIELD_SIZE);
 let lastCheckCols = Array(FIELD_SIZE);
@@ -44,14 +44,16 @@ function cellClickHandler(row, col) {
     FIELD[row][col] = turn;
     renderSymbolInCell(turn, row, col);
     moveToNextTurn();
-    randomAIMove();
+    if(!gameOver){
+        randomAIMove();
+    }
 }
 
 function moveToNextTurn(){
     turn = turn === CROSS ? ZERO : CROSS;
     turnsLeft--;
     checkForWinner();
-    if (turnsLeft === 0) {
+    if (!gameOver && turnsLeft === 0) {
         setTimeout(() => {
             alert('Победила дружба!');
         }, 20);
@@ -171,7 +173,9 @@ function checkForWinner() {
         possibleWinner ||= (checkCol(i) || checkRow(i));
         if (possibleWinner) {
             colorCells(lastCheckRows, lastCheckCols);
-            alert(`Победил ${possibleWinner}`);
+            setTimeout(() => {
+                alert(`Победил ${possibleWinner}`);
+            }, 20);
             gameOver = true;
             return;
         }
@@ -184,7 +188,7 @@ function resetGame(){
     {
         let arr = [];
         for(let j = 0; j < FIELD_SIZE; j++){
-            arr.push(" ")
+            arr.push(EMPTY)
         }
         FIELD.push(arr);
     }
@@ -196,20 +200,16 @@ function resetGame(){
 function randomAIMove()
 {
     while(true){
-        let x = Math.floor(Math.random() * FIELD_SIZE);
-        if(x === FIELD_SIZE){
-            x--;
-        }
-        let y = Math.floor(Math.random() * FIELD_SIZE);
-        if(y === FIELD_SIZE){
-            y--;
-        }
-        if(FIELD[x][y] === EMPTY || !gameOver){
+        let x = Math.floor(Math.random() * (FIELD_SIZE-0.5));
+        let y = Math.floor(Math.random() * (FIELD_SIZE-0.5));
+        if(FIELD[x][y] === EMPTY && !gameOver){
+            FIELD[x][y] = turn;
             renderSymbolInCell(turn, x, y);
+            moveToNextTurn();
             break;
         }
     }
-    moveToNextTurn();
+
 }
 
 /* Test Function */
