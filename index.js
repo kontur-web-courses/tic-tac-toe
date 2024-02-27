@@ -32,11 +32,12 @@ function renderGrid (dimension) {
 
 function cellClickHandler(row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (currentStepQuery === 0) {
+    if (currentStepQuery === 0 && !field[row][col]) {
         field[row][col] = 'x'
         renderSymbolInCell(CROSS, row, col);
         currentStepQuery = 1;
-    } else {
+    }
+    if(currentStepQuery === 1 && !field[row][col]) {
         field[row][col] = '0'
         renderSymbolInCell(ZERO, row, col);
         currentStepQuery = 0;
@@ -44,13 +45,6 @@ function cellClickHandler(row, col) {
 }
 
 function isWinner() {
-
-        renderSymbolInCell(CROSS, row, col);
-        currentStepQuery = 1;
-    } else {
-        renderSymbolInCell(ZERO, row, col);
-        currentStepQuery = 0;
-    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
