@@ -7,6 +7,7 @@ const container = document.getElementById('fieldWrapper');
 let gameStarted = true;
 let currentPlayer = CROSS;
 
+let wantBot = false;
 let dimension = 4;
 
 let board = [
@@ -29,6 +30,11 @@ function startGame () {
         return;
     }
     dimension = +user_dimension;
+
+    let bot = confirm("Хотите ли вы играть с ботом?");
+    if (bot){
+        wantBot = true;
+    }
     gameStarted = true;
     currentPlayer = CROSS;
     renderGrid(dimension);
@@ -72,12 +78,33 @@ function cellClickHandler(row, col) {
     }
 }
 
+function aiMove() {
+    const emptyCells = [];
+    for (let i = 0; i < dimension; i++) {
+        for (let j = 0; j < dimension; j++) {
+            if (board[i][j] === EMPTY) {
+                emptyCells.push([i, j]);
+            }
+        }
+    }
+    if (emptyCells.length > 0) {
+        const randomIndex = Math.floor(Math.random() * emptyCells.length);
+        const [row, col] = emptyCells[randomIndex];
+        cellClickHandler(row, col);
+    }
+}
+
 function getCurrentPlayer() {
     return currentPlayer;
 }
 
 function nextTurn(){
-    console.log(currentPlayer);
+    currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
+
+    if (currentPlayer === ZERO && wantBot){
+        aiMove();
+    }
+
     currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
 }
 
