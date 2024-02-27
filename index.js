@@ -37,19 +37,28 @@ function cellClickHandler(row, col) {
         if (currentStepQuery === 0 && !field[row][col]) {
             field[row][col] = 'x'
             renderSymbolInCell(CROSS, row, col);
-            currentStepQuery = 1;
+            // currentStepQuery = 1;
+            basicAIStep();
+
         }
-        if (currentStepQuery === 1 && !field[row][col]) {
-            field[row][col] = '0'
-            renderSymbolInCell(ZERO, row, col);
-            currentStepQuery = 0;
-        }
+        // if (currentStepQuery === 1 && !field[row][col]) {
+        //     // field[row][col] = '0'
+        //     // renderSymbolInCell(ZERO, row, col);
+        //     currentStepQuery = 0;
+        // }
         console.log(isWinner());
         if (isWinner()) {
             alert("Победил " + field[row][col]);
             isWin = true;
         }
     }
+}
+
+function basicAIStep() {
+    let row = Math.floor(Math.random() * 3);
+    let col = Math.floor(Math.random() * 3);
+    field[row][col] = '0'
+    renderSymbolInCell(ZERO, row, col);
 }
 
 function isWinner() {
