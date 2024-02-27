@@ -102,6 +102,12 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    for (let i = 0; i < START_GRID; i++) {
+        for (let j = 0; j < START_GRID; j++) {
+            const cell = findCell(i, j);
+            cell.textContent = EMPTY;
+        }
+    }
     console.log('reset!');
 }
 
