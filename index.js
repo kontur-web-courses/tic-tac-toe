@@ -71,7 +71,7 @@ function resetClickHandler () {
 function checkMove() {
 
     for (let column of field) {
-        for (let cell of field) {
+        for (let cell of column) {
             if (cell === EMPTY) {
                 return true;
             }
@@ -86,24 +86,24 @@ function checkWinner() {
     let winner = false;
 
     for (let column of field) {
-        if (column[0] === column[1] === column[2] !== EMPTY) {
+        if (column[0] === column[1] && column[1] === column[2] && column[2] !== EMPTY) {
             winner = column[0];
             break;
         }
     }
 
     for (let i = 0; i < 3; i++) {
-        if (field[0][i] === field[1][i] === field[2][i] !== EMPTY) {
+        if (field[0][i] === field[1][i] && field[1][i] === field[2][i] && field[2][i] !== EMPTY) {
             winner = field[0][i];
             break;
         }
     }
 
-    if (field[0][0] === field[1][1] === field[2][2] !== EMPTY) {
+    if (field[0][0] === field[1][1] && field[1][1] === field[2][2] && field[2][2] !== EMPTY) {
         winner = field[0][0];
     }
 
-    if (field[2][0] === field[1][1] === field[0][2] !== EMPTY) {
+    if (field[2][0] === field[1][1] && field[1][1] === field[0][2] && field[0][2] !== EMPTY) {
         winner = field[0][0];
     }
 
