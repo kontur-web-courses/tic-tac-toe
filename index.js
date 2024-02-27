@@ -36,6 +36,7 @@ function startGame () {
 
 function renderGrid (dimension) {
     container.innerHTML = '';
+    board[0].push(0);
     board=[]
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
