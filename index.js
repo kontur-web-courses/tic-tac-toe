@@ -17,7 +17,7 @@ function newBoard(dimension) {
         curSide: CROSS,
         getWinningValues: function (side) {
             for (let row of this._data) {
-                if (row.every((el) => el === side)) {
+                if (row.every((el) => el.side === side)) {
                     return [row, true];
                 }
             }
@@ -28,7 +28,7 @@ function newBoard(dimension) {
                     column.push(row[colIdx]);
                 }
 
-                if (column.every((el) => el === side)) {
+                if (column.every((el) => el.side === side)) {
                     return [column, true]
                 }
             }
@@ -42,12 +42,12 @@ function newBoard(dimension) {
                 }
             }
 
-            if (diag1.every((el) => el === side)) {
+            if (diag1.every((el) => el.side === side)) {
                 return [diag1, true]
             }
 
 
-            if (diag2.every((el) => el === side)) {
+            if (diag2.every((el) => el.side === side)) {
                 return [diag2, true];
             }
 
@@ -92,7 +92,9 @@ function cellClickHandler(row, col) {
     board.set(row, col, board.curSide);
     renderSymbolInCell(board.curSide, row, col);
 
-    if (board.is_winner(board.curSide)) {
+    let [winningCells, isWinner] = board.getWinningValues(board.curSide)
+    if (isWinner) {
+        alert("")
 
     }
 }
