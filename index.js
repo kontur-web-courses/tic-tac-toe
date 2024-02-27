@@ -10,6 +10,8 @@ const board = [
 
 const container = document.getElementById('fieldWrapper');
 
+var turn = 0;
+
 startGame();
 addResetListener();
 
@@ -49,15 +51,25 @@ function checkWinner(board) {
     if (board[0][2] !== '' && board[0][2] === board[1][1] && board[1][1] === board[2][0]) {
         return board[0][2];
     }
+}
 
-    return ''; // Нет победителя
+function checkTie(){
+    return board.any()
 }
 
 function cellClickHandler (row, col) {
-    
     console.log(`Clicked on cell: ${row}, ${col}`);
+    if (board[row][col] !== EMPTY){
+        return null;
+    } else if (turn % 2 === 0){
+        renderSymbolInCell(CROSS, row, col);
+        board[row][col] = CROSS;
+    } else {
+        renderSymbolInCell(ZERO, row, col);
+        board[row][col] = ZERO;
+    }
+    turn++;
 
-    renderSymbolInCell(ZERO, row, col);
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -79,6 +91,7 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    turn = 0;
 }
 
 
