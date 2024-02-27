@@ -35,48 +35,57 @@ function renderGrid(dimension) {
 function cellClickHandler(row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
     if (!isWin) {
-        if (currentStepQuery === 0 && !field[row][col]) {
+        if (!field[row][col]) {
             field[row][col] = 'x'
             renderSymbolInCell(CROSS, row, col);
-            // currentStepQuery = 1;
             stepNumber++;
             basicAIStep();
 
-    }
-        // if (currentStepQuery === 1 && !field[row][col]) {
-        //     // field[row][col] = '0'
-        //     // renderSymbolInCell(ZERO, row, col);
-        //     currentStepQuery = 0;
-            stepNumber++;
-    // }
-    let winner = findWinner();
-    if (winner)
-    {
-        alert("Победил " + field[row][col]);
-        isWin = true;
-        winner.forEach(element => {
-            renderSymbolInCell(field[row][col], element[0], element[1], '#e60026');
-        });
-    } 
-    if (stepNumber === field.length ** 2) 
-    {
-        alert("Победила дружба");
-        isWin = true;
+        }
+        stepNumber++;
+        let winner = findWinner();
+        if (winner) {
+            alert("Победил " + field[row][col]);
+            isWin = true;
+            winner.forEach(element => {
+                renderSymbolInCell(field[row][col], element[0], element[1], '#e60026');
+            });
+        }
+        if (stepNumber === field.length ** 2) {
+            alert("Победила дружба");
+            isWin = true;
+        }
     }
 }
 
 function basicAIStep() {
-    let row = Math.floor(Math.random() * 3);
-    let col = Math.floor(Math.random() * 3);
+    let row = 0;
+    let col = 0;
+    while (field[row][col]) {
+        row = Math.floor(Math.random() * 3);
+        col = Math.floor(Math.random() * 3);
+    }
     field[row][col] = '0'
     renderSymbolInCell(ZERO, row, col);
 }
 
-function basicAIStep() {
-    let row = Math.floor(Math.random() * 3);
-    let col = Math.floor(Math.random() * 3);
-    field[row][col] = '0'
-    renderSymbolInCell(ZERO, row, col);
+function getNeighbors(arr, row, col) {
+    const rows = arr.length;
+    const cols = arr[0].length;
+    const neighbors = [];
+
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            const newRow = row + i;
+            const newCol = col + j;
+
+            if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && !(i === 0 && j === 0)) {
+                neighbors.push(arr[newRow][newCol]);
+            }
+        }
+    }
+
+    return neighbors;
 }
 
 function findWinner() {
@@ -121,8 +130,6 @@ function resetClickHandler() {
 }
 
 
-/* Test Function */
-
 /* Победа первого игрока */
 function testWin() {
     clickOnCell(0, 2);
@@ -150,4 +157,4 @@ function testDraw() {
 
 function clickOnCell(row, col) {
     findCell(row, col).click();
-}}
+}
