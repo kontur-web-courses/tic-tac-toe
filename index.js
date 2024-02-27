@@ -6,12 +6,14 @@ const container = document.getElementById('fieldWrapper');
 
 let board = [];
 let currentPlayer = CROSS;
+let movesLeft;
 startGame();
 addResetListener();
 
 function startGame () {
     board = []
     renderGrid(3);
+    movesLeft = 9;
 }
 
 function renderGrid (dimension) {
@@ -35,6 +37,11 @@ function cellClickHandler (row, col) {
     if (board[row][col] === EMPTY) {
         renderSymbolInCell(currentPlayer, row, col);
         board[row][col] = currentPlayer;
+        --movesLeft;
+
+    }
+    if (movesLeft === 0) {
+        alert('Победила дружба');
     }
     console.log(`Clicked on cell: ${row}, ${col}`);
 }
