@@ -2,6 +2,7 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 let count = 0;
+let pole = [];
 
 const container = document.getElementById('fieldWrapper');
 
@@ -15,8 +16,10 @@ function startGame () {
 function renderGrid (dimension) {
     container.innerHTML = '';
     for (let i = 0; i < dimension; i++) {
+        pole[i] = [];
         const row = document.createElement('tr');
         for (let j = 0; j < dimension; j++) {
+            pole[i][j] = EMPTY;
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
             cell.addEventListener('click', () => cellClickHandler(i, j));
@@ -31,10 +34,12 @@ function cellClickHandler (row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
     if (findCell(row, col).textContent === EMPTY){
         if (count === 0){
+            pole[row][col] = ZERO;
             renderSymbolInCell(ZERO, row, col);
             count = 1;
         }
         else{
+            pole[row][col] = CROSS;
             renderSymbolInCell(CROSS, row, col);
             count = 0;
         }
