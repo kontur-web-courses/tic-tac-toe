@@ -4,6 +4,8 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+let currentStepQuery = 0;
+
 startGame();
 addResetListener();
 
@@ -27,7 +29,6 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler(row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
     if (currentStepQuery === 0) {
         renderSymbolInCell(CROSS, row, col);
