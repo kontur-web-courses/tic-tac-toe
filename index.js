@@ -4,11 +4,30 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
-startGame();
+let sizeGameField = prompt("Введите размер поля", "3");
+sizeGameField = sizeGameField !== null ? Number(sizeGameField) : 3;
+let gameField = initField(sizeGameField);
+let strokeNumber = 0;
+let winner = null;
+
+
+startGame(sizeGameField);
 addResetListener();
 
-function startGame () {
-    renderGrid(3);
+function initField(size) {
+    let field = [];
+    for (let i = 0; i < size; i++) {
+        let row = [];
+        for (let j = 0; j < size; j++) {
+            row[j] = EMPTY;
+        }
+        field.push(row);
+    }
+    return field;
+}
+
+function startGame (size) {
+    renderGrid(size);
 }
 
 function renderGrid (dimension) {
@@ -28,12 +47,100 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
+    if (gameField[row][col] !== EMPTY || winner !== null) {
+        return
+    }
+
+    if (strokeNumber % 2 === 0) {
+        renderSymbolInCell(ZERO, row, col);
+        gameField[row][col] = ZERO;
+        strokeNumber += 1;
+    } else {
+        renderSymbolInCell(CROSS, row, col);
+        gameField[row][col] = CROSS;
+        strokeNumber += 1;
+    }
     console.log(`Clicked on cell: ${row}, ${col}`);
 
+    winner = searchWinner(row, col);
+    if (winner !== null) {
+        alert(`Победиииииииил игрооооооок с ${winner}`);
+    }
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    if (strokeNumber === (sizeGameField * sizeGameField) && winner === null) {
+        alert('Победила дружба!');
+    }
+}
+
+function searchWinner (row, col) {
+    let figurePlayer = gameField[row][col];
+    if (checkWinInRow(gameField, row, figurePlayer)) {
+        for (let i = 0; i < sizeGameField; i++) {
+            renderSymbolInCell(gameField[row][i], row, i, '#ff0000');
+        }
+
+        return figurePlayer;
+    }
+
+    if (checkWinInColumn(gameField, col, figurePlayer)) {
+        for (let i = 0; i < sizeGameField; i++) {
+            renderSymbolInCell(gameField[i][col], i, col, '#ff0000');
+        }
+
+        return figurePlayer;
+    }
+
+    if (checkWinInMainDiagonal(gameField, figurePlayer)) {
+        for (let i = 0; i < sizeGameField; i++) {
+            renderSymbolInCell(gameField[i][i], i, i, '#ff0000');
+        }
+
+        return figurePlayer;
+    }
+
+    if (checkWinInsideDiagonal(gameField, figurePlayer)) {
+        for (let i = 0; i < sizeGameField; i++) {
+            renderSymbolInCell(gameField[i][sizeGameField - 1 - i], i, sizeGameField - 1 - i, '#ff0000');
+        }
+
+        return figurePlayer;
+    }
+
+    return null;
+}
+
+function checkWinInRow (gameField, row, figurePlayer) {
+    return gameField[row].every(sym => sym === figurePlayer);
+}
+
+function checkWinInColumn (gameField, col, figurePlayer) {
+    for (let i = 0; i < sizeGameField; i++) {
+        if (gameField[i][col] !== figurePlayer) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function checkWinInMainDiagonal (gameField, figurePlayer) {
+    for (let i = 0; i < sizeGameField; i++) {
+        if (gameField[i][i] !== figurePlayer) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function checkWinInsideDiagonal (gameField, figurePlayer) {
+    for (let i = 0; i < sizeGameField; i++) {
+        if (gameField[i][sizeGameField - 1 - i] !== figurePlayer) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -54,7 +161,18 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    initStartTools();
     console.log('reset!');
+    startGame(sizeGameField);
+    addResetListener();
+}
+
+function initStartTools(){
+    sizeGameField = prompt("Введите размер поля", "3");
+    sizeGameField = sizeGameField !== null ? Number(sizeGameField) : 3;
+    gameField = initField(sizeGameField);
+    strokeNumber = 0;
+    winner = null;
 }
 
 
