@@ -10,8 +10,6 @@ const container = document.getElementById('fieldWrapper');
 let turn = 0, currentPlayer = CROSS;
 let gameOver = false;
 
-
-
 startGame();
 addResetListener();
 
@@ -116,6 +114,35 @@ function makeAIMove(board) {
         board[randomCell.row][randomCell.col] = 'O';
     }
 }
+
+function markWinningCells(row, col) {
+    const symbol = currentPlayer;
+    let winCells = [];
+
+    for (let i = 0; i < 3; i++) {
+        if (board[row][i] === symbol) {
+            winCells.push([row, i]);
+        }
+        if (board[i][col] === symbol) {
+            winCells.push([i, col]);
+        }
+    }
+
+    if (row === col || row + col === 2) {
+        for (let i = 0; i < 3; i++) {
+            if (board[i][i] === symbol) {
+                winCells.push([i, i]);
+            }
+            if (board[i][2 - i] === symbol) {
+                winCells.push([i, 2 - i]);
+            }
+        }
+    }
+    winCells.forEach(([r, c]) => {
+        renderSymbolInCell(symbol, r, c, 'red');
+    });
+}
+
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
