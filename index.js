@@ -47,6 +47,61 @@ function haveMoves(board){
    return false;
 }
 
+function checkWin(board){
+    // Диагональ
+
+    for (let i = 0; i < dimension; i++) {
+        let sum = '';
+        for (let j = 0; j < dimension; j++) {
+            sum += board.board[i][j];
+        }
+        let checkLine = checkLineWin(sum);
+        if (checkLine !== undefined){
+            return checkLine
+        }
+    }
+
+    // Горизонталь
+    for (let i = 0; i < dimension; i++) {
+        let sum = '';
+        for (let j = 0; j < dimension; j++) {
+            sum += board.board[j][i];
+        }
+        let checkLine = checkLineWin(sum);
+        if (checkLine !== undefined){
+            return checkLine
+        }
+    }
+
+    // Диагональ (0,0) -> (d, d)
+    let sum = '';
+    for (let i = 0; i < dimension; i++) {
+        sum += board.board[i][i];
+    }
+    let checkLine = checkLineWin(sum);
+    if (checkLine !== undefined){
+        return checkLine;
+    }
+
+    sum = '';
+    // Диагональ (d, 0) -> (0, d)
+    for (let i = 0; i < dimension; i++) {
+        sum += board.board[i][dimension - 1 - i];
+    }
+    checkLine = checkLineWin(sum);
+    if (checkLine !== undefined){
+        return checkLine;
+    }
+}
+
+function checkLineWin(sum){
+    console.log(sum)
+    if (sum === CROSS.repeat(dimension))
+        return CROSS;
+    if (sum === ZERO.repeat(dimension))
+        return ZERO;
+}
+
 // ---------- Board Methods End -------
 
 function startGame () {
@@ -83,7 +138,11 @@ function cellClickHandler (row, col, board) {
         renderSymbolInCell(board.currentMove, row, col);
         nextCurrentMove(board)
     }
-    if (!haveMoves(board)){
+    let win = checkWin(board);
+    console.log(win);
+    if(win !== undefined){
+        alert(`Победил ${win}`)
+    }else if (!haveMoves(board)){
         alert("Победила дружба!")
     }
 }
