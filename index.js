@@ -4,6 +4,24 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+let counter = 0;
+let field;
+let n = 3;
+
+function init_game_model(){
+    field = [];
+    for (let i = 0; i < n; i++){
+        field.push([EMPTY]);
+    }
+    counter = 0;
+}
+
+function get_figure(){
+    a = [CROSS, ZERO];
+    return a[counter++ % 2];
+}
+
+
 startGame();
 addResetListener();
 
