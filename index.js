@@ -40,15 +40,10 @@ function cellClickHandler (row, col) {
             gameboard[row][col] = ZERO;
         }
     }
-    if (!(EMPTY in gameboard)){
+    if (gameboard.flat(Infinity).indexOf(EMPTY) === -1){
         alert("Победила дружба");
     }
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
