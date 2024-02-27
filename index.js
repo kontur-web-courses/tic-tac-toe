@@ -6,6 +6,7 @@ const container = document.getElementById('fieldWrapper');
 
 let board = [];
 let currentPlayer = CROSS;
+let currentState = 'game';
 let movesLeft;
 startGame();
 addResetListener();
@@ -14,6 +15,7 @@ function startGame () {
     board = []
     renderGrid(3);
     movesLeft = 9;
+    currentState = 'game';
 }
 
 function renderGrid (dimension) {
@@ -34,6 +36,8 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
+    if (currentState === 'game over')
+        return;
     if (board[row][col] === EMPTY) {
         renderSymbolInCell(currentPlayer, row, col);
         board[row][col] = currentPlayer;
@@ -41,6 +45,7 @@ function cellClickHandler (row, col) {
         if (checkAndHighlightWinner()) {
             const winner = currentPlayer === CROSS ? 'Крестики' : 'Нолики';
             alert(`${winner} выиграли`);
+            currentState = 'game over'
         }
     }
     if (movesLeft === 0) {
@@ -49,19 +54,8 @@ function cellClickHandler (row, col) {
     currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
 }
 
-
 function checkAndHighlightWinner() {
     let check = false;
-    for (let row = 0; row < 3; ++row) {
-        check = true;
-        for (let col = 0; col < 3; ++col) {
-            check &&= board[row][col] === currentPlayer;
-        }
-        if (check) {
-            highlightRowOrColumn(true, row);
-            return true;
-        }
-    }
     for (let col = 0; col < 3; ++col) {
         check = true;
         for (let row = 0; row < 3; ++row) {
@@ -72,7 +66,16 @@ function checkAndHighlightWinner() {
             return true;
         }
     }
-
+    for (let row = 0; row < 3; ++row) {
+        check = true;
+        for (let col = 0; col < 3; ++col) {
+            check &&= board[row][col] === currentPlayer;
+        }
+        if (check) {
+            highlightRowOrColumn(true, row);
+            return true;
+        }
+    }
     check = true;
     for (let i = 0; i < 3; ++i) {
         check &&= board[i][i] === currentPlayer;
@@ -109,7 +112,7 @@ function highlightDiagonal(main = true){
 function highlightRowOrColumn(row = true, number) {
     if (row) {
         for (let i = 0; i < 3; i++) {
-            findCell(number, j).style.color = 'red';
+            findCell(number, i).style.color = 'red';
         }
     }
     else {
@@ -137,7 +140,7 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
-    console.log('reset!');
+    startGame();
 }
 
 
