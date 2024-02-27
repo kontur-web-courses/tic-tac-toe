@@ -68,6 +68,17 @@ function renderSymbolInCell(symbol, row, col, color = '#333') {
     targetCell.style.color = color;
 }
 
+function colorSymbols(symbol, color='#ff0000'){
+    for (let row = 0; row < n; row++){
+        const row_arr = field[row];
+        for (let col = 0; col < n; col++){
+            if (row_arr[col] === symbol){
+                findCell(row, col).style.color = color;
+            }
+        }
+    }
+}
+
 function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
