@@ -4,23 +4,27 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+let dim = Number(prompt("Какой размер?"))
 startGame();
 addResetListener();
 
 let currentClick = ZERO
-let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
+let field = resetField(dim)
 let isWinnerFound = false;
-function resetField () {
-    for (let y = 0; y < 3; y++){
-        for (let x = 0; x < 3; x++){
-            field[y][x] = EMPTY;
+function resetField (size) {
+    let field = []
+    for (let y = 0; y < size; y++){
+        field.push([]);
+        for (let x = 0; x < size; x++){
+            field[y].push(EMPTY);
         }
     }
+    return field
 }
 
 function checkForAvailable (field) {
-    for (let y = 0; y < 3; y++){
-        for (let x = 0; x < 3; x++){
+    for (let y = 0; y < dim; y++){
+        for (let x = 0; x < dim; x++){
             if (field[y][x] === EMPTY){
                 return true;
             }
@@ -30,21 +34,21 @@ function checkForAvailable (field) {
 }
 
 function checkSequence(symbol, yIterator, xIterator, initialY, initalX){
-    for (let y = initialY, x = initalX; y < 3 && x < 3; x = xIterator(x), y = yIterator(y)){
+    for (let y = initialY, x = initalX; y < dim && x < dim; x = xIterator(x), y = yIterator(y)){
         if (field[y][x] !== symbol) {
             return null;
         }
     }
 
     let arr = []
-    for (let y = initialY, x = initalX; y < 3 && x < 3; x = xIterator(x), y = yIterator(y)){
+    for (let y = initialY, x = initalX; y < dim && x < dim; x = xIterator(x), y = yIterator(y)){
         arr.push([y, x]) 
     }
     return arr;
 }
 
 function checkRows(symbol){
-    for (let i = 0; i < 3; i++){
+    for (let i = 0; i < dim; i++){
         let sequence = checkSequence(symbol, y => y, x => x + 1, i, 0);
         if (sequence !== null) {
             return sequence;
@@ -54,7 +58,7 @@ function checkRows(symbol){
 }
 
 function checkColumns(symbol){
-    for (let i = 0; i < 3; i++){
+    for (let i = 0; i < dim; i++){
         let sequence = checkSequence(symbol, y => y + 1, x => x, 0, i);
         if (sequence !== null) {
             return sequence;
@@ -64,7 +68,8 @@ function checkColumns(symbol){
 }
 
 function checkDiagonals(symbol){
-    return checkSequence(symbol, y => y + 1, x => x + 1, 0, 0) || checkSequence(symbol, y => y + 1, x => x - 1, 0, 2)
+    return checkSequence(symbol, y => y + 1, x => x + 1, 0, 0)
+        || checkSequence(symbol, y => y + 1, x => x - 1, 0, dim - 1)
 }
 
 
@@ -73,7 +78,7 @@ function checkWinner(symbol){
 }
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(dim);
 }
 
 function renderGrid (dimension) {
@@ -156,11 +161,11 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
-    resetField(field)
+    field = resetField(dim)
     isWinnerFound = false;
-    for (let i = 0; i < 3; i++)
+    for (let i = 0; i < dim; i++)
     {
-        for (let k = 0; k < 3; k++){
+        for (let k = 0; k < dim; k++){
             renderSymbolInCell(' ', i, k);
         }
     }
