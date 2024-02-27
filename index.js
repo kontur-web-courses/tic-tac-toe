@@ -25,12 +25,6 @@ function initField(x) {
     }
 }
 
-function checkWinner(field, currentSymbol) {
-    for (const row of field) {
-
-    }
-}
-
 function flipCurrentSymbol() {
     if (currentSymbol === CROSS) {
         currentSymbol = ZERO;
@@ -110,6 +104,16 @@ function checkWinner() {
         return field[2][0];
     }
     return EMPTY;
+}
+
+function colorIfWin (symb, fieldSize) {
+    for (let i = 0; i < fieldSize; i++) {
+        for (let j = 0; j < fieldSize; j++) {
+            if (field[i][j] === symb) {
+                renderSymbolInCell(EMPTY, i, j, '#f00');
+            }
+        }
+    }
 }
 
 
