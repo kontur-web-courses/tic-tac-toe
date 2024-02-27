@@ -136,10 +136,6 @@ function addResetListener () {
     resetButton.addEventListener('click', resetClickHandler);
 }
 
-function resetClickHandler () {
-    console.log('reset!');
-}
-
 
 /* Test Function */
 /* Победа первого игрока */
