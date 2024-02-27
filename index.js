@@ -4,11 +4,13 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
-let board = []
+let board = [];
+let currentPlayer = CROSS;
 startGame();
 addResetListener();
 
 function startGame () {
+    board = []
     renderGrid(3);
 }
 
@@ -17,7 +19,9 @@ function renderGrid (dimension) {
 
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
+        board.push([]);
         for (let j = 0; j < dimension; j++) {
+            board[i].push(EMPTY);
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
             cell.addEventListener('click', () => cellClickHandler(i, j));
@@ -28,13 +32,11 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    if (board[row][col] === EMPTY) {
+        renderSymbolInCell(currentPlayer, row, col);
+        board[row][col] = currentPlayer;
+    }
     console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
