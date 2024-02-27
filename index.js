@@ -36,28 +36,28 @@ function is_turns_ended() {
     return true;
 }
 
-function findWinner() {
+function findWinner(figure) {
     for (let i = 0; i < n; i++) {
-        figureInStr = field[i][0];
-        strCount = 1;
-        figureInCol = field[0][i];
-        colCount = 1;
-        figureInLeftCorner = field[0][0]
-        leftCornerCount = 0
-        figureInRightCorner = field[0][n - 1]
-        rightCornerCount = 0
-        for (let j = 1; i < n; i++) {
-            if (field[i][j] === figureInStr) strCount += 1;
-            if (field[j][i] === figureInCol) colCount += 1;
+        let strCount = 0;
+        let colCount = 0;
+        
+        for (let j = 0; j < n; j++) {
+            if (field[i][j] === figure) strCount += 1;
+            if (field[j][i] === figure) colCount += 1;
         }
-        if (strCount === n) return figureInStr;
-        if (colCount === n) return figureInCol;
-        if (field[i][i] === figureInLeftCorner) leftCornerCount += 1;
-        if (field[i][n - i - 1] === figureInRightCorner) rightCornerCount += 1;
-        if (leftCornerCount === n) return figureInLeftCorner;
-        if (rightCornerCount === n) return figureInRightCorner;
+        if (strCount === n) return true;
+        if (colCount === n) return true;
     }
-    return null;
+    let leftCornerCount = 0;
+    let rightCornerCount = 0;
+    for (let i = 0; i < n; i++){
+        if (field[i][i] === figure) leftCornerCount += 1;
+        if (field[i][n - i - 1] === figure) rightCornerCount += 1;
+        if (leftCornerCount === n || rightCornerCount === n){
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -98,7 +98,12 @@ function cellClickHandler(row, col) {
         field[row][col] = figure;
         if (is_turns_ended()) alert("Победила дружба!")
         renderSymbolInCell(figure, row, col);
-        console.log(findWinner());
+        if (findWinner(CROSS)){
+            console.log(CROSS);
+        }
+        if (findWinner(ZERO)){
+            console.log(ZERO);
+        }
     }
     
 
@@ -137,7 +142,7 @@ function addResetListener() {
 
 function resetClickHandler() {
     console.log('reset!');
-    renderGrid();
+    renderGrid(n);
     init_game_model();
 }
 
