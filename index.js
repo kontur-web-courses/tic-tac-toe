@@ -2,16 +2,28 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
-let grid = [
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY]
-]
 
 let step = 0;
 const STEPS = [CROSS, ZERO];
-let victoryCombination;
 let isRunning = true;
+const dimension = 4;
+
+
+let grid = []
+for (let j = 0; j < dimension; j++) {
+    let line = [];
+    for (let i = 0; i < dimension;i++){
+        line.push(EMPTY);
+    }
+    grid.push(line);
+}
+
+
+
+let verticalLineWins = false;
+let horizontalLineWins = false;
+let rightDiagonalWins = false;
+let leftDiagonalWins = false;
 
 const container = document.getElementById('fieldWrapper');
 
@@ -19,7 +31,7 @@ startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(dimension);
 }
 
 function renderGrid (dimension) {
@@ -37,33 +49,47 @@ function renderGrid (dimension) {
     }
 }
 
-function isVictory() {
-    let combs = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6],
-    ];
-    for (let comb of combs) {
-        if (
-            grid[Math.floor(comb[0] / 3)][comb[0] % 3] === grid[Math.floor(comb[1] / 3)][comb[1] % 3] &&
-            grid[Math.floor(comb[1] / 3)][comb[1] % 3] === grid[Math.floor(comb[2] / 3)][comb[2] % 3] &&
-            grid[Math.floor(comb[0] / 3)][comb[0] % 3] !== EMPTY
-        ) {
-            victoryCombination = comb;
-            return true;
+function isVictory(row, col) {
+    const symbol = grid[row][col];
+
+    verticalLineWins = true;
+    horizontalLineWins = true;
+    rightDiagonalWins = true;
+    leftDiagonalWins = true;
+
+    for (let i = 0; i < dimension; i++) {
+        if (grid[row][i] !== symbol) {
+            verticalLineWins = false;
+        }
+        if (grid[i][col] !== symbol) {
+            horizontalLineWins = false;
+        }
+        if (grid[i][i] !== symbol) {
+            leftDiagonalWins = false;
+        }
+        if (grid[i][dimension - 1 - i] !== symbol) {
+            rightDiagonalWins = false;
         }
     }
-    return false;
+
+    return rightDiagonalWins || leftDiagonalWins || horizontalLineWins || verticalLineWins
 }
 
-function colourVictoryCombination() {
-    for (const ind of victoryCombination) {
-        findCell(Math.floor(ind / 3), ind % 3).style.color = 'red';
+function colourVictoryCombination(row, col) {
+    for (let i = 0; i < dimension; i++) {
+        if (verticalLineWins) {
+            findCell(row, i).style.color = 'red';
+        }
+        if (horizontalLineWins) {
+            findCell(i, col).style.color = 'red';
+            horizontalLineWins = false;
+        }
+        if (leftDiagonalWins) {
+            findCell(i, i).style.color = 'red';
+        }
+        if (rightDiagonalWins) {
+            findCell(i, dimension - 1 - i).style.color = 'red';
+        }
     }
 }
 
@@ -76,12 +102,12 @@ function cellClickHandler (row, col) {
         let symbol = STEPS[step % 2];
         grid[row][col] = symbol;
         renderSymbolInCell(symbol, row, col);
-        let res = isVictory()
-        if (step === 9 && res === false) {
+        let res = isVictory(row, col)
+        if (step === dimension * dimension && res === false) {
             alert('Победила дружба!');
         }
-        if (isVictory()) {
-            colourVictoryCombination();
+        if (res) {
+            colourVictoryCombination(row, col);
             isRunning = false;
             alert(`${symbol} победил!`);
         }
