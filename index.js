@@ -4,10 +4,10 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
-let FIELD = [];
-let PLAYER = true;
-let STEPS = 0;
-let SIZE;
+let field = [];
+let player = true;
+let steps = 0;
+let size;
 
 startGame();
 addResetListener();
@@ -17,12 +17,12 @@ function startGame() {
 }
 
 function renderGrid(dimension) {
-    STEPS = dimension * dimension;
-    SIZE = dimension;
+    steps = dimension * dimension;
+    size = dimension;
     for (let i = 0; i < dimension; i++) {
-        FIELD[i] = [];
+        field[i] = [];
         for (let j = 0; j < dimension; j++) {
-            FIELD[i][j] = EMPTY;
+            field[i][j] = EMPTY;
         }
     }
     container.innerHTML = '';
@@ -42,16 +42,16 @@ function renderGrid(dimension) {
 function cellClickHandler(row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (FIELD[row][col] !== EMPTY || getWinner()) {
+    if (field[row][col] !== EMPTY || getWinner()) {
 			return;
 		}
-    if (STEPS === 0) {
+    if (steps === 0) {
 			alert('Победила дружба');
 			return;
 		}
-    FIELD[row][col] = PLAYER ? CROSS : ZERO;
-    renderSymbolInCell(FIELD[row][col], row, col);
-    PLAYER = !PLAYER;
+    field[row][col] = player ? CROSS : ZERO;
+    renderSymbolInCell(field[row][col], row, col);
+    player = !player;
     let winner = getWinner();
     console.log(winner);
     if (winner) {
@@ -73,15 +73,15 @@ function getWinner() {
 }
 
 function checkRow() {
-    for (let i = 0; i < SIZE; i++) {
+    for (let i = 0; i < size; i++) {
         let win = true;
-        let winner = FIELD[i][0];
+        let winner = field[i][0];
         let points = [[i, 0]];
         if (winner === EMPTY) {
-            break;
+            continue;
         }
-        for (let j = 1; j < SIZE; j++) {
-            win = (winner === FIELD[i][j]);
+        for (let j = 1; j < size; j++) {
+            win = (winner === field[i][j]);
             points[j] = [i, j]
             console.log(win);
             if (!win) {
@@ -92,20 +92,20 @@ function checkRow() {
             return [winner, points];
         }
     }
-    return [undefined];
+    return [false];
 }
 
 function checkColumn() {
-    for (let i = 0; i < SIZE; i++) {
+    for (let i = 0; i < size; i++) {
         let win = true;
-        let winner = FIELD[0][i];
+        let winner = field[0][i];
         let points = [[0, i]];
         if (winner === EMPTY) {
-            break;
+            continue;
         }
-        for (let j = 1; j < SIZE; j++) {
+        for (let j = 1; j < size; j++) {
             points[j] = [j, i];
-            win = (winner === FIELD[j][i]);
+            win = (winner === field[j][i]);
             if (!win) {
                 break;
             }
@@ -114,17 +114,17 @@ function checkColumn() {
             return [winner, points];
         }
     }
-    return [undefined];
+    return [false]
 }
 
 function checkDiagonals() {
     let win = true;
-    let winner = FIELD[0][0];
+    let winner = field[0][0];
     let points = [[0, 0]];
     if (winner !== EMPTY) {
-        for (let i = 1; i < SIZE; i++) {
+        for (let i = 1; i < size; i++) {
             points[i] = [i, i];
-            win = (winner === FIELD[i][i]);
+            win = (winner === field[i][i]);
             if (!win) {
                 break;
             }
@@ -134,12 +134,12 @@ function checkDiagonals() {
         }
     }
     win = true;
-    winner = FIELD[0][SIZE - 1];
-    points = [[0, SIZE - 1]];
+    winner = field[0][size - 1];
+    points = [[0, size - 1]];
     if (winner !== EMPTY) {
-        for (let i = 1; i < SIZE; i++) {
-            points[i] = [i, SIZE - 1 - i];
-            win = (winner === FIELD[i][SIZE - 1 - i]);
+        for (let i = 1; i < size; i++) {
+            points[i] = [i, size - 1 - i];
+            win = (winner === field[i][size - 1 - i]);
             if (!win) {
                 break;
             }
@@ -148,7 +148,7 @@ function checkDiagonals() {
             return [winner, points];
         }
     }
-    return [undefined];
+    return [false]
 }
 
 function renderSymbolInCell(symbol, row, col, color = '#333') {
@@ -169,11 +169,11 @@ function addResetListener() {
 }
 
 function resetClickHandler() {
-    FIELD = [];
-    PLAYER = true;
-	STEPS = 0;
-    for (let i = 0; i < SIZE; i++){
-        for (let j = 0; j < SIZE; j++){
+    field = [];
+    player = true;
+	steps = 0;
+    for (let i = 0; i < size; i++){
+        for (let j = 0; j < size; j++){
             renderSymbolInCell(' ', i, j);
         }
     }
