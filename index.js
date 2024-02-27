@@ -27,7 +27,11 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
+    let gameField = [
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', '']
+    ]
     console.log(`Clicked on cell: ${row}, ${col}`);
 
 
