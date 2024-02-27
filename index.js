@@ -32,21 +32,30 @@ function renderGrid (dimension) {
 let _counter = 0
 function cellClickHandler (row, col) {
     // Пиши код тут
-    if (!checkWinner()) {
-        if (checkMove()) {
-            let move = _counter % 2 === 0 ? ZERO : CROSS;
-            field[row][col] = move;
-            renderSymbolInCell(move, row, col);
-            _counter++;
+    if(!checkWinner()&&checkMove()) {
+        let move;
+        if(_counter % 2 === 0){
+            console.log("11")
+            randomMove();
+            move = ZERO
+        } else {
+
+            move = CROSS
+            renderSymbolInCell(CROSS, row, col);
         }
+        field[row][col] = move
+        _counter++;
+        checkWinner();
+        checkMove();
     }
 }
 
 function randomMove () {
-    for (let i = 0; i < 2; i++) {
-        for (let j = 0; j < 2; j++) {
+    for (let i = 0; i <= 2; i++) {
+        for (let j = 0; j <= 2; j++) {
             if (field[i][j] === EMPTY) {
                 renderSymbolInCell(ZERO, i, j);
+                return;
             }
         }
     }
@@ -73,8 +82,15 @@ function resetClickHandler () {
     field = [[EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY]];
-    container.querySelectorAll('tr')
 
+    for(let row= 0; row<3; row++)
+    {
+        for (let column = 0; column<3; column++)
+        {
+            renderSymbolInCell(EMPTY, row, column);
+        }
+    }
+    _counter = 0;
     alert('reset!');
 }
 
