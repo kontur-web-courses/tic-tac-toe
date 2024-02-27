@@ -20,6 +20,9 @@ function checkWinner(field, sym) {
             }
         }
         if (flag) {
+            for (let m = 0; m < i; m++) {
+                renderSymbolInCell(player, i, m, 'red')                
+            }
             console.log('row')
             return true
         }
@@ -27,6 +30,7 @@ function checkWinner(field, sym) {
     
     for (let i = 0; i < field.length; i++) {
         let flag = true
+        
         for (let j = 0; j < field[0].length; j++) {
             const col_element = field[j][i]
             if (col_element !== sym) {
@@ -34,6 +38,9 @@ function checkWinner(field, sym) {
             }
         }
         if (flag) {
+            for (let m = 0; m < i; m++) {
+                renderSymbolInCell(player, m, i, 'red')                
+            }
             console.log('col')
             return true
         }
@@ -47,6 +54,9 @@ function checkWinner(field, sym) {
         }
     }
     if (flag) {
+        for (let m = 0; m < START_GRID; m++) {
+            renderSymbolInCell(player, m, m, 'red')                
+        }
         console.log('diag')
         return true
     }
@@ -59,6 +69,9 @@ function checkWinner(field, sym) {
         }
     }
     if (flag) {
+        for (let m = 0; m < START_GRID; m++) {
+            renderSymbolInCell(player, m, m, 'red')                
+        }
         console.log('rev')
         return true
     }
@@ -116,14 +129,17 @@ function cellClickHandler (row, col) {
     if (targetCell === EMPTY) {
         console.log(`Clicked on cell: ${row}, ${col}`);
         field[row][col] = player
-        console.log(field,row,col)
+
         renderSymbolInCell(player, row, col);
+
         if (checkWinner(field, player)) {
             alert('${player} wins');
             //return;
         }
 
-        switchPlayers();
+        console.log(field,row,col)
+
+
         if (checkDraw()){
             alert("Победила дружба!");
             return
