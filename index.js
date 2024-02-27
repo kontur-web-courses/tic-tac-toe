@@ -10,13 +10,23 @@ addResetListener();
 let currentClick = ZERO
 let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
 
-function resetField (field)
-{
+function resetField (field) {
     for (let y = 0; y < 3; y++){
         for (let x = 0; x < 3; x++){
             field[y][x] = EMPTY;
         }
     }
+}
+
+function checkForAvailable (field) {
+    for (let y = 0; y < 3; y++){
+        for (let x = 0; x < 3; x++){
+            if (field[y][x] === EMPTY){
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 function startGame () {
@@ -42,6 +52,8 @@ function cellClickHandler (row, col) {
     // Пиши код тут
     renderSymbolInCell(currentClick, row, col);
     currentClick = currentClick === ZERO ? CROSS : ZERO;
+    if (!checkForAvailable(field))
+        alert('Победила дружба')
 
     console.log(`Clicked on cell: ${row}, ${col}`);
 
