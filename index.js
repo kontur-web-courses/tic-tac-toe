@@ -13,6 +13,7 @@ let board = [
     [EMPTY, EMPTY, EMPTY],
     [EMPTY, EMPTY, EMPTY]
 ];
+let winner = null;
 
 function startGame () {
     renderGrid(3);
@@ -34,14 +35,9 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
-    if (board[row][col] === EMPTY) {
+    if (board[row][col] === EMPTY && winner === null) {
         if (turnCounter % 2 === 1) {
             renderSymbolInCell(ZERO, row, col);
         } else {
@@ -49,11 +45,12 @@ function cellClickHandler (row, col) {
         }
     }
 
-    const winner = checkWinner();
+    winner = checkWinner();
+
     if (winner) {
         highlightWinnerCells(winner);
-        alert(`The winner is ${winner}!`);
         container.removeEventListener('click', cellClickHandler);
+        alert(`The winner is ${winner}!`);
     } else {
         turnCounter++;
         if (turnCounter === 9) {
@@ -63,21 +60,18 @@ function cellClickHandler (row, col) {
 }
 
 function checkWinner() {
-    // Check rows
     for (let i = 0; i < 3; i++) {
         if (board[i][0] !== EMPTY && board[i][0] === board[i][1] && board[i][1] === board[i][2]) {
             return board[i][0];
         }
     }
 
-    // Check columns
     for (let i = 0; i < 3; i++) {
         if (board[0][i] !== EMPTY && board[0][i] === board[1][i] && board[1][i] === board[2][i]) {
             return board[0][i];
         }
     }
 
-    // Check diagonals
     if (board[0][0] !== EMPTY && board[0][0] === board[1][1] && board[1][1] === board[2][2]) {
         return board[0][0];
     }
@@ -106,13 +100,12 @@ function resetClickHandler() {
         [EMPTY, EMPTY, EMPTY],
         [EMPTY, EMPTY, EMPTY]
     ];
-
+    renderGrid(3);
     const cells = container.querySelectorAll('td');
     cells.forEach(cell => {
         cell.textContent = EMPTY;
         cell.style.color = '#333';
     });
-
     container.addEventListener('click', cellClickHandler);
 }
 
