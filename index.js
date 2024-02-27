@@ -92,6 +92,20 @@ class Board {
 
         return [null, []];
     }
+
+    getRandomFreeIndex() {
+        let indices = [];
+        for (let i = 0; i < this.matrix.length; i++) {
+            for (let j = 0; j < this.matrix.length; j++) {
+                if (this.matrix[i][j] === null) {
+                    indices.push([i, j]);
+                }
+            }
+        }
+
+        let randIndex = getRandomInt(indices.length);
+        return indices[randIndex];
+    }
 }
 
 
@@ -104,8 +118,10 @@ const container = document.getElementById('fieldWrapper');
 
 let board;
 let boardDimension;
+let wantsToPlayWithBot;
 
 showDimensionInput();
+randomBotInput();
 
 function showDimensionInput() {
     let input = prompt("Введите размер поля (от 3 и выше):");
@@ -121,6 +137,18 @@ function showDimensionInput() {
     }
 }
 
+function randomBotInput() {
+    wantsToPlayWithBot = confirm("Хотите ли вы играть с ботом?");
+
+    if (wantsToPlayWithBot) {
+        // Код, который будет запускаться, если пользователь хочет играть с ботом
+        console.log("Играем с ботом!");
+    } else {
+        // Код, который будет запускаться, если пользователь не хочет играть с ботом
+        console.log("Играем без бота!");
+    }
+}
+
 function startGame() {
     renderGrid(boardDimension);
 }
@@ -133,10 +161,19 @@ function renderGrid(dimension) {
         for (let j = 0; j < dimension; j++) {
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
-            cell.addEventListener('click', () => cellClickHandler(i, j));
+            cell.addEventListener('click', () => gameClickHandler(i, j));
             row.appendChild(cell);
         }
         container.appendChild(row);
+    }
+}
+
+function gameClickHandler(row, col){
+    cellClickHandler(row, col);
+    if (wantsToPlayWithBot)
+    {
+        let cell = board.getRandomFreeIndex();
+        cellClickHandler(cell[0], cell[1]);
     }
 }
 
@@ -190,6 +227,10 @@ function resetClickHandler() {
     console.log('reset!');
     board = new Board(boardDimension);
     startGame();
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
 }
 
 
