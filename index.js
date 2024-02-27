@@ -10,13 +10,13 @@ const field = [
         ];
 
 let currentSymbol = CROSS;
-let current
+let N = 3;
 
 startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(3);
+    renderGrid(n);
 }
 
 function renderGrid (dimension) {
@@ -42,8 +42,28 @@ function checkNoMoreMoves() {
             }
         }
     }
-    
     return true;
+}
+
+function findWinLine(symbol){
+    for (let i = 0; i < N; i++){
+        for (let j = 0; j < N - 2; j++){
+            if (field[i][j] === symbol && field[i][j+1] === symbol && field[i][j+2] === symbol){
+                return true;
+            }
+            if (field[j][i] === symbol && field[j+1][i] === symbol && field[j+2][i] === symbol){
+                return true;
+            }
+        }
+    }
+    for (let i = 0; i < N - 2; i++){
+        for (let j = 0; j < N - 2; j++){
+            if (field[i][j] === symbol && field[i+1][j+1] === symbol && field[i+2][j+2] === symbol){
+                return true;
+            }
+        }
+    return false;
+    }
 }
 
 function cellClickHandler (row, col) {
@@ -52,7 +72,11 @@ function cellClickHandler (row, col) {
     field[row][col] = current;
     renderSymbolInCell(current, row, col);
     currentSymbol = currentSymbol === ZERO ? CROSS : ZERO;
-    if (checkNoMoreMoves()) {
+    if (findWinLine(CROSS)){
+        alert("CROSS");
+    } else if (findWinLine(ZERO)){
+            alert("ZERO");
+    } else if (checkNoMoreMoves()) {
         alert('Победила дружба');
     }
 }
