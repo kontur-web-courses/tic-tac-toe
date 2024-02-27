@@ -53,7 +53,7 @@ function cellClickHandler (row, col) {
     }
     board[row][col] = turn;
     renderSymbolInCell(turn, row, col);
-    if (checkWin()){
+    if ( checkIfSymbolWins(turn) ){
         isFinish = true;
         return;
     }
@@ -65,24 +65,113 @@ function cellClickHandler (row, col) {
 }
 
 function changeTurn() {
-    turn = (turn == CROSS) ? ZERO : CROSS;
+    turn = (turn === CROSS) ? ZERO : CROSS;
+}
+
+
+function checkIfSymbolWins(symbol){
+
+    let won = true;
+
+    for (let i = 0; i < board.length; i++) {
+
+        won = true;
+
+        for (let j = 0; j < board.length; j++) {
+
+            if (board[i][j] !== symbol) {
+
+                won = false;
+
+            }
+
+        }
+
+        if (won) {
+
+            for (let j = 0; j < board.length; j++) {
+
+                renderSymbolInCell(symbol, i, j, 'red');
+
+            }
+
+            return true;
+
+        }
+
+    }
+
+
+
+    for (let i = 0; i < board.length; i++) {
+
+        won = true;
+
+        for (let j = 0; j < board.length; j++) {
+
+            if (board[j][i] !== symbol) {
+
+                won = false;
+
+            }
+
+        }
+
+        if (won) {
+
+            for (let j = 0; j < board.length; j++) {
+
+                renderSymbolInCell(symbol, j, i, 'red');
+
+            }
+
+            return true;
+
+        }
+
+    }
+
+
+
+    won = true;
+
+    for (let i = 0; i < board.length; i++) {
+
+
+
+        if (board[i][i] !== symbol)
+
+            won = false;
+
+    }
+
+    if (won){
+
+        for (let i = 0; i < board.length; i++) {
+
+            renderSymbolInCell(symbol, i, i, 'red');
+
+        }
+
+        return true;
+
+    }
 }
 
 function checkWin(){
     for (let i = 0; i < board.length; i++){
-        if (checkLineWin(i, 0, board.length, board.length, 0, 1) 
-                || checkLineWin(0, i, board.length, board.length, 1, 0))
+        if ( checkLineWin(i, 0, board.length, board.length, 0, 1) || checkLineWin(0, i, board.length, board.length, 1, 0) )
             return true;
     }
-    if (checkLineWin(0, 0, board.length, board.length, 1, 1) 
-            || checkLineWin(0, board.length, board.length, 0, 1, -1))
+    if ( checkLineWin(0, 0, board.length, board.length, 1, 1) )
         return true;
     return false;
 }
 
 function checkLineWin(stX, stY, endX, endY, dx, dy){
-    if (isLineWin(stX, stY, endX, endY, dx, dy)){
-        renderWonLine(stX, stY, endX, endY, dx, dy);
+    if ( isLineWin(stX, stY, endX, endY, dx, dy) ) {
+        console.log(`${stX} ${stY} ${endX} ${endY}`);
+        // renderWonLine(stX, stY, endX, endY, dx, dy);
         return true;
     }
     return false;
@@ -90,9 +179,11 @@ function checkLineWin(stX, stY, endX, endY, dx, dy){
 
 function isLineWin(stX, stY, endX, endY, dx, dy){
     for (let i = stX; i < endX; i += dx) {
-        for (let j = stY; j < endY; i += dy) {
-            if (board[i][j] != turn)
+        for (let j = stY; j < endY; j += dy) {
+            if (board[i][j] !== turn) {
+                console.log(`${stX} ${stY} ${endX} ${endY}`);
                 return false;
+            }
         }
     }
     return true;
@@ -100,7 +191,7 @@ function isLineWin(stX, stY, endX, endY, dx, dy){
 
 function renderWonLine(stX, stY, endX, endY, dx, dy){
     for (let i = stX; i < endX; i += dx) {
-        for (let j = stY; j < endY; i += dy) {
+        for (let j = stY; j < endY; j += dy) {
             renderSymbolInCell(board[i][j], i, j, '#FF0000');
         }
     }
