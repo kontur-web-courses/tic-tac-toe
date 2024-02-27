@@ -40,25 +40,37 @@ class Field {
     }
 
     IsWin () {
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 3; i++) {
             if ((this.state[i][0] === this.state[i][1]) && (this.state[i][1] === this.state[i][2])) {
                 if (this.state[i][0] !== EMPTY) {
+                    for (let j = 0; j < 3; j++) {
+                        renderSymbolInCell(this.state[i][j], i, j, 'red');
+                    }
                     return true;
                 }
             }
             if ((this.state[0][i] === this.state[1][i]) && (this.state[1][i] === this.state[2][i])) {
                 if (this.state[0][i] !== EMPTY) {
+                    for (let j = 0; j < 3; j++) {
+                        renderSymbolInCell(this.state[j][i], j, i, 'red');
+                    }
                     return true;
                 }
             }
         }
         if ((this.state[0][0] === this.state[1][1]) && (this.state[1][1] === this.state[2][2])) {
             if (this.state[0][0] !== EMPTY) {
+                renderSymbolInCell(this.state[0][0], 0, 0, 'red');
+                renderSymbolInCell(this.state[1][1], 1, 1, 'red');
+                renderSymbolInCell(this.state[1][1], 2, 2, 'red');
                 return true;
             }
         }
         if ((this.state[2][0] === this.state[1][1]) && (this.state[1][1] === this.state[0][2])) {
             if (this.state[2][0] !== EMPTY) {
+                renderSymbolInCell(this.state[2][0], 2, 0, 'red');
+                renderSymbolInCell(this.state[1][1], 1, 1, 'red');
+                renderSymbolInCell(this.state[0][2], 0, 2, 'red');
                 return true;
             }
         }
@@ -95,7 +107,9 @@ function cellClickHandler (row, col) {
     if (targetCell.textContent === EMPTY) {
         console.log(`Clicked on cell: ${row}, ${col}`);
         let symbol = grid.state[row][col];
-        renderSymbolInCell(symbol, row, col);
+        if (winSymbol === null) {
+            renderSymbolInCell(symbol, row, col);
+        }
     }
     if (winSymbol === CROSS) {
         alert('Победили крестики');
