@@ -29,7 +29,7 @@ function renderGrid (dimension) {
 function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if (count == 0){
+    if (count === 0){
         renderSymbolInCell(ZERO, row, col);
         count = 1;
     }
