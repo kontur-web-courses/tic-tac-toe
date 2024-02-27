@@ -30,37 +30,21 @@ function checkForAvailable (field) {
 }
 
 function checkSequence(symbol, yIterator, xIterator, initialY, initalX){
-    for (let y = initialY; y < 3; y = yIterator(y) ){
-        for (let x = initalX; x < 3; x = xIterator(x)){
-            if (field[y][x] !== symbol)
-                return null;
-            if (xIterator === null){
-                break;
-            }
-        }
-        if (yIterator === null){
-            break;
-        }
+    for (let y = initialY, x = initalX; y < 3 && x < 3; x = xIterator(x), y = yIterator(y)){
+        if (field[y][x] !== symbol)
+            return null;
     }
 
     let arr = []
-    for (let y = initialY; y < 3; y = yIterator(y) ){
-        for (let x = initalX; x < 3; x = xIterator(x)){
-            arr.push([y, x])
-            if (xIterator === null){
-                break;
-            }
-        }
-        if (yIterator === null){
-            break;
-        }
+    for (let y = initialY, x = initalX; y < 3 && x < 3; x = xIterator(x), y = yIterator(y)){
+        arr.push([y, x])
     }
     return arr;
 }
 
 function checkRows(symbol){
     for (let i = 0; i < 3; i++){
-        let sequence = checkSequence(symbol, null, x => x + 1, i, 0);
+        let sequence = checkSequence(symbol, y => y, x => x + 1, i, 0);
         if (sequence !== null)
             return sequence;
     }
@@ -69,7 +53,7 @@ function checkRows(symbol){
 
 function checkColumns(symbol){
     for (let i = 0; i < 3; i++){
-        let sequence = checkSequence(symbol, y => y + 1, null, 0, i);
+        let sequence = checkSequence(symbol, y => y + 1, x => x, 0, i);
         if (sequence !== null)
             return sequence;
     }
