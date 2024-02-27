@@ -3,20 +3,18 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-const field = [
-            [EMPTY, EMPTY, EMPTY],
-            [EMPTY, EMPTY, EMPTY],
-            [EMPTY, EMPTY, EMPTY]
-        ];
 
 let currentSymbol = CROSS;
-let N = 3;
+let N = 5;
+let gameEnded = false;
+let field;
 
 startGame();
 addResetListener();
 
 function startGame () {
-    renderGrid(n);
+    renderGrid(N);
+    resetClickHandler();
 }
 
 function renderGrid (dimension) {
@@ -46,38 +44,60 @@ function checkNoMoreMoves() {
 }
 
 function findWinLine(symbol){
+    let winCells;
     for (let i = 0; i < N; i++){
         for (let j = 0; j < N - 2; j++){
             if (field[i][j] === symbol && field[i][j+1] === symbol && field[i][j+2] === symbol){
-                return true;
+                winCells = [[i,j],[i,j+1],[i,j+2]];
             }
             if (field[j][i] === symbol && field[j+1][i] === symbol && field[j+2][i] === symbol){
-                return true;
+                winCells = [[j, i],[j+1,i],[j+2,i]];
             }
         }
     }
     for (let i = 0; i < N - 2; i++){
         for (let j = 0; j < N - 2; j++){
             if (field[i][j] === symbol && field[i+1][j+1] === symbol && field[i+2][j+2] === symbol){
-                return true;
+                winCells = [[i,j],[i+1,j+1],[i+2,j+2]];
             }
         }
-    return false;
+
     }
+
+    for (let i = 2; i < N; i++){
+        for (let j = 0; j < N - 2; j++){
+            if (field[i][j] === symbol && field[i-1][j+1] === symbol && field[i-2][j+2] === symbol){
+                winCells = [[i,j],[i-1,j+1],[i-2,j+2]];
+            }
+        }
+
+    }
+    for (const cell of winCells){
+        renderSymbolInCell(symbol, cell[0], cell[1], "#ff0000");
+    }
+    return !!winCells;
+}
+
+function finishGame(result) {
+    if (result === CROSS || result == ZERO) {
+        alert(result);
+    } else alert('Победила дружба!') 
+    gameEnded = true;
 }
 
 function cellClickHandler (row, col) {
+    if (gameEnded) return;
     console.log(`Clicked on cell: ${row}, ${col}`);
     if (field[row][col] != EMPTY) return;
-    field[row][col] = current;
-    renderSymbolInCell(current, row, col);
+    field[row][col] = currentSymbol;
+    renderSymbolInCell(currentSymbol, row, col);
     currentSymbol = currentSymbol === ZERO ? CROSS : ZERO;
     if (findWinLine(CROSS)){
-        alert("CROSS");
+        finishGame(CROSS);
     } else if (findWinLine(ZERO)){
-            alert("ZERO");
+        finishGame(ZERO);
     } else if (checkNoMoreMoves()) {
-        alert('Победила дружба');
+        finishGame();
     }
 }
 
@@ -100,6 +120,13 @@ function addResetListener () {
 
 function resetClickHandler () {
     console.log('reset!');
+    field = Array(N).fill().map(() => Array(N).fill(EMPTY));
+    for (let row = 0; row < N; ++row) {
+        for (let col = 0; col < N; ++col) {
+            renderSymbolInCell(EMPTY, row, col);
+        }
+    }
+    gameEnded = false;
 }
 
 
