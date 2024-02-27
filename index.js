@@ -4,16 +4,34 @@ const EMPTY = ' ';
 
 let currentPlayer = ZERO;
 let isGameEnd = false;
-let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
+let field = [];
 let winPosition = [];
+let size = 3;
 
 const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
 
+function generateMatrix(n) {
+    const matrix = [];
+    for (let i = 0; i < n; i++) {
+        matrix[i] = [];
+        for (let j = 0; j < n; j++) {
+            matrix[i][j] = EMPTY;
+        }
+    }
+    return matrix;
+}
+
 function startGame () {
-    renderGrid(3);
+    let dimension = prompt('Введите размер поля (не меньше 1):', 3);
+    while (dimension <= 0){
+        dimension = prompt('Введите размер поля (не меньше 1):', 3);
+    }
+    size = dimension;
+    field = generateMatrix(dimension);
+    renderGrid(dimension);
 }
 
 function renderGrid (dimension) {
@@ -33,10 +51,10 @@ function renderGrid (dimension) {
 
 function haveFiner (sign) {
     let result = true;
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < size; i++) {
         winPosition = [];
         result = true;
-        for (let j = 0; j < 3; j++) {
+        for (let j = 0; j < size; j++) {
             winPosition.push([i, j]);
             result = result && (field[i][j] === sign);
         }
@@ -45,10 +63,10 @@ function haveFiner (sign) {
         }
     }
 
-    for (let j = 0; j < 3; j++) {
+    for (let j = 0; j < size; j++) {
         result = true;
         winPosition = [];
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < size; i++) {
             winPosition.push([i, j]);
             result = result && (field[i][j] === sign);
         }
@@ -59,7 +77,7 @@ function haveFiner (sign) {
 
     result = true;
     winPosition = [];
-    for (let j = 0; j < 3; j++) {
+    for (let j = 0; j < size; j++) {
         winPosition.push([j, j]);
         result = result && (field[j][j] === sign);
     }
@@ -69,9 +87,9 @@ function haveFiner (sign) {
 
     result = true;
     winPosition = [];
-    for (let j = 0; j < 3; j++) {
-        winPosition.push([2 - j, j]);
-        result = result && (field[2 - j][j] === sign);
+    for (let j = 0; j < size; j++) {
+        winPosition.push([size - 1 - j, j]);
+        result = result && (field[size - 1 - j][j] === sign);
     }
     if (result) {
         return true;
@@ -80,8 +98,8 @@ function haveFiner (sign) {
 }
 
 function haveFreeSteps () {
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
+    for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
             if (field[i][j] === EMPTY) {
                 return true;
             }
@@ -109,6 +127,7 @@ function cellClickHandler (row, col) {
         for (const pair of winPosition) {
             renderSymbolInCell(currentPlayer, pair[0], pair[1], isWin=true);
         }
+        return;
     }
     if (haveFiner(CROSS)){
         isGameEnd = true;
@@ -116,6 +135,7 @@ function cellClickHandler (row, col) {
         for (const pair of winPosition) {
             renderSymbolInCell(currentPlayer, pair[0], pair[1], isWin=true);
         }
+        return;
     }
 
     if (!haveFreeSteps()) {
@@ -147,7 +167,6 @@ function addResetListener () {
 function resetClickHandler () {
     currentPlayer = ZERO;
     isGameEnd = false;
-    field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
     winPosition = [];
 
     startGame();
