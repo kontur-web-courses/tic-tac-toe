@@ -8,6 +8,7 @@ let gameField = [
     ['', '', ''],
     ['', '', '']
 ]
+let currentPlayer = CROSS;
 
 startGame();
 addResetListener();
@@ -33,13 +34,9 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     if (gameField[row][col] === ''){
-        for(let i = 0; i < 9; i++){
-            if(i % 2 === 0){
-                renderSymbolInCell(ZERO, row, col);
-            }else{
-                renderSymbolInCell(CROSS, row, col);
-            }
-        }
+        renderSymbolInCell(currentPlayer, row, col);
+        gameField[row][col] = currentPlayer;
+        currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
     }
 
     console.log(`Clicked on cell: ${row}, ${col}`);
