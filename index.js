@@ -7,6 +7,14 @@ const container = document.getElementById('fieldWrapper');
 startGame();
 addResetListener();
 
+let currentClick = ZERO
+let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
+
+function resetField (field)
+{
+
+}
+
 function startGame () {
     renderGrid(3);
 }
@@ -28,6 +36,9 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
+    renderSymbolInCell(currentClick, row, col);
+    currentClick = currentClick === ZERO ? CROSS : ZERO;
+
     console.log(`Clicked on cell: ${row}, ${col}`);
 
 
