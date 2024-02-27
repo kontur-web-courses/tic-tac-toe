@@ -10,7 +10,7 @@ addResetListener();
 let currentClick = ZERO
 let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]]
 let isWinnerFound = false;
-function resetField (field) {
+function resetField () {
     for (let y = 0; y < 3; y++){
         for (let x = 0; x < 3; x++){
             field[y][x] = EMPTY;
@@ -154,6 +154,14 @@ function addResetListener () {
 
 function resetClickHandler () {
     resetField(field)
+    isWinnerFound = false;
+    for (let i = 0; i < 3; i++)
+    {
+        for (let k = 0; k < 3; k++){
+            renderSymbolInCell(' ', i, k);
+        }
+    }
+
     console.log('reset!');
 }
 
