@@ -14,12 +14,17 @@ addResetListener();
 function newBoard(dimension) {
     let data = []
     for (let i = 0; i < dimension; i++) {
-        data.push(Array(dimension).fill({x: -1, y: -1, side: EMPTY}));
+        let arr = []
+        for (let j = 0; j < dimension; j++) {
+            arr.push({x: i, y: j, side: EMPTY});
+        }
+
+        data.push(arr);
     }
 
     board = {
         _data: data,
-        curSide: CROSS,
+        curSide: EMPTY,
         finished: false,
         getWinningValues: function (side) {
             for (let row of this._data) {
@@ -42,10 +47,8 @@ function newBoard(dimension) {
             let diag1 = [];
             let diag2 = [];
             for (let diagIdx = 0; diagIdx < dimension; diagIdx++) {
-                for (let row of this._data) {
-                    diag1.push(row[diagIdx]);
-                    diag2.push(row[dimension - diagIdx - 1]);
-                }
+                diag1.push(this._data[diagIdx][diagIdx]);
+                diag2.push(this._data[diagIdx][dimension - diagIdx - 1]);
             }
 
             if (diag1.every((el) => el.side === side)) {
@@ -107,10 +110,11 @@ function cellClickHandler(row, col) {
     let [winningCells, isWinner] = board.getWinningValues(board.curSide)
     if (isWinner) {
         board.finished = true;
-        alert(`${board.curSide} won!`)
         for (let cell of winningCells) {
-            renderSymbolInCell(cell.side, cell.x, cell.y, '#800')
+            renderSymbolInCell(cell.side, cell.x, cell.y, '#800');
         }
+
+        alert(`${board.curSide} won!`);
     }
 }
 
