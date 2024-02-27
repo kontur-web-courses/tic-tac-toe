@@ -6,11 +6,27 @@ const field = new Array(3).fill(EMPTY).map(() => new Array(3).fill(EMPTY));
 const container = document.getElementById('fieldWrapper');
 let status = false;
 
+const field = new Array(3).fill(-1).map(() => new Array(3).fill(-1))
+
 startGame();
 addResetListener();
 
 function startGame () {
     renderGrid(3);
+}
+
+function getMove () {
+    let validMoves = []
+    for (let i = 0; i<3; i++){
+        for(let j = 0; j<3; j++){
+            if (field[i][j] === EMPTY){
+                validMoves.push([i, j])
+            }
+        }
+    }
+
+    const randomIndex = Math.floor(Math.random() * validMoves.length);
+    return validMoves[randomIndex]
 }
 
 function renderGrid (dimension) {
@@ -21,6 +37,7 @@ function renderGrid (dimension) {
         for (let j = 0; j < dimension; j++) {
             const cell = document.createElement('td');
             cell.textContent = EMPTY;
+
             cell.addEventListener('click', () => cellClickHandler(i, j));
             row.appendChild(cell);
         }
