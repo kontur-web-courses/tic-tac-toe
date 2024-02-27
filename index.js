@@ -10,9 +10,6 @@ const START_GRID = 3
 
 let field = Array(START_GRID).fill(Array(START_GRID).fill(EMPTY));
 
-function applyMove() {
-    
-}
 
 function checkWinner(field, sym) {
     for (let i = 0; i < field.length; i++) {
@@ -97,24 +94,25 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
-    const targetCell = findCell(row, col);
+    const targetCell = field[row][col];
 
     // Проверяем, что ячейка еще не заполнена
-    if (targetCell.textContent === EMPTY) {
+    if (targetCell === EMPTY) {
         console.log(`Clicked on cell: ${row}, ${col}`);
+        field[row][col] = player
         renderSymbolInCell(player, row, col);
-    
-    if (checkWinner) {
-        alert('${player} wins')
-    }
+        if (checkWinner(field, player)) {
+            alert('${player} wins');
+            return;
+        }
 
-    
-    switchPlayers();
+        checkDraw()
+        switchPlayers();
+        
+
     } else {
         console.log(`Cell ${row}, ${col} is already filled`);
     }
-
-    
 
     /* Пользоваться методом для размещения символа в клетке так:
      */
