@@ -2,6 +2,15 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
+let grid = [
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY],
+    [EMPTY, EMPTY, EMPTY]
+]
+
+let step = 0;
+const STEPS = [CROSS, ZERO];
+
 const container = document.getElementById('fieldWrapper');
 
 startGame();
@@ -30,10 +39,28 @@ function cellClickHandler (row, col) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
 
+    if (grid[row][col] === EMPTY) {
+        let symbol = STEPS[step % 2];
+        grid[row][col] = symbol;
+        renderSymbolInCell(symbol, row, col);
+        if (step === 8 && !checkWinner(step % 2)) {
+            alert('Победила дружба!');
+        }
+        step++;
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    }
+}
+
+function checkWinner(lastSymbolIndex) {
+    let result = false;
+    let opponentSymbol = STEPS[(lastSymbolIndex + 1) % 2]
+    for (const line in grid) {
+        if (!(EMPTY in line) && !(opponentSymbol in line)) {
+            result = true;
+        }
+
+    }
+    return result
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
