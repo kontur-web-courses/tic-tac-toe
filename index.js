@@ -4,6 +4,7 @@ const EMPTY = ' ';
 let TURN = true;
 const field = new Array(3).fill(EMPTY).map(() => new Array(3).fill(EMPTY));
 const container = document.getElementById('fieldWrapper');
+let status = false;
 
 startGame();
 addResetListener();
@@ -28,7 +29,7 @@ function renderGrid (dimension) {
 }
 
 function cellClickHandler (row, col) {
-    if (field[row][col] !== EMPTY) {
+    if (field[row][col] !== EMPTY || status) {
         return;
     }
 
@@ -44,18 +45,64 @@ function cellClickHandler (row, col) {
 
     switch (checkWinner(row, col)) {
         case 'Ничья':
-            alert('Ничья')
+            status = true;
+            setTimeout(function () { alert('Победила Дружба'); }, 1000);
             return;
         case CROSS:
-            alert('Победили крестики')
+            status = true;
+            setTimeout(function () { alert('Победили крестики'); }, 1000);
             return;
         case ZERO:
-            alert('Победили нолики')
+            status = true;
+            setTimeout(function () { alert('Победили нолики'); }, 1000);
             return;
         default:
             TURN = !TURN;
             break;
     }
+}
+
+function checkWinner() {
+    for (let i = 0; i < 3; i++) {
+        if (field[i][0] !== EMPTY && field[i][0] === field[i][1] && field[i][0] === field[i][2]) {
+            findCell(i, 0).style.background = 'red';
+            findCell(i, 1).style.background = 'red';
+            findCell(i, 2).style.background = 'red';
+            return field[i][0];
+        }
+    }
+
+    for (let j = 0; j < 3; j++) {
+        if (field[0][j] !== EMPTY && field[0][j] === field[1][j] && field[0][j] === field[2][j]) {
+            findCell(0, j).style.background = 'red';
+            findCell(1, j).style.background = 'red';
+            findCell(2, j).style.background = 'red';
+            return field[0][j];
+        }
+    }
+
+    if (field[0][0] !== EMPTY && field[0][0] === field[1][1] && field[0][0] === field[2][2]) {
+        findCell(0, 0).style.background = 'red';
+        findCell(1, 1).style.background = 'red';
+        findCell(2, 2).style.background = 'red';
+        return field[0][0];
+    }
+    if (field[0][2] !== EMPTY && field[0][2] === field[1][1] && field[0][2] === field[2][0]) {
+        findCell(0, 2).style.background = 'red';
+        findCell(1, 1).style.background = 'red';
+        findCell(2, 0).style.background = 'red';
+        return field[0][2];
+    }
+
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (field[i][j] === EMPTY) {
+                return '';
+            }
+        }
+    }
+
+    return 'Ничья';
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
@@ -76,7 +123,13 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
-    field.clear();
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            field[i][j] = EMPTY;
+        }
+    }
+    renderGrid(3);
+    status = false;
     console.log('reset!');
 }
 
