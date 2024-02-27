@@ -5,6 +5,8 @@ const EMPTY = ' ';
 const container = document.getElementById('fieldWrapper');
 const FIELD_SIZE = 5;
 let FIELD = [];
+let lastCheckRows = Array(FIELD_SIZE);
+let lastCheckCols = Array(FIELD_SIZE);
 let turn = CROSS;
 let turnsLeft = FIELD_SIZE * FIELD_SIZE;
 let gameOver = false;
@@ -19,7 +21,7 @@ function startGame () {
     renderGrid(FIELD_SIZE);
 }
 
-function renderGrid (dimension) {
+function renderGrid(dimension) {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
@@ -34,10 +36,9 @@ function renderGrid (dimension) {
     }
 }
 
-function cellClickHandler (row, col) {
+function cellClickHandler(row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if(FIELD[row][col] !== EMPTY || gameOver)
-    {
+    if (FIELD[row][col] !== EMPTY || gameOver) {
         return
     }
     FIELD[row][col] = turn;
@@ -51,89 +52,123 @@ function moveToNextTurn(){
     turnsLeft--;
     checkForWinner();
     if (turnsLeft === 0) {
-        setTimeout(() => { alert('Победила дружба!'); }, 20);
+        setTimeout(() => {
+            alert('Победила дружба!');
+        }, 20);
     }
 }
 
-function renderSymbolInCell (symbol, row, col, color = '#333') {
+function renderSymbolInCell(symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
 }
 
-function findCell (row, col) {
+function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
 }
 
-function addResetListener () {
+function addResetListener() {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
 }
 
-function resetClickHandler () {
+function resetClickHandler() {
     console.log('reset!');
     startGame();
 }
 
-function checkRow(rowIndex)
+function colorCells(cellsRow, cellsColumn)
 {
+    for(let i = 0; i < cellsRow.length; i++) {
+        let row = cellsRow[i];
+        let col = cellsColumn[i];
+        renderSymbolInCell(FIELD[row][col], row, col, 'red');
+    }
+}
+
+function checkRow(rowIndex) {
     const type = FIELD[rowIndex][0];
-    if(type === EMPTY){
+    let result = true;
+    if (type === EMPTY) {
         return false;
     }
-    for(const item of FIELD[rowIndex]){
-        if(type !== item){
-            return false;
+    for (let i = 0;i < FIELD_SIZE; i++) {
+        if (type !== FIELD[rowIndex][i]) {
+            result = false;
         }
+        lastCheckRows[i] = rowIndex;
+        lastCheckCols[i] = i;
     }
-    return type;
+
+    if(result) {
+        return type;
+    }
+
+    return false;
 }
 
-function checkCol(colIndex)
-{
+function checkCol(colIndex) {
     const type = FIELD[0][colIndex];
-    if(type === EMPTY){
+    let result = true;
+    if (type === EMPTY) {
         return false;
     }
-    for(let i = 0; i < FIELD_SIZE; i++){
+    for (let i = 0; i < FIELD_SIZE; i++) {
         let item = FIELD[i][colIndex];
-        if(type !== item){
-            return false;
+        if (type !== item) {
+            result = false;
         }
+
+        lastCheckRows[i] = i;
+        lastCheckCols[i] = colIndex;
     }
 
-    return type;
+
+    if(result) {
+        return type;
+    }
+
+    return false;
 }
 
-function checkDiag(diagNum){
+function checkDiag(diagNum) {
     let dir = diagNum === 0 ? 1 : -1;
     let currentCol = diagNum === 0 ? 0 : FIELD_SIZE - 1;
+    let result = true;
     const type = FIELD[0][currentCol];
 
-    if(type === EMPTY){
+    if (type === EMPTY) {
         return false;
     }
 
-    for(let i = 0; i < FIELD_SIZE; i++) {
-        if(FIELD[i][currentCol] !== type) {
-            return false;
+    for (let i = 0; i < FIELD_SIZE; i++) {
+        if (FIELD[i][currentCol] !== type) {
+            result = false;
         }
 
+        lastCheckRows[i] = i;
+        lastCheckCols[currentCol] = currentCol;
         currentCol += dir;
     }
 
-    return type;
+    if(result) {
+        return type;
+    }
+
+    return false;
 }
 
 function checkForWinner() {
     let possibleWinner = checkDiag(0) || checkDiag(1);
-    for(let i = 0; i < FIELD_SIZE; i++) {
+
+    for (let i = 0; i < FIELD_SIZE; i++) {
         possibleWinner ||= (checkCol(i) || checkRow(i));
         if (possibleWinner) {
-            setTimeout(() => { alert(`Победил ${possibleWinner}`); }, 20);
-            
+            colorCells(lastCheckRows, lastCheckCols);
+            alert(`Победил ${possibleWinner}`);
             gameOver = true;
             return;
         }
@@ -175,8 +210,9 @@ function randomAIMove()
 }
 
 /* Test Function */
+
 /* Победа первого игрока */
-function testWin () {
+function testWin() {
     clickOnCell(0, 2);
     clickOnCell(0, 0);
     clickOnCell(2, 0);
@@ -187,7 +223,7 @@ function testWin () {
 }
 
 /* Ничья */
-function testDraw () {
+function testDraw() {
     clickOnCell(2, 0);
     clickOnCell(1, 0);
     clickOnCell(1, 1);
@@ -200,6 +236,6 @@ function testDraw () {
     clickOnCell(2, 2);
 }
 
-function clickOnCell (row, col) {
+function clickOnCell(row, col) {
     findCell(row, col).click();
 }
