@@ -14,7 +14,8 @@ addResetListener();
 function createBoard(){
     return {
         currentMove: CROSS,
-        board: []
+        board: [],
+        end: false,
     };
 }
 
@@ -143,20 +144,24 @@ function renderGrid (dimension, board) {
 function cellClickHandler (row, col, board) {
     // Пиши код тут
     console.log(`Clicked on cell: ${row}, ${col}`);
-    if(board.board[row][col] === EMPTY){
+    if(board.board[row][col] === EMPTY && !board.end){
         board.board[row][col] = board.currentMove;
         renderSymbolInCell(board.currentMove, row, col);
         nextCurrentMove(board)
     }
-    let win = checkWin(board);
-    console.log(win);
-    if(win !== undefined){
-        for (let winElementElement of win[1]) {
-            renderSymbolInCell(win[0], winElementElement[0], winElementElement[1], redColor);
+    if (!board.end){
+        let win = checkWin(board);
+        console.log(win);
+        if(win !== undefined){
+            for (let winElementElement of win[1]) {
+                renderSymbolInCell(win[0], winElementElement[0], winElementElement[1], redColor);
+            }
+            alert(`Победил ${win[0]}`)
+            board.end = true;
+        }else if (!haveMoves(board)){
+            alert("Победила дружба!")
+            board.end = true;
         }
-        alert(`Победил ${win[0]}`)
-    }else if (!haveMoves(board)){
-        alert("Победила дружба!")
     }
 }
 
