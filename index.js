@@ -7,7 +7,6 @@ const redColor = '#FF0000'
 const container = document.getElementById('fieldWrapper');
 
 startGame();
-addResetListener();
 
 
 // -------- Board methods ---------
@@ -21,6 +20,8 @@ function createBoard(){
 
 function setEmptyBoard(board){
     board.board = []
+    board.currentMove = CROSS;
+    board.end = false;
     for (let i = 0; i < dimension; i++) {
         let arr = []
         for (let j = 0; j < dimension; j++) {
@@ -71,7 +72,7 @@ function checkWin(board){
         let pairs = [];
         for (let j = 0; j < dimension; j++) {
             sum += board.board[j][i];
-            pairs.push([i, j]);
+            pairs.push([j, i]);
         }
         let checkLine = checkLineWin(sum);
         if (checkLine !== undefined){
@@ -119,13 +120,12 @@ function startGame () {
     let board = createBoard()
     createBoard(board);
     setEmptyBoard(board);
+    addResetListener(board);
     renderGrid(dimension, board);
 }
 
 function renderGrid (dimension, board) {
     container.innerHTML = '';
-    console.log(board)
-
 
     for (let i = 0; i < dimension; i++) {
         const row = document.createElement('tr');
@@ -177,18 +177,19 @@ function findCell (row, col) {
     return targetRow.querySelectorAll('td')[col];
 }
 
-function addResetListener () {
+function addResetListener (board) {
     const resetButton = document.getElementById('reset');
-    resetButton.addEventListener('click', resetClickHandler);
+    resetButton.addEventListener('click',() => resetClickHandler(board));
 }
 
-function resetClickHandler () {
+function resetClickHandler (board) {
     console.log('reset!');
     for (let row = 0; row < dimension; row++) {
         for (let column = 0; column < 3; column++) {
             renderSymbolInCell(EMPTY, row, column);
         }
     }
+    setEmptyBoard(board);
 }
 
 
