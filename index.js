@@ -2,16 +2,64 @@ const CROSS = 'X';
 const ZERO = 'O';
 const EMPTY = ' ';
 
+const DIMENSION = 3;
+
 const container = document.getElementById('fieldWrapper');
 
 startGame();
 addResetListener();
 
-function startGame () {
+let board = newBoard();
+
+function newBoard(dimension) {
+    board = {
+        _data: Array(dimension * dimension).fill(EMPTY),
+        curSide: CROSS,
+        is_winner: function (side) {
+            for (let row of this._data) {
+                if (row.every((el) => el === side)) {
+                    return true;
+                }
+            }
+
+            for (let colIdx = 0; colIdx < dimension; colIdx++) {
+                let column = [];
+                for (let row of this._data) {
+                    column.push(row[colIdx]);
+                }
+
+                if (column.every((el) => el === side)) {
+                    return true;
+                }
+            }
+
+            let diag1 = [];
+            let diag2 = [];
+            for (let diagIdx = 0; diagIdx < dimension; diagIdx++) {
+                for (let row of this._data) {
+                    diag1.push(row[diagIdx]);
+                    diag2.push(row[dimension - diagIdx - 1]);
+                }
+            }
+
+            return diag1.every((el) => el === side) || diag2.every((el) => el === side);
+        },
+        at: function (row, col) {
+            return this._data[row * dimension + col]
+        },
+        set: function (row, col, side) {
+            this._data[row * dimension + col] = side
+        },
+    }
+
+    return board;
+}
+
+function startGame() {
     renderGrid(3);
 }
 
-function renderGrid (dimension) {
+function renderGrid(dimension) {
     container.innerHTML = '';
 
     for (let i = 0; i < dimension; i++) {
@@ -26,41 +74,45 @@ function renderGrid (dimension) {
     }
 }
 
-function cellClickHandler (row, col) {
-    // Пиши код тут
+function cellClickHandler(row, col) {
     console.log(`Clicked on cell: ${row}, ${col}`);
+    if (board.at(row, col) !== EMPTY)
+        return;
 
+    board.set(row, col, board.curSide);
+    renderSymbolInCell(board.curSide, row, col);
 
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    if (board.is_winner())
 }
 
-function renderSymbolInCell (symbol, row, col, color = '#333') {
+function renderSymbolInCell(symbol, row, col, color = '#333') {
     const targetCell = findCell(row, col);
 
     targetCell.textContent = symbol;
     targetCell.style.color = color;
 }
 
-function findCell (row, col) {
+function findCell(row, col) {
     const targetRow = container.querySelectorAll('tr')[row];
     return targetRow.querySelectorAll('td')[col];
 }
 
-function addResetListener () {
+function addResetListener() {
     const resetButton = document.getElementById('reset');
     resetButton.addEventListener('click', resetClickHandler);
 }
 
-function resetClickHandler () {
+function resetClickHandler() {
     console.log('reset!');
+    renderGrid(3)
+    board = newBoard();
 }
 
 
 /* Test Function */
+
 /* Победа первого игрока */
-function testWin () {
+function testWin() {
     clickOnCell(0, 2);
     clickOnCell(0, 0);
     clickOnCell(2, 0);
@@ -71,7 +123,7 @@ function testWin () {
 }
 
 /* Ничья */
-function testDraw () {
+function testDraw() {
     clickOnCell(2, 0);
     clickOnCell(1, 0);
     clickOnCell(1, 1);
@@ -84,6 +136,6 @@ function testDraw () {
     clickOnCell(2, 2);
 }
 
-function clickOnCell (row, col) {
+function clickOnCell(row, col) {
     findCell(row, col).click();
 }
