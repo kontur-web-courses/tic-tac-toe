@@ -29,14 +29,15 @@ function renderGrid (dimension) {
     }
 }
 
+let _counter = 0
 function cellClickHandler (row, col) {
     // Пиши код тут
-    console.log(`Clicked on cell: ${row}, ${col}`);
-
-
-    /* Пользоваться методом для размещения символа в клетке так:
-        renderSymbolInCell(ZERO, row, col);
-     */
+    if (field[row][col] === EMPTY) {
+        let move = _counter % 2 === 0 ? ZERO : CROSS;
+        field[row][col] = move;
+        renderSymbolInCell(move, row, col);
+        _counter++;
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
