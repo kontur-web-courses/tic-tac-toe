@@ -21,14 +21,19 @@ function changeField(row_index, column_index, value){
 
 function checkGameState(){
 
-    for (const row of field){
-        if (row[0] === row[1] && row[1] === row[2]){
-            if (row[0] === CROSS){
+    for (let i = 0; i < field.length; i++){
+        if (field[i][0] === field[i][1] && field[i][1] === field[i][2]){
+            if (field[i][0] === CROSS){
                 alert('First win')
-                render
+                isGameEnded = true;
+                for (let j=0; j < field[i].length; j++)
+                    renderSymbolInCell(CROSS, i, j, RED)
             }
-            else if (row[1] === ZERO){
+            else if (field[i][0] === ZERO){
                 alert('Second win')
+                isGameEnded = true;
+                for (let j=0; j < field[i].length; j++)
+                    renderSymbolInCell(ZERO, i, j, RED)
             }
         }
     }
@@ -37,9 +42,15 @@ function checkGameState(){
         if (field[0][i] === field[1][i] && field[1][i] === field[2][i]){
             if (field[0][i] === CROSS){
                 alert('First win')
+                isGameEnded = true;
+                for (let j=0; j < field[0].length; j++)
+                    renderSymbolInCell(CROSS, j, i, RED)
             }
             else if (field[0][i] === ZERO){
                 alert('Second win')
+                isGameEnded = true;
+                for (let j=0; j < field[0].length; j++)
+                    renderSymbolInCell(ZERO, j, i, RED)
             }
         }
     }
@@ -47,18 +58,34 @@ function checkGameState(){
     if (field[0][0] === field[1][1] && field[1][1] === field[2][2]){
         if (field[0][0] === CROSS){
             alert('First win')
+            isGameEnded = true
+            renderSymbolInCell(CROSS, 0, 0, RED);
+            renderSymbolInCell(CROSS, 1, 1, RED);
+            renderSymbolInCell(CROSS, 2, 2, RED);
         }
         else if (field[0][0] === ZERO){
             alert('Second win')
+            isGameEnded = true
+            renderSymbolInCell(ZERO, 0, 0, RED);
+            renderSymbolInCell(ZERO, 1, 1, RED);
+            renderSymbolInCell(ZERO, 2, 2, RED);
         }
     }
 
     if (field[0][2] === field[1][1] && field[1][1] === field[2][0]){
         if (field[0][2] === CROSS){
             alert('First win')
+            isGameEnded = true
+            renderSymbolInCell(CROSS, 0, 2, RED);
+            renderSymbolInCell(CROSS, 1, 1, RED);
+            renderSymbolInCell(CROSS, 2, 0, RED);
         }
         else if (field[0][2] === ZERO){
             alert('Second win')
+            isGameEnded = true
+            renderSymbolInCell(ZERO, 0, 2, RED);
+            renderSymbolInCell(ZERO, 1, 1, RED);
+            renderSymbolInCell(ZERO, 2, 0, RED);
         }
     }
 
