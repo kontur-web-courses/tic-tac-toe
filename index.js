@@ -145,6 +145,7 @@ function resetField(){
             }
         }
     }
+    isFinish = false;
 }
 
 /* Test Function */
