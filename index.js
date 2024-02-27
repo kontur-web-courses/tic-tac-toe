@@ -30,10 +30,7 @@ function startGame () {
     }
     dimension = +user_dimension;
 
-    let bot = confirm("Хотите ли вы играть с ботом?");
-    if (bot){
-        wantBot = true;
-    }
+    wantBot = confirm("Хотите ли вы играть с ботом?");
     gameStarted = true;
     currentPlayer = CROSS;
     renderGrid(dimension);
@@ -102,7 +99,6 @@ function nextTurn(){
 
     if (currentPlayer === ZERO && wantBot){
         aiMove();
-        currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
     }
 }
 
