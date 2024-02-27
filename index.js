@@ -59,10 +59,10 @@ function cellClickHandler (row, col) {
 
     field[row][col] = currentSymbol;
     renderSymbolInCell(currentSymbol, row, col);
-    let possibleWinner = checkWinner();
-    if (possibleWinner === currentSymbol) {
+    if (checkWinner(currentSymbol)) {
         alert(`${currentSymbol === CROSS ? "Крестики" : "Нолики"} выиграли!`);
-        determinedWinner = possibleWinner;
+        colorIfWin(currentSymbol, 3);
+        determinedWinner = currentSymbol;
         return;
     }
     freeSpace -= 1;
@@ -104,29 +104,29 @@ function resetClickHandler () {
     console.log('reset!');
 }
 
-function checkWinner() {
+function checkWinner(symbol) {
     for (let i = 0; i < 3; i++) {
-        if (field[i][0] === field[i][1] && field[i][1] === field[i][2]) {
-            return field[i][0];
+        if (field[i][0] === symbol && field[i][1] === symbol && field[i][2] === symbol) {
+            return true;
         }
-        if (field[0][i] === field[1][i] && field[1][i] === field[2][i]) {
-            return field[0][i];
+        if (field[0][i] === symbol && field[1][i] === symbol && field[2][i] === symbol) {
+            return true;
         }
     }
-    if (field[0][0] === field[1][1] && field[1][1] === field[2][2]) {
-        return field[0][0];
+    if (field[0][0] === symbol && field[1][1] === symbol && field[2][2] === symbol) {
+        return true;
     }
-    if (field[2][0] === field[1][1] && field[1][1] === field[0][2]) {
-        return field[2][0];
+    if (field[2][0] === symbol && field[1][1] === symbol && field[0][2] === symbol) {
+        return true;
     }
-    return EMPTY;
+    return false;
 }
 
 function colorIfWin (symb, fieldSize) {
     for (let i = 0; i < fieldSize; i++) {
         for (let j = 0; j < fieldSize; j++) {
             if (field[i][j] === symb) {
-                renderSymbolInCell(EMPTY, i, j, '#f00');
+                renderSymbolInCell(symb, i, j, '#f00');
             }
         }
     }
