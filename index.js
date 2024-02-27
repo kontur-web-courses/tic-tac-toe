@@ -17,11 +17,8 @@ startGame();
 addResetListener();
 
 function startGame () {
-<<<<<<< HEAD
     gameStarted = true;
     currentPlayer = CROSS;
-=======
->>>>>>> 9df55c1552a6ac3c6cd589bf2cea827b8c76943a
     renderGrid(3);
 }
 
@@ -53,13 +50,9 @@ function cellClickHandler(row, col) {
         renderSymbolInCell(currentPlayer, row, col);
         
 
-<<<<<<< HEAD
-        if (checkWinner()) {
-            const winner = getCurrentPlayer() === CROSS ? "Крестики" : "Нолики";
-=======
+
         if (checkWinner(row, col, currentPlayer)) {
-            const winner = getCurrentPlayer() === ZERO ? "Крестики" : "Нолики";
->>>>>>> 9df55c1552a6ac3c6cd589bf2cea827b8c76943a
+            const winner = getCurrentPlayer() === CROSS ? "Крестики" : "Нолики";
             alert(`Победитель: ${winner}`);
             disableClickHandlers();
         } else if (checkDraw()) {
@@ -70,7 +63,6 @@ function cellClickHandler(row, col) {
 }
 
 function getCurrentPlayer() {
-<<<<<<< HEAD
     return currentPlayer;
     const crosses = board.flat().filter(cell => cell === CROSS);
     const zeros = board.flat().filter(cell => cell === ZERO);
@@ -79,12 +71,6 @@ function getCurrentPlayer() {
 
 function nextTurn(){
     currentPlayer = currentPlayer === CROSS ? ZERO : CROSS;
-    //alert(currentPlayer);
-=======
-    const crosses = board.flat().filter(cell => cell === CROSS);
-    const zeros = board.flat().filter(cell => cell === ZERO);
-    return crosses.length === zeros.length ? CROSS : ZERO;
->>>>>>> 9df55c1552a6ac3c6cd589bf2cea827b8c76943a
 }
 
 function checkWinner(row, col, player) {
