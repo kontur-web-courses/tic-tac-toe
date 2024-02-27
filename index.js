@@ -12,7 +12,11 @@ let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]
 
 function resetField (field)
 {
-
+    for (let y = 0; y < 3; y++){
+        for (let x = 0; x < 3; x++){
+            field[y][x] = EMPTY;
+        }
+    }
 }
 
 function startGame () {
@@ -65,6 +69,7 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    resetField(field)
     console.log('reset!');
 }
 
