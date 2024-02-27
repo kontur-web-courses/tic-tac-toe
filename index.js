@@ -3,7 +3,9 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 let currentPlayer = ZERO;
+let isGameEnd = false;
 let field = [[EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY], [EMPTY, EMPTY, EMPTY]];
+let arra
 
 const container = document.getElementById('fieldWrapper');
 
@@ -29,13 +31,91 @@ function renderGrid (dimension) {
     }
 }
 
+function haveFiner (sign) {
+    let result = true;
+    for (let i = 0; i < 3; i++) {
+        result = true;
+        for (let j = 0; j < 3; j++) {
+            result = result && (field[i][j] === sign);
+        }
+        if (result){
+            return true;
+        }
+    }
+
+    for (let j = 0; j < 3; j++) {
+        result = true;
+        for (let i = 0; i < 3; i++) {
+            result = result && (field[i][j] === sign);
+        }
+        if (result){
+            return true;
+        }
+    }
+    result = true;
+    for (let j = 0; j < 3; j++) {
+        result = result && (field[j][j] === sign);
+    }
+    if (result){
+        return true;
+    }
+    result = true;
+    for (let j = 0; j < 3; j++) {
+        result = result && (field[2 - j][j] === sign);
+    }
+    if (result){
+        return true;
+    }
+    return false;
+}
+
+function haveFreeSteps () {
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (field[i][j] === EMPTY) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 function cellClickHandler (row, col) {
-    field[row, col] = currentPlayer;
-    currentPlayer = currentPlayer == ZERO ? CROSS : ZERO;
-    console.log(`Clicked on cell: ${row}, ${col}`);
+
+    if (haveFiner(ZERO)){
+        isGameEnd = true;
+        alert("Победил первый игрок");
+    }
+    if (haveFiner(CROSS)){
+        isGameEnd = true;
+        alert("Победил второй игрок");
+    }
+
+    if (!haveFreeSteps()) {
+        isGameEnd = true;
+        alert("Победила дружба");
+    }
+
+    if (isGameEnd){
+        return;
+    }
 
 
-    renderSymbolInCell(currentPlayer, row, col);
+
+    if (field[row][col] === EMPTY) {
+        field[row][col] = currentPlayer;
+        currentPlayer = currentPlayer == ZERO ? CROSS : ZERO;
+        console.log(`Clicked on cell: ${row}, ${col}`);
+
+        renderSymbolInCell(currentPlayer, row, col);
+    }
+
+    if (haveFiner(ZERO)){
+        alert("Победил первый игрок");
+    }
+    if (haveFiner(CROSS)){
+        alert("Победил второй игрок");
+    }
 }
 
 function renderSymbolInCell (symbol, row, col, color = '#333') {
