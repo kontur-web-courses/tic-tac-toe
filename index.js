@@ -3,33 +3,21 @@ const ZERO = 'O';
 const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
-const field = [
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY],
-    [EMPTY, EMPTY, EMPTY]
-];
-const GameDimension = 3;
-const winCombinations = [
-    new Set([0, 1, 2]),
-    new Set([3, 4, 5]),
-    new Set([6, 7, 8]),
-
-    new Set([0, 3, 6]),
-    new Set([1, 4, 7]),
-    new Set([2, 5, 8]),
-
-    new Set([0, 4, 8]),
-    new Set([2, 4, 6]),
-];
-
+const GameDimension = 5;
+const field = createEmptyField(GameDimension);
 let currentSymbol = ZERO;
 let isGameOver = false;
 
 startGame();
 addResetListener();
 
-function setIsEquals(xs, ys) {
-    return xs.size === ys.size && [...xs].every((x) => ys.has(x));
+function createEmptyField(dimension) {
+    const field = [];
+    for (let i =  0; i < dimension; i++) {
+        const row = new Array(dimension).fill(EMPTY);
+        field.push(row);
+    }
+    return field;
 }
 
 function startGame() {
@@ -51,47 +39,78 @@ function renderGrid(dimension) {
     }
 }
 
-function checkGameState(currentSymbol) {
-    if (getIndexesOfSymbol(EMPTY).size === 0) {
-        alert("Победила дружба");
+function checkRowState(row, symbol) {
+    return field[row].every(it => it === symbol);
+}
+
+function checkColState(col, symbol) {
+    for (const row of field) {
+        if (row[col] !== symbol)
+            return false;
     }
+    return true;
+}
 
-    const winState = haveGameWinState(currentSymbol);
+function checkMainDiag(symbol) {
+    for (let i = 0; i < GameDimension; i++) {
+        if (field[i][i] !== symbol)
+            return false;
+    }
+    return true;
+}
 
-    if (winState) {
-        alert(`Выиграл ${currentSymbol === ZERO ? 'нолик' : 'крестик'}!`);
-        for (const index of winState) {
-            renderSymbolInCell(
-                currentSymbol,
-                Math.floor(index / 3),
-                index % 3,
-                '#ff0000'
-            );
+function checkSideDiag(symbol) {
+    for (let i = 0; i < GameDimension; i++) {
+        if (field[i][GameDimension - 1 - i] !== symbol)
+            return false;
+    }
+    return true;
+}
+
+function checkGameState(currentSymbol) {
+    const currentSymbolRus = currentSymbol === ZERO ? 'нолик' : 'крестик';
+    for (let i = 0; i < GameDimension; i++) {
+        if (checkColState(i, currentSymbol)) {
+            alert(`Выиграл ${currentSymbolRus}!`);
+            for (let j = 0; j < GameDimension; j++) {
+                renderSymbolInCell(currentSymbol, j, i, '#ff0000');
+            }
+            isGameOver = true;
+        } else if (checkRowState(i, currentSymbol)) {
+            alert(`Выиграл ${currentSymbolRus}!`);
+            for (let j = 0; j < GameDimension; j++) {
+                renderSymbolInCell(currentSymbol, i, j, '#ff0000');
+            }
+            isGameOver = true;
+        }
+    }
+    if (checkMainDiag(currentSymbol)) {
+        alert(`Выиграл ${currentSymbolRus}!`);
+        for (let i = 0; i < GameDimension; i++) {
+            renderSymbolInCell(currentSymbol, i, i, '#ff0000');
         }
         isGameOver = true;
     }
-}
-
-function haveGameWinState(symbol) {
-    const indexes = getIndexesOfSymbol(symbol);
-
-    for (const winCombination of winCombinations) {
-        if (setIsEquals(winCombination, indexes)) {
-            return indexes;
+    if (checkSideDiag(currentSymbol)) {
+        alert(`Выиграл ${currentSymbolRus}!`);
+        for (let i = 0; i < GameDimension; i++) {
+            renderSymbolInCell(currentSymbol, i, GameDimension - 1 - i, '#ff0000');
         }
+        isGameOver = true;
     }
-
-    return false;
+    if (getIndexesOfSymbol(EMPTY).length === 0) {
+        alert("Победила дружба");
+    }
 }
 
 function getIndexesOfSymbol(symbol) {
     let currentIndex = 0;
-    const symbolIndexes = new Set();
+    const symbolIndexes = [];
 
     for (const row of field) {
         for (const element of row) {
             if (element === symbol) {
-                symbolIndexes.add(currentIndex);
+                symbolIndexes.push(currentIndex);
             }
             currentIndex++;
         }
