@@ -4,11 +4,81 @@ const EMPTY = ' ';
 
 const container = document.getElementById('fieldWrapper');
 
+let dim = Number(prompt("Какой размер?"))
 startGame();
 addResetListener();
 
+let currentClick = ZERO
+let field = resetField(dim)
+let isWinnerFound = false;
+function resetField (size) {
+    let field = []
+    for (let y = 0; y < size; y++){
+        field.push([]);
+        for (let x = 0; x < size; x++){
+            field[y].push(EMPTY);
+        }
+    }
+    return field
+}
+
+function checkForAvailable (field) {
+    for (let y = 0; y < dim; y++){
+        for (let x = 0; x < dim; x++){
+            if (field[y][x] === EMPTY){
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function checkSequence(symbol, yIterator, xIterator, initialY, initalX){
+    for (let y = initialY, x = initalX; y < dim && x < dim; x = xIterator(x), y = yIterator(y)){
+        if (field[y][x] !== symbol) {
+            return null;
+        }
+    }
+
+    let arr = []
+    for (let y = initialY, x = initalX; y < dim && x < dim; x = xIterator(x), y = yIterator(y)){
+        arr.push([y, x]) 
+    }
+    return arr;
+}
+
+function checkRows(symbol){
+    for (let i = 0; i < dim; i++){
+        let sequence = checkSequence(symbol, y => y, x => x + 1, i, 0);
+        if (sequence !== null) {
+            return sequence;
+        }
+    }
+    return null;
+}
+
+function checkColumns(symbol){
+    for (let i = 0; i < dim; i++){
+        let sequence = checkSequence(symbol, y => y + 1, x => x, 0, i);
+        if (sequence !== null) {
+            return sequence;
+        }
+    }
+    return null;
+}
+
+function checkDiagonals(symbol){
+    return checkSequence(symbol, y => y + 1, x => x + 1, 0, 0)
+        || checkSequence(symbol, y => y + 1, x => x - 1, 0, dim - 1)
+}
+
+
+function checkWinner(symbol){
+    return checkColumns(symbol) || checkRows(symbol) || checkDiagonals(symbol)
+}
+
 function startGame () {
-    renderGrid(3);
+    renderGrid(dim);
 }
 
 function renderGrid (dimension) {
@@ -28,6 +98,43 @@ function renderGrid (dimension) {
 
 function cellClickHandler (row, col) {
     // Пиши код тут
+    debugger;
+    if (field[row][col] !== EMPTY){
+        return;
+    }
+    if (isWinnerFound){
+        return;
+    }
+
+    renderSymbolInCell(currentClick, row, col);
+    
+    field[row][col] = currentClick;
+    currentClick = currentClick === ZERO ? CROSS : ZERO;
+    
+    let crossSequence = checkWinner(CROSS);
+    let zeroSequence = checkWinner(ZERO);
+    
+    if (crossSequence !== null){
+        for (cell of crossSequence){
+            renderSymbolInCell(CROSS, cell[0], cell[1], color = '#FF0000');
+        }
+        isWinnerFound = true;
+        alert('CROSS!!!!!');
+        return;
+    }
+    if (zeroSequence !== null){
+        for (cell of zeroSequence){
+            renderSymbolInCell(ZERO, cell[0], cell[1], color = '#FF0000');
+        }
+        isWinnerFound = true;
+        alert('ZERO!!!!!');
+        return;
+    }
+
+    if (!checkForAvailable(field)){
+        alert('Победила дружба')
+    }
+
     console.log(`Clicked on cell: ${row}, ${col}`);
 
 
@@ -54,6 +161,15 @@ function addResetListener () {
 }
 
 function resetClickHandler () {
+    field = resetField(dim)
+    isWinnerFound = false;
+    for (let i = 0; i < dim; i++)
+    {
+        for (let k = 0; k < dim; k++){
+            renderSymbolInCell(' ', i, k);
+        }
+    }
+
     console.log('reset!');
 }
 
